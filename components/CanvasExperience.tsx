@@ -145,6 +145,9 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [selectedWireId, setSelectedWireId] = useState<string | null>(null);
+  const [copiedNode, setCopiedNode] = useState<NodeState | null>(null);
+  const nodesRef = useRef(nodes);
+  const copiedNodeRef = useRef(copiedNode);
 
   // Dragging State
   const [dragMode, setDragMode] = useState<DragMode>('NONE');
@@ -212,7 +215,11 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
           else {
               displayedProjects = initialProjects.slice(0, 3);
           }
-      }
+      
+    } else {
+      // No filter connected - show default 3
+      displayedProjects = initialProjects.slice(0, 3);
+  }
 
         // Compare with current state to avoid infinite loops
         const currentSlugs = (node.data?.displayedProjects || []).map((p: ProjectData) => p.slug).join(',');
@@ -251,9 +258,52 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
   }, [connections, initialProjects, nodes]);
 
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
+  
+  useEffect(() => {
+    copiedNodeRef.current = copiedNode;
+  }, [copiedNode]);
+
   // --- Keyboard Shortcuts ---
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+          // Copy: Cmd/Ctrl + C
+    if ((e.metaKey || e.ctrlKey) && e.key === 'c' && selectedNodeId) {
+      e.preventDefault();
+      const nodeToCopy = nodesRef.current.find(n => n.id === selectedNodeId);
+      if (nodeToCopy) {
+        setCopiedNode(nodeToCopy);
+        console.log('📋 Copied node:', nodeToCopy.title);
+      }
+      return;
+    }
+
+    // Paste: Cmd/Ctrl + V
+    if ((e.metaKey || e.ctrlKey) && e.key === 'v' && copiedNodeRef.current) {
+      e.preventDefault();
+      
+      // Create a new node based on the copied one
+      const copied = copiedNodeRef.current;
+const newNode: NodeState = {
+  ...copied,
+  id: `n-${Date.now()}`,
+  position: {
+    x: copied.position.x + 50,
+    y: copied.position.y + 50
+  },
+  data: copied.data ? { ...copied.data } : undefined,
+  inputs: copied.inputs.map(i => ({ ...i })),
+  outputs: copied.outputs.map(o => ({ ...o }))
+};
+      
+      setNodes(prev => [...prev, newNode]);
+      setSelectedNodeId(newNode.id); // Select the newly pasted node
+      console.log('📌 Pasted node:', newNode.title);
+      return;
+    }
+
       if (e.key === 'Backspace' || e.key === 'Delete') {
         if (selectedWireId) {
           setConnections(prev => prev.filter(c => c.id !== selectedWireId));
@@ -263,6 +313,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         else if (selectedNodeId) {
           setNodes(prev => prev.filter(n => n.id !== selectedNodeId));
           setConnections(prev => prev.filter(c => c.fromNodeId !== selectedNodeId && c.toNodeId !== selectedNodeId));
+          setCopiedNode(prev => prev?.id === selectedNodeId ? null : prev);
           setSelectedNodeId(null);
         }
       }
