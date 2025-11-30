@@ -208,59 +208,79 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
       const currentImage = gallery[idx] || null;
 
       return (
-         <div className="w-full h-full relative group overflow-hidden bg-[#f0f0f0] flex flex-col">
-            {currentImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={currentImage} alt={upstreamData.title} className="w-full h-full object-cover transition-all duration-700" />
-            ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No Image Available</div>
-            )}
-            
-            {gallery.length > 1 && (
-              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button 
-                      onClick={(e) => { e.stopPropagation(); handleImageNav('prev', upstreamData); }}
-                      className="w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center shadow-sm backdrop-blur-sm"
-                  >
-                      <ChevronLeft size={16} />
-                  </button>
-                  <button 
-                      onClick={(e) => { e.stopPropagation(); handleImageNav('next', upstreamData); }}
-                      className="w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center shadow-sm backdrop-blur-sm"
-                  >
-                      <ChevronRight size={16} />
-                  </button>
-              </div>
-            )}
-
-            <div className="absolute bottom-0 left-0 right-0 p-2 bg-white/90 border-t border-black/5 backdrop-blur-sm translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-between items-center">
-               <p className="text-[9px] font-mono uppercase">{upstreamData.slug}</p>
-               <p className="text-[9px] font-mono">{gallery.length > 0 ? idx + 1 : 0} / {gallery.length}</p>
-            </div>
-         </div>
-      );
-
-    case NodeType.VIEWER_3D:
-      if (!upstreamData || !isProject(upstreamData)) {
-        return (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center">
-            <Box size={16} />
-            <span className="text-[10px] uppercase tracking-widest">Connect Input to Project</span>
-          </div>
-        );
-      }
-
-      return (
-        <div className="w-full h-full relative">
-          <ThreeScene 
-            geometryType={upstreamData.geometryType || 'cube'} 
-            modelUrl={upstreamData.modelUrl}
-          />
-          <div className="absolute bottom-3 right-3 text-[9px] font-mono text-black/50 uppercase tracking-wider pointer-events-none">
-             Geo: {upstreamData.geometryType || 'Standard'}
-          </div>
+        <div className="w-full h-full relative group overflow-hidden bg-[#ffffff]">
+           {/* Blurred background image */}
+           {currentImage && (
+             <div 
+               className="absolute inset-0"
+               style={{
+                 backgroundImage: `url(${currentImage})`,
+                 backgroundSize: 'cover',
+                 backgroundPosition: 'center',
+                 filter: 'blur(10px)',
+                 transform: 'scale(1.1)',
+                 opacity: 0.4
+               }}
+             />
+           )}
+           
+           {/* Main image on top */}
+           {currentImage ? (
+               // eslint-disable-next-line @next/next/no-img-element
+               <img 
+                 src={currentImage} 
+                 alt={upstreamData.title} 
+                 className="relative w-full h-full object-contain transition-all duration-700 z-10"
+               />
+           ) : (
+               <div className="relative w-full h-full flex items-center justify-center text-gray-400 text-xs z-10">No Image Available, Plug Project Input</div>
+           )}
+           
+           {gallery.length > 1 && (
+             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                 <button 
+                     onClick={(e) => { e.stopPropagation(); handleImageNav('prev', upstreamData); }}
+                     className="w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center shadow-sm backdrop-blur-sm"
+                 >
+                     <ChevronLeft size={16} />
+                 </button>
+                 <button 
+                     onClick={(e) => { e.stopPropagation(); handleImageNav('next', upstreamData); }}
+                     className="w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center shadow-sm backdrop-blur-sm"
+                 >
+                     <ChevronRight size={16} />
+                 </button>
+             </div>
+           )}
+   
+           <div className="absolute bottom-0 left-0 right-0 p-2 bg-black/50 border-t border-white/10 backdrop-blur-sm translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-between items-center z-20">
+              <p className="text-[9px] font-mono uppercase text-white/90">{upstreamData.slug}</p>
+              <p className="text-[9px] font-mono text-white/90">{gallery.length > 0 ? idx + 1 : 0} / {gallery.length}</p>
+           </div>
         </div>
-      );
+     );
+
+case NodeType.VIEWER_3D:
+  if (!upstreamData || !isProject(upstreamData)) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center">
+        <Box size={16} />
+        <span className="text-[10px] uppercase tracking-widest">Connect Input to Project</span>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <ThreeScene 
+        geometryType={upstreamData.geometryType || 'cube'} 
+        modelUrl={upstreamData.modelUrl}
+      />
+      <div className="absolute bottom-3 right-3 text-[9px] font-mono text-black/50 uppercase tracking-wider pointer-events-none z-20">
+         Geo: {upstreamData.geometryType || 'Standard'}
+      </div>
+    </>
+  );
 
     case NodeType.DATA:
       if (!upstreamData || !isProject(upstreamData)) {

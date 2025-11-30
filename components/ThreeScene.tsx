@@ -63,10 +63,9 @@ const ModelLoader: React.FC<{ url: string }> = ({ url }) => {
 export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl }) => {
   return (
     <div 
-      className="w-full h-full bg-[#FAFAF7] relative overflow-hidden"
+      className="absolute inset-0 bg-[#FAFAF7] overflow-hidden"
+      style={{ margin: 0, padding: 0 }}
       onPointerDown={(e) => {
-          // Stop propagation only for Left click (0).
-          // Allow Middle (1) and Right (2) Click to bubble to CanvasExperience for panning.
           if (e.button !== 1 && e.button !== 2) {
              e.stopPropagation();
           }
@@ -76,7 +75,15 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl }
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#FAFAF7] via-transparent to-transparent z-10 opacity-20" />
       
       <Canvas 
-        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+        style={{ 
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          margin: 0,
+          padding: 0,
+          display: 'block'
+        }}
         gl={{ alpha: true, antialias: true }} 
         resize={{ debounce: 0 }}
       >

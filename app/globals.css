@@ -54,3 +54,10 @@ body {
   */
   animation: pulse-ring 10s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
+/* Force canvas elements to fill their containers */
+canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}

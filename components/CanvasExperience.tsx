@@ -184,20 +184,35 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         let displayedProjects: ProjectData[] = [];
         
         if (filterConn) {
-            // Find which Job is connected
-            const fromNode = nodes.find(n => n.id === filterConn.fromNodeId);
-            if (fromNode && fromNode.type === NodeType.CV && filterConn.fromSocketId.startsWith('out-cv-')) {
-                const jobId = filterConn.fromSocketId.replace('out-cv-', '');
-                // FILTER LOGIC
-                displayedProjects = initialProjects.filter(p => p.jobId === jobId);
-            } else {
-                // Connected to something else? Fallback.
-                displayedProjects = initialProjects.slice(0, 3);
-            }
-        } else {
-            // No filter connected - show default 3
-            displayedProjects = initialProjects.slice(0, 3);
-        }
+          const fromNode = nodes.find(n => n.id === filterConn.fromNodeId);
+          
+          // CASE 1: Direct - CV → Project List
+          if (fromNode && fromNode.type === NodeType.CV && filterConn.fromSocketId.startsWith('out-cv-')) {
+              const jobId = filterConn.fromSocketId.replace('out-cv-', '');
+              console.log('🔍 Direct CV, jobId:', jobId);
+              displayedProjects = initialProjects.filter(p => p.jobId === jobId);
+          } 
+          // CASE 2: Upstream - CV → Details → Project List
+          else if (fromNode && fromNode.type === NodeType.DETAILS) {
+              // Trace back to find CV
+              const detailsInputConn = connections.find(c => c.toNodeId === fromNode.id && c.toSocketId === 'in-select');
+              if (detailsInputConn) {
+                  const cvNode = nodes.find(n => n.id === detailsInputConn.fromNodeId);
+                  if (cvNode && cvNode.type === NodeType.CV && detailsInputConn.fromSocketId.startsWith('out-cv-')) {
+                      const jobId = detailsInputConn.fromSocketId.replace('out-cv-', '');
+                      console.log('🔗 Upstream through Details, jobId:', jobId);
+                      displayedProjects = initialProjects.filter(p => p.jobId === jobId);
+                  } else {
+                      displayedProjects = initialProjects.slice(0, 3);
+                  }
+              } else {
+                  displayedProjects = initialProjects.slice(0, 3);
+              }
+          }
+          else {
+              displayedProjects = initialProjects.slice(0, 3);
+          }
+      }
 
         // Compare with current state to avoid infinite loops
         const currentSlugs = (node.data?.displayedProjects || []).map((p: ProjectData) => p.slug).join(',');
@@ -235,7 +250,6 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
     }
 
   }, [connections, initialProjects, nodes]);
-
 
   // --- Keyboard Shortcuts ---
   useEffect(() => {
