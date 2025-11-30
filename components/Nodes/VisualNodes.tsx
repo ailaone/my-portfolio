@@ -181,11 +181,23 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
       return (
         <div className="p-6 flex flex-col h-full overflow-y-auto bg-[#FAFAF7]">
           <h2 className="text-2xl font-serif text-black leading-tight mb-4">{upstreamData.title}</h2>
-          {upstreamData.summaryHtml ? (
-            <div className="font-serif text-xs text-gray-600 leading-relaxed mb-4 prose prose-sm" dangerouslySetInnerHTML={{ __html: upstreamData.summaryHtml }} />
-          ) : (
-            <p className="font-serif text-xs text-gray-600 leading-relaxed mb-4">{upstreamData.descriptionHtml || 'No description available.'}</p>
+          
+          {/* Summary */}
+          {upstreamData.summaryHtml && (
+            <div className="font-serif text-xs text-gray-600 leading-relaxed mb-4 prose prose-sm" 
+                 dangerouslySetInnerHTML={{ __html: upstreamData.summaryHtml }} />
           )}
+          
+          {/* Description */}
+          {upstreamData.descriptionHtml && (
+            <div className="font-serif text-xs text-gray-600 leading-relaxed mb-4 prose prose-sm" 
+                 dangerouslySetInnerHTML={{ __html: upstreamData.descriptionHtml }} />
+          )}
+          
+          {!upstreamData.summaryHtml && !upstreamData.descriptionHtml && (
+            <p className="font-serif text-xs text-gray-600 leading-relaxed mb-4">No description available.</p>
+          )}
+          
           <div className="mt-auto grid grid-cols-2 gap-4 border-t border-black/10 pt-4">
              <div><h3 className="text-[9px] tracking-widest uppercase text-gray-400">Role</h3><p className="text-xs">{upstreamData.role.join(', ')}</p></div>
              <div><h3 className="text-[9px] tracking-widest uppercase text-gray-400">Year</h3><p className="text-xs">{upstreamData.year}</p></div>
