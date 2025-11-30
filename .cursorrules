@@ -1,0 +1,38 @@
+# Project Context: Node-Based Portfolio System
+
+This is a Next.js 14+ (App Router) project using TypeScript and Tailwind CSS.
+It features a custom "Infinite Canvas" UI with node-based content management.
+
+## Core Architecture
+
+1.  **Content Layer (Filesystem CMS)**
+    -   Projects live in `/content/projects/<slug>/`.
+    -   Metadata is in `project.json`.
+    -   Images/Models are in subfolders (`images/`, `3d/`) and are served via `/app/api/project-asset/route.ts`.
+    -   **NEVER** import from `fs` in client components. Use `lib/projects.ts` only in Server Components.
+
+2.  **Visual Engine (Canvas)**
+    -   `CanvasExperience.tsx` is the main client entry point.
+    -   `NodeContainer.tsx` handles node rendering.
+    -   `WireConnections.tsx` handles SVG lines.
+    -   **CRITICAL:** Socket alignment relies on strict pixel math, NOT flexbox.
+        -   Header height: `32px`
+        -   Standard Stride: `40px`
+        -   Project Index Stride: `60px`
+        -   Socket Top = `Header + (Index * Stride) + (Stride/2)`.
+    -   Do not use `gap-` classes for sockets; use absolute positioning.
+
+3.  **Interactions**
+    -   **Pan:** Right-Click drag OR 2-finger trackpad drag.
+    -   **Zoom:** Pinch OR Ctrl + Wheel.
+    -   **Wire Logic:** Connections drive data flow. `VisualNodes.tsx` uses recursive traversal to find upstream data.
+
+## Styling Rules
+-   Use Tailwind CSS.
+-   Font: `var(--font-playfair)` for headings, `var(--font-inter)` for UI.
+-   Background: `#FAFAF7` (Architectural Off-White).
+-   Keep the "Editorial" aesthetic: thin borders, small type, minimal shadows.
+
+## Common Tasks
+-   **Adding a Node Type:** Update `NodeType` enum in `types/content.ts`, add rendering case in `VisualNodes.tsx`, add to `TOOLBAR_ITEMS` in `CanvasExperience.tsx`.
+-   **Updating Geometry:** `ThreeScene.tsx` handles R3F logic. Use `useGLTF` for models.
