@@ -41,7 +41,7 @@ export interface ProjectData extends ProjectJson {
   descriptionHtml?: string;
   summaryHtml?: string;
   processHtml?: string;
-  
+
   // Constructed Asset URLs
   heroImageUrl?: string;
   galleryUrls?: string[];
@@ -86,7 +86,7 @@ export interface NodeState {
   outputs: { id: string; label: string }[];
   width: number;
   height?: number;
-  data?: any; 
+  data?: any;
   socketStride?: number;
 }
 
