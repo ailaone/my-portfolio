@@ -19,7 +19,7 @@ const CV_DATA: JobData[] = [
     role: 'Co-Founder',
     company: 'Slicelab',
     year: '2012-Present',
-    description: 'Multi-disciplinary experimental design studio specializing in complex fabrication consulting and computational design.',
+    description: 'Design studio specializing in DfAM consulting and computational design.',
     details: [
       'Led fabrication consulting across dramatically different domains: 3D-printed jewelry, sports protective padding, architectural components, and product design.',
       'Bridged design ambition and manufacturing reality for clients, focusing on additive manufacturing feasibility, budget constraints, and timeline coordination.',
