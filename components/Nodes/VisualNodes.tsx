@@ -119,8 +119,9 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
               </div>
             ))}
             {projectList.length === 0 && (
-                <div className="flex-1 flex items-center justify-center p-4">
-                  <p className="text-center text-[10px] text-gray-500 italic font-sans">No projects associated with this yet</p>
+                <div className="flex-1 flex flex-col items-center justify-center p-4 gap-2">
+                  <Plug size={16} className="text-gray-400" />
+                  <p className="text-center text-[10px] text-gray-400 uppercase tracking-widest">Connect Work Experience</p>
                 </div>
             )}
           </div>

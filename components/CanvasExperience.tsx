@@ -111,14 +111,12 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   // --- Initialize State with Dynamic Props ---
   
   const getInitialNodes = (projects: ProjectData[]): NodeState[] => {
-    // Default: Show first 3 projects if no filter applied
-    const defaultProjects = projects.slice(0, 3);
-    const projectOutputs = defaultProjects.map(p => ({ id: `out-p-${p.slug}`, label: '' }));
     const jobOutputs = CV_DATA.map(j => ({ id: `out-cv-${j.id}`, label: '' }));
-    
+
     // Use 60px stride for lists to allow multi-line titles
-    const socketStride = 60; 
-    const listHeight = 32 + (defaultProjects.length * socketStride); 
+    const socketStride = 60;
+    const minContentHeight = 80; // Minimum height for empty state message
+    const listHeight = 32 + minContentHeight;
     const cvHeight = 32 + (CV_DATA.length * socketStride);
 
     return [
@@ -140,17 +138,17 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         data: {} 
       },
 
-      { 
-        id: 'n-list', 
-        type: NodeType.PROJECT_LIST, 
+      {
+        id: 'n-list',
+        type: NodeType.PROJECT_LIST,
         position: { x: 50, y: 320 + cvHeight + 50 }, // Positioned below CV
-        title: 'Project Index', 
-        inputs: [{ id: 'in-filter', label: 'Filter by Job' }], 
-        outputs: projectOutputs, 
+        title: 'Project Index',
+        inputs: [{ id: 'in-filter', label: 'Filter by Job' }],
+        outputs: [],
         width: 350,
         height: listHeight,
         socketStride: socketStride,
-        data: { displayedProjects: defaultProjects } 
+        data: { displayedProjects: [] }
       },
 
       // COLUMN 2: CENTER
@@ -248,19 +246,19 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
                       console.log('🔗 Upstream through Details, jobId:', jobId);
                       displayedProjects = initialProjects.filter(p => p.jobId === jobId);
                   } else {
-                      displayedProjects = initialProjects.slice(0, 3);
+                      displayedProjects = [];
                   }
               } else {
-                  displayedProjects = initialProjects.slice(0, 3);
+                  displayedProjects = [];
               }
           }
           else {
-              displayedProjects = initialProjects.slice(0, 3);
+              displayedProjects = [];
           }
-      
+
     } else {
-      // No filter connected - show default 3
-      displayedProjects = initialProjects.slice(0, 3);
+      // No filter connected - show empty state
+      displayedProjects = [];
   }
 
         // Compare with current state to avoid infinite loops
@@ -496,12 +494,12 @@ const newNode: NodeState = {
       // Customize Project List
       if (newNodeType === NodeType.PROJECT_LIST) {
         const socketStride = 60;
-        const defaultProjects = initialProjects.slice(0, 3);
+        const minContentHeight = 80; // Minimum height for empty state message
         newNode.inputs = [{ id: 'in-filter', label: 'Filter by Job' }];
-        newNode.outputs = defaultProjects.map(p => ({ id: `out-p-${p.slug}`, label: '' }));
-        newNode.height = 32 + (defaultProjects.length * socketStride); 
+        newNode.outputs = [];
+        newNode.height = 32 + minContentHeight;
         newNode.socketStride = socketStride;
-        newNode.data = { displayedProjects: defaultProjects };
+        newNode.data = { displayedProjects: [] };
       }
 
       // Customize CV List
@@ -530,6 +528,7 @@ const newNode: NodeState = {
   const handleWheel = (e: React.WheelEvent) => {
     // Explicit Zoom (Ctrl+Wheel or Pinch on some browsers)
     if (e.ctrlKey || e.metaKey) {
+        e.preventDefault(); // Prevent browser zoom
         zoomCanvas(e.clientX, e.clientY, -e.deltaY);
         return;
     }
@@ -538,9 +537,10 @@ const newNode: NodeState = {
     // Mouse wheels typically have large integer deltas (e.g., 53, 100) and deltaX is 0.
     // Trackpads have smaller, fractional deltas and often have deltaX != 0.
     const isMouseWheel = Math.abs(e.deltaY) >= 20 && e.deltaX === 0 && Number.isInteger(e.deltaY);
-    
+
     if (isMouseWheel) {
         // Zoom
+        e.preventDefault(); // Prevent browser zoom
         zoomCanvas(e.clientX, e.clientY, -e.deltaY);
     } else {
         // Pan (Inverted for natural feeling)
@@ -693,122 +693,134 @@ const newNode: NodeState = {
   }
 
   return (
-    <div 
-      ref={containerRef}
-      className="w-screen h-screen bg-[#FAFAF7] overflow-hidden relative select-none font-sans cursor-default touch-none overscroll-none"
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onWheel={handleWheel}
-      onContextMenu={(e) => e.preventDefault()} 
-    >
-      <GridBackground pan={pan} zoom={zoom} />
-
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 h-14 bg-white/80 backdrop-blur-md border border-black/5 rounded-full shadow-editorial flex items-center px-2 gap-1 z-50">
-         {TOOLBAR_ITEMS.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={item.label}
-                className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-full hover:bg-black/5 cursor-grab active:cursor-grabbing transition-colors"
-                onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); setDragMode('NEW_NODE_DRAG'); setNewNodeType(item.type); setGhostNodePos({ x: e.clientX, y: e.clientY }); }}
-              >
-                 <Icon strokeWidth={1.5} className="w-5 h-5 text-black/70 group-hover:text-black group-hover:scale-110 transition-transform" />
-                 <span className="absolute -bottom-8 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                    {item.label}
-                 </span>
-              </div>
-            )
-         })}
-         <div className="w-[1px] h-6 bg-black/10 mx-2"></div>
-         <button onClick={handleReset} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition-colors">
-             <RefreshCw className="w-4 h-4" />
-         </button>
-      </div>
-
-      {dragMode === 'NEW_NODE_DRAG' && newNodeType && (
-        <div 
-           className="fixed pointer-events-none z-50 bg-white border border-black/50 shadow-xl rounded p-2 flex items-center gap-2 opacity-80"
-           style={{ left: ghostNodePos.x, top: ghostNodePos.y, transform: 'translate(-50%, -50%)' }}
-        >
-           <div className="w-2 h-2 bg-black rounded-full animate-pulse"></div>
-           <span className="text-xs font-mono uppercase">Adding {newNodeType}...</span>
-        </div>
-      )}
-
-      <div
-        id="canvas-transform-layer" 
-        className="absolute origin-top-left w-full h-full"
-        style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}
-      >
-        <div className="absolute inset-0 pointer-events-none z-0">
-            <WireConnections 
-            connections={connections} 
-            nodes={nodes} 
-            selectedWireId={selectedWireId}
-            onSelectWire={(id) => { setSelectedWireId(id); setSelectedNodeId(null); }}
-            isTempInvalid={!!isDragInvalid}
-            tempConnection={dragMode === 'WIRE_CREATE' && tempWireStart ? { 
-                start: getSocketPos(tempWireStart.nodeId, tempWireStart.socketId, tempWireStart.isInput),
-                end: mousePos
-            } : null}
-            />
+    <>
+      {/* Fixed UI Layer - Never transforms */}
+      <div className="fixed inset-0 pointer-events-none z-50">
+        {/* Toolbar */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 h-14 bg-white/80 backdrop-blur-md border border-black/5 rounded-full shadow-editorial flex items-center px-2 gap-1 pointer-events-auto">
+           {TOOLBAR_ITEMS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.label}
+                  className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-full hover:bg-black/5 cursor-grab active:cursor-grabbing transition-colors"
+                  onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); setDragMode('NEW_NODE_DRAG'); setNewNodeType(item.type); setGhostNodePos({ x: e.clientX, y: e.clientY }); }}
+                >
+                   <Icon strokeWidth={1.5} className="w-5 h-5 text-black/70 group-hover:text-black group-hover:scale-110 transition-transform" />
+                   <span className="absolute -bottom-8 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                      {item.label}
+                   </span>
+                </div>
+              )
+           })}
+           <div className="w-[1px] h-6 bg-black/10 mx-2"></div>
+           <button onClick={handleReset} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition-colors">
+               <RefreshCw className="w-4 h-4" />
+           </button>
         </div>
 
-        {nodes.map((node) => (
-          <NodeContainer
-            key={node.id}
-            node={node}
-            isSelected={selectedNodeId === node.id}
-            hoveredSocket={hoveredSocket}
-            connectedSockets={connections.reduce((acc, c) => {
-              if (c.fromNodeId === node.id) acc.add(c.fromSocketId);
-              if (c.toNodeId === node.id) acc.add(c.toSocketId);
-              return acc;
-            }, new Set<string>())}
-            isDragInvalid={!!isDragInvalid}
-            onHeaderDown={handleNodeDown}
-            onSocketDown={handleSocketDown}
-            onSocketUp={handleSocketUp}
-            onSocketHover={handleSocketHover}
-            onSocketContextMenu={handleSocketContextMenu}
-            onSocketDoubleClick={handleSocketDoubleClick}
-            onResizeDown={handleResizeDown}
+        {/* Ghost Node During Drag */}
+        {dragMode === 'NEW_NODE_DRAG' && newNodeType && (
+          <div
+             className="absolute pointer-events-none bg-white border border-black/50 shadow-xl rounded p-2 flex items-center gap-2 opacity-80"
+             style={{ left: ghostNodePos.x, top: ghostNodePos.y, transform: 'translate(-50%, -50%)' }}
           >
-             <VisualNodeContent 
-                node={node}
-                allNodes={nodes}
-                connections={connections}
-                projects={initialProjects}
-                jobs={CV_DATA}
-                onNodeDataChange={handleNodeDataChange}
-             />
-          </NodeContainer>
-        ))}
-      </div>
-      
-      {contextMenu && (
-        <div 
-          className="fixed z-50 bg-white border border-black/10 shadow-xl rounded py-1 px-1 min-w-[120px]"
-          style={{ left: contextMenu.x, top: contextMenu.y }}
-        >
-          <button onClick={handleDisconnectSocket} className="w-full text-left px-2 py-1.5 text-[10px] uppercase tracking-wider hover:bg-red-50 hover:text-red-600 flex items-center gap-2 rounded">
-            <Trash2 size={12} /> Disconnect
-          </button>
+             <div className="w-2 h-2 bg-black rounded-full animate-pulse"></div>
+             <span className="text-xs font-mono uppercase">Adding {newNodeType}...</span>
+          </div>
+        )}
+
+        {/* Context Menu */}
+        {contextMenu && (
+          <div
+            className="absolute bg-white border border-black/10 shadow-xl rounded py-1 px-1 min-w-[120px] pointer-events-auto"
+            style={{ left: contextMenu.x, top: contextMenu.y }}
+          >
+            <button onClick={handleDisconnectSocket} className="w-full text-left px-2 py-1.5 text-[10px] uppercase tracking-wider hover:bg-red-50 hover:text-red-600 flex items-center gap-2 rounded">
+              <Trash2 size={12} /> Disconnect
+            </button>
+          </div>
+        )}
+
+        {/* Coordinate & Scale Display */}
+        <div className="absolute bottom-12 left-12 text-black font-mono text-[10px] tracking-widest select-none bg-white/80 backdrop-blur-sm px-2 py-1 rounded border border-black/5 shadow-sm">
+          COORD: {pan.x.toFixed(0)} / {pan.y.toFixed(0)} :: SCALE: {(zoom * 100).toFixed(0)}%
         </div>
-      )}
 
-      {/* Coordinate & Scale Display */}
-      <div className="absolute bottom-12 left-12 z-50 text-black font-mono text-[10px] tracking-widest pointer-events-none select-none bg-white/80 backdrop-blur-sm px-2 py-1 rounded border border-black/5 shadow-sm">
-        COORD: {pan.x.toFixed(0)} / {pan.y.toFixed(0)} :: SCALE: {(zoom * 100).toFixed(0)}%
+        {/* Zoom Instructions */}
+        <div className="absolute bottom-6 right-6 opacity-60">
+           <div className="flex flex-col items-end gap-1 text-[9px] font-mono tracking-wider text-black/70">
+              <div className="flex items-center gap-2"><MousePointer2 size={10}/> <span>PAN: RIGHT DRAG</span></div>
+              <div className="flex items-center gap-2"><Box size={10}/> <span>ZOOM: PINCH / CTRL+WHEEL</span></div>
+           </div>
+        </div>
       </div>
 
-      <div className="absolute bottom-6 right-6 pointer-events-none opacity-60">
-         <div className="flex flex-col items-end gap-1 text-[9px] font-mono tracking-wider text-black/70">
-            <div className="flex items-center gap-2"><MousePointer2 size={10}/> <span>PAN: RIGHT DRAG</span></div>
-            <div className="flex items-center gap-2"><Box size={10}/> <span>ZOOM: PINCH / CTRL+WHEEL</span></div>
-         </div>
+      {/* Canvas Layer - Transforms with zoom/pan */}
+      <div
+        ref={containerRef}
+        className="w-screen h-screen bg-[#FAFAF7] overflow-hidden relative select-none font-sans cursor-default overscroll-none"
+        style={{ touchAction: 'none' }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onWheel={handleWheel}
+        onContextMenu={(e) => e.preventDefault()}
+        onTouchStart={(e) => { if (e.touches.length > 1) e.preventDefault(); }}
+      >
+        <GridBackground pan={pan} zoom={zoom} />
+
+        <div
+          id="canvas-transform-layer"
+          className="absolute origin-top-left w-full h-full"
+          style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}
+        >
+          <div className="absolute inset-0 pointer-events-none z-0">
+              <WireConnections
+              connections={connections}
+              nodes={nodes}
+              selectedWireId={selectedWireId}
+              onSelectWire={(id) => { setSelectedWireId(id); setSelectedNodeId(null); }}
+              isTempInvalid={!!isDragInvalid}
+              tempConnection={dragMode === 'WIRE_CREATE' && tempWireStart ? {
+                  start: getSocketPos(tempWireStart.nodeId, tempWireStart.socketId, tempWireStart.isInput),
+                  end: mousePos
+              } : null}
+              />
+          </div>
+
+          {nodes.map((node) => (
+            <NodeContainer
+              key={node.id}
+              node={node}
+              isSelected={selectedNodeId === node.id}
+              hoveredSocket={hoveredSocket}
+              connectedSockets={connections.reduce((acc, c) => {
+                if (c.fromNodeId === node.id) acc.add(c.fromSocketId);
+                if (c.toNodeId === node.id) acc.add(c.toSocketId);
+                return acc;
+              }, new Set<string>())}
+              isDragInvalid={!!isDragInvalid}
+              onHeaderDown={handleNodeDown}
+              onSocketDown={handleSocketDown}
+              onSocketUp={handleSocketUp}
+              onSocketHover={handleSocketHover}
+              onSocketContextMenu={handleSocketContextMenu}
+              onSocketDoubleClick={handleSocketDoubleClick}
+              onResizeDown={handleResizeDown}
+            >
+               <VisualNodeContent
+                  node={node}
+                  allNodes={nodes}
+                  connections={connections}
+                  projects={initialProjects}
+                  jobs={CV_DATA}
+                  onNodeDataChange={handleNodeDataChange}
+               />
+            </NodeContainer>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
