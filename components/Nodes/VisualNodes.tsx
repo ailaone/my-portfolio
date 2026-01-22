@@ -108,7 +108,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
       
       return (
         <div className="flex flex-col h-full bg-[#FAFAF7] overflow-hidden">
-           <div className="flex flex-col"> 
+           <div className="flex flex-col h-full"> 
             {projectList.map((p: ProjectData) => (
               <div key={p.slug} className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-black/5 transition-colors shrink-0" style={{ height: node.socketStride || 40 }}>
                 <div className="flex flex-col justify-center h-full">
@@ -119,7 +119,9 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
               </div>
             ))}
             {projectList.length === 0 && (
-                <div className="p-4 text-center text-[10px] text-gray-500 italic">No projects linked to this job.</div>
+                <div className="flex-1 flex items-center justify-center p-4">
+                  <p className="text-center text-[10px] text-gray-500 italic font-sans">No projects associated with this yet</p>
+                </div>
             )}
           </div>
         </div>
