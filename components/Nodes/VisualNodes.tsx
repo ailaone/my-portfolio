@@ -285,10 +285,21 @@ case NodeType.VIEWER_3D:
     );
   }
 
+  // Check if 3D model is available for this project
+  if (!upstreamData.modelUrl) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center bg-[#FAFAF7]">
+        <Box size={16} />
+        <span className="text-[10px] uppercase tracking-widest">3D Not Available for This Project</span>
+        <span className="text-[9px] text-gray-500 mt-1">{upstreamData.title}</span>
+      </div>
+    );
+  }
+
   return (
     <>
-      <ThreeScene 
-        geometryType={upstreamData.geometryType || 'cube'} 
+      <ThreeScene
+        geometryType={upstreamData.geometryType || 'cube'}
         modelUrl={upstreamData.modelUrl}
       />
       <div className="absolute bottom-3 right-3 text-[9px] font-mono text-black/50 uppercase tracking-wider pointer-events-none z-20">

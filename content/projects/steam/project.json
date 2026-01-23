@@ -1,0 +1,22 @@
+{
+    "slug": "steam",
+    "title": "Steam Lounge Chair",
+    "year": "2022",
+    "category": "Slicelab",
+    "role": ["Designer"],
+    "client": "R&D",
+    "technologies": ["Rhino", "Grasshopper", "SubD", "3D Printing"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "steam_01.jpg",
+      "steam_02.jpg",
+      "steam_03.jpg",
+      "steam_04.jpg",
+      "steam_05.jpg",
+      "steam_06.jpg"
+    ],
+    "model": "test.glb",
+    "geometryType": "chair",
+    "jobID": "slice"
+  }

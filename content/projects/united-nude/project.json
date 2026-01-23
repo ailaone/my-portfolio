@@ -1,0 +1,19 @@
+{
+    "slug": "euronews",
+    "title": "Euronews Facade",
+    "year": "2014",
+    "category": "Jakob + MacFarlane / Architecture",
+    "role": ["Lead Designer", "Computational Specialist"],
+    "client": "Euronews",
+    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "euronews_01.jpg",
+      "euronews_02.jpg",
+      "euronews_03.jpg"
+    ],
+    "model": "test.glb",
+    "geometryType": "chair",
+    "jobID": "jmf"
+  }

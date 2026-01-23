@@ -45,19 +45,27 @@ export function getProjectBySlug(slug: string): ProjectData | null {
       return `/api/project-asset?project=${slug}&type=${type}&file=${filename}`;
     };
 
+    // Check if model file actually exists before creating URL
+    const getModelUrl = (modelFilename?: string) => {
+      if (!modelFilename) return undefined;
+      const modelPath = path.join(projectDir, '3d', modelFilename);
+      if (!fs.existsSync(modelPath)) return undefined;
+      return getUrl('model', modelFilename);
+    };
+
     const heroImage = projectJson.images.length > 0 ? projectJson.images[0] : undefined;
 
     const projectData: ProjectData = {
       ...projectJson,
       slug,
       // Normalize jobId: handle both 'jobId' (correct) and 'jobID' (common typo)
-      jobId: projectJson.jobId || (projectJson as any).jobID, 
+      jobId: projectJson.jobId || (projectJson as any).jobID,
       descriptionHtml: readText(projectJson.description_file),
       summaryHtml: readText(projectJson.summary_file),
       processHtml: readText(projectJson.process_file),
       heroImageUrl: getUrl('image', heroImage),
       galleryUrls: projectJson.images.map(img => getUrl('image', img)!),
-      modelUrl: getUrl('model', projectJson.model),
+      modelUrl: getModelUrl(projectJson.model),
     };
 
     return projectData;
