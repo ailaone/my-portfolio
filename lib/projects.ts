@@ -1,8 +1,22 @@
 import fs from 'fs';
 import path from 'path';
+import { marked } from 'marked';
 import { ProjectData, ProjectJson } from '@/types/content';
 
 const CONTENT_DIR = path.join((process as any).cwd(), 'content', 'projects');
+
+// Configure marked for safe HTML rendering with links opening in new tabs
+marked.use({
+  gfm: true, // GitHub Flavored Markdown
+  breaks: true, // Convert \n to <br>
+  renderer: {
+    link({ href, title, tokens }) {
+      const text = this.parser.parseInline(tokens);
+      const titleAttr = title ? ` title="${title}"` : '';
+      return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer">${text}</a>`;
+    }
+  }
+});
 
 export function getAllProjects(): ProjectData[] {
   // If directory doesn't exist (e.g. first run), return empty or mock
@@ -30,11 +44,13 @@ export function getProjectBySlug(slug: string): ProjectData | null {
     const fileContents = fs.readFileSync(jsonPath, 'utf8');
     const projectJson: ProjectJson = JSON.parse(fileContents);
 
-    // Helper to read text file if it exists
-    const readText = (filename?: string) => {
+    // Helper to read markdown file and convert to HTML
+    const readMarkdown = (filename?: string) => {
       if (!filename) return undefined;
       const filePath = path.join(projectDir, filename);
-      return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : undefined;
+      if (!fs.existsSync(filePath)) return undefined;
+      const markdownContent = fs.readFileSync(filePath, 'utf8');
+      return marked.parse(markdownContent) as string;
     };
 
     // Construct Asset URLs for the frontend API
@@ -53,18 +69,32 @@ export function getProjectBySlug(slug: string): ProjectData | null {
       return getUrl('model', modelFilename);
     };
 
-    const heroImage = projectJson.images.length > 0 ? projectJson.images[0] : undefined;
+    // Check if image file actually exists before creating URL
+    const getImageUrl = (imageFilename?: string) => {
+      if (!imageFilename) return undefined;
+      const imagePath = path.join(projectDir, 'images', imageFilename);
+      if (!fs.existsSync(imagePath)) return undefined;
+      return getUrl('image', imageFilename);
+    };
+
+    // Filter images to only those that exist on disk
+    const existingImages = projectJson.images.filter(img => {
+      const imagePath = path.join(projectDir, 'images', img);
+      return fs.existsSync(imagePath);
+    });
+
+    const heroImage = existingImages.length > 0 ? existingImages[0] : undefined;
 
     const projectData: ProjectData = {
       ...projectJson,
       slug,
       // Normalize jobId: handle both 'jobId' (correct) and 'jobID' (common typo)
       jobId: projectJson.jobId || (projectJson as any).jobID,
-      descriptionHtml: readText(projectJson.description_file),
-      summaryHtml: readText(projectJson.summary_file),
-      processHtml: readText(projectJson.process_file),
-      heroImageUrl: getUrl('image', heroImage),
-      galleryUrls: projectJson.images.map(img => getUrl('image', img)!),
+      descriptionHtml: readMarkdown(projectJson.description_file),
+      summaryHtml: readMarkdown(projectJson.summary_file),
+      processHtml: readMarkdown(projectJson.process_file),
+      heroImageUrl: getImageUrl(heroImage),
+      galleryUrls: existingImages.map(img => getImageUrl(img)!).filter(Boolean),
       modelUrl: getModelUrl(projectJson.model),
     };
 

@@ -13,6 +13,7 @@
     "@react-three/fiber": "^9.4.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.555.0",
+    "marked": "^17.0.1",
     "mime": "^4.1.0",
     "next": "16.0.5",
     "react": "19.2.0",

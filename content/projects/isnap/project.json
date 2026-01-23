@@ -1,19 +1,20 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "isnap",
+    "title": "iSnap macOS App",
+    "year": "2026",
+    "category": "Solo Project",
+    "role": ["Developer"],
+    "client": "Personal",
+    "technologies": ["Swift", "SwiftUI", "Swift Package Manager"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "isnap-01.png",
+      "isnap-02.png",
+      "isnap-03.png",
+      "isnap-04.png",
+      "isnap-05.png",
+      "isnap-06.png"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "solo"
   }

@@ -219,6 +219,18 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
       }
 
       const gallery = upstreamData.galleryUrls || (upstreamData.heroImageUrl ? [upstreamData.heroImageUrl] : []);
+
+      // Check if there are no images available for this project
+      if (gallery.length === 0) {
+        return (
+          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center bg-[#f0f0f0]">
+            <Plug size={16} />
+            <span className="text-[10px] uppercase tracking-widest">Images Not Available for This Project</span>
+            <span className="text-[9px] text-gray-500 mt-1">{upstreamData.title}</span>
+          </div>
+        );
+      }
+
       const idx = node.data?.imageIndex || 0;
       const currentImage = gallery[idx] || null;
 

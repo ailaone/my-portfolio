@@ -1,1 +1,1 @@
-this is the euronews facade project
+99% vibe-coded macOS screenshot productivity tool.
