@@ -18,6 +18,20 @@ marked.use({
   }
 });
 
+// Helper to parse year for sorting (handles "2024", "2024-2025", "2012-Present")
+function parseYearForSorting(yearString: string): number {
+  if (!yearString) return 0;
+
+  // Handle "Present" or "Ongoing" - use current year
+  if (yearString.toLowerCase().includes('present') || yearString.toLowerCase().includes('ongoing')) {
+    return new Date().getFullYear();
+  }
+
+  // Extract first year from ranges like "2024-2025" or single years like "2024"
+  const match = yearString.match(/\d{4}/);
+  return match ? parseInt(match[0], 10) : 0;
+}
+
 export function getAllProjects(): ProjectData[] {
   // If directory doesn't exist (e.g. first run), return empty or mock
   if (!fs.existsSync(CONTENT_DIR)) {
@@ -26,10 +40,17 @@ export function getAllProjects(): ProjectData[] {
   }
 
   const slugs = fs.readdirSync(CONTENT_DIR);
-  
+
   const projects = slugs.map((slug) => {
     return getProjectBySlug(slug);
   }).filter((p): p is ProjectData => p !== null);
+
+  // Sort by year, newest first
+  projects.sort((a, b) => {
+    const yearA = parseYearForSorting(a.year);
+    const yearB = parseYearForSorting(b.year);
+    return yearB - yearA; // Descending order (newest first)
+  });
 
   return projects;
 }

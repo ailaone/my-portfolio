@@ -1,19 +1,19 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
+    "slug": "autodesk-residency",
+    "title": "Autodesk Residency",
+    "year": "2015",
+    "category": "R&D",
     "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "client": "Autodesk",
+    "technologies": ["Maya", "Rhino", "Grasshopper", "3D Printing"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "autodesk-residency_01.jpg",
+      "autodesk-residency_02.jpg",
+      "autodesk-residency_03.jpg"
     ],
     "model": "test.glb",
     "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "slice"
   }
