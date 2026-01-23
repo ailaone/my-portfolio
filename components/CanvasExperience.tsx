@@ -178,16 +178,18 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   // --- State ---
   const [pan, setPan] = useState<Position>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0.75);
-  
+
   // Initialize state once
   const [nodes, setNodes] = useState<NodeState[]>(() => getInitialNodes(initialProjects));
   const [connections, setConnections] = useState<Connection[]>(() => getInitialConnections(initialProjects));
-  
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  const [selectedNodeIds, setSelectedNodeIds] = useState<Set<string>>(new Set());
   const [selectedWireId, setSelectedWireId] = useState<string | null>(null);
-  const [copiedNode, setCopiedNode] = useState<NodeState | null>(null);
+  const [copiedData, setCopiedData] = useState<{ nodes: NodeState[], connections: Connection[] } | null>(null);
   const nodesRef = useRef(nodes);
-  const copiedNodeRef = useRef(copiedNode);
+  const connectionsRef = useRef(connections);
+  const copiedDataRef = useRef(copiedData);
+  const shiftPressed = useRef(false);
 
   // Dragging State
   const [dragMode, setDragMode] = useState<DragMode>('NONE');
@@ -305,46 +307,84 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   useEffect(() => {
     nodesRef.current = nodes;
   }, [nodes]);
-  
+
   useEffect(() => {
-    copiedNodeRef.current = copiedNode;
-  }, [copiedNode]);
+    connectionsRef.current = connections;
+  }, [connections]);
+
+  useEffect(() => {
+    copiedDataRef.current = copiedData;
+  }, [copiedData]);
 
   // --- Keyboard Shortcuts ---
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-          // Copy: Cmd/Ctrl + C
-    if ((e.metaKey || e.ctrlKey) && e.key === 'c' && selectedNodeId) {
-      e.preventDefault();
-      const nodeToCopy = nodesRef.current.find(n => n.id === selectedNodeId);
-      if (nodeToCopy) {
-        setCopiedNode(nodeToCopy);
-        console.log('📋 Copied node:', nodeToCopy.title);
+      // Track shift key
+      if (e.key === 'Shift') {
+        shiftPressed.current = true;
       }
-      return;
-    }
+
+      // Copy: Cmd/Ctrl + C (copy all selected nodes and their internal connections)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'c' && selectedNodeIds.size > 0) {
+        e.preventDefault();
+        const selectedIds = Array.from(selectedNodeIds);
+        const nodesToCopy = nodesRef.current.filter(n => selectedIds.includes(n.id));
+
+        // Find connections where BOTH nodes are in the selection
+        const internalConnections = connectionsRef.current.filter(c =>
+          selectedIds.includes(c.fromNodeId) && selectedIds.includes(c.toNodeId)
+        );
+
+        setCopiedData({ nodes: nodesToCopy, connections: internalConnections });
+        console.log(`📋 Copied ${nodesToCopy.length} node(s) and ${internalConnections.length} connection(s)`);
+        return;
+      }
 
     // Paste: Cmd/Ctrl + V
-    if ((e.metaKey || e.ctrlKey) && e.key === 'v' && copiedNodeRef.current) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'v' && copiedDataRef.current) {
       e.preventDefault();
-      
-      // Create a new node based on the copied one
-      const copied = copiedNodeRef.current;
-const newNode: NodeState = {
-  ...copied,
-  id: `n-${Date.now()}`,
-  position: {
-    x: copied.position.x + 50,
-    y: copied.position.y + 50
-  },
-  data: copied.data ? { ...copied.data } : undefined,
-  inputs: copied.inputs.map(i => ({ ...i })),
-  outputs: copied.outputs.map(o => ({ ...o }))
-};
-      
-      setNodes(prev => [...prev, newNode]);
-      setSelectedNodeId(newNode.id); // Select the newly pasted node
-      console.log('📌 Pasted node:', newNode.title);
+
+      const { nodes: copiedNodes, connections: copiedConnections } = copiedDataRef.current;
+
+      // Create ID mapping from old IDs to new IDs
+      const idMap = new Map<string, string>();
+      const timestamp = Date.now();
+
+      // Create new nodes with new IDs
+      const newNodes: NodeState[] = copiedNodes.map((node, index) => {
+        const newId = `n-${timestamp}-${index}`;
+        idMap.set(node.id, newId);
+
+        return {
+          ...node,
+          id: newId,
+          position: {
+            x: node.position.x + 50,
+            y: node.position.y + 50
+          },
+          data: node.data ? { ...node.data } : undefined,
+          inputs: node.inputs.map(i => ({ ...i })),
+          outputs: node.outputs.map(o => ({ ...o }))
+        };
+      });
+
+      // Create new connections with remapped IDs
+      const newConnections: Connection[] = copiedConnections.map((conn, index) => ({
+        ...conn,
+        id: `c-${timestamp}-${index}`,
+        fromNodeId: idMap.get(conn.fromNodeId)!,
+        toNodeId: idMap.get(conn.toNodeId)!
+      }));
+
+      // Add to canvas
+      setNodes(prev => [...prev, ...newNodes]);
+      setConnections(prev => [...prev, ...newConnections]);
+
+      // Select the newly pasted nodes
+      const newNodeIds = new Set(newNodes.map(n => n.id));
+      setSelectedNodeIds(newNodeIds);
+
+      console.log(`📌 Pasted ${newNodes.length} node(s) and ${newConnections.length} connection(s)`);
       return;
     }
 
@@ -352,19 +392,40 @@ const newNode: NodeState = {
         if (selectedWireId) {
           setConnections(prev => prev.filter(c => c.id !== selectedWireId));
           setSelectedWireId(null);
-          setSelectedNodeId(null);
+          setSelectedNodeIds(new Set());
         }
-        else if (selectedNodeId) {
-          setNodes(prev => prev.filter(n => n.id !== selectedNodeId));
-          setConnections(prev => prev.filter(c => c.fromNodeId !== selectedNodeId && c.toNodeId !== selectedNodeId));
-          setCopiedNode(prev => prev?.id === selectedNodeId ? null : prev);
-          setSelectedNodeId(null);
+        else if (selectedNodeIds.size > 0) {
+          // Delete all selected nodes
+          const idsToDelete = Array.from(selectedNodeIds);
+          setNodes(prev => prev.filter(n => !idsToDelete.includes(n.id)));
+          setConnections(prev => prev.filter(c =>
+            !idsToDelete.includes(c.fromNodeId) && !idsToDelete.includes(c.toNodeId)
+          ));
+          // Clear copied data if any deleted nodes were in the copied set
+          setCopiedData(prev => {
+            if (!prev) return null;
+            const hasDeletedNode = prev.nodes.some(n => idsToDelete.includes(n.id));
+            return hasDeletedNode ? null : prev;
+          });
+          setSelectedNodeIds(new Set());
+          console.log(`🗑️ Deleted ${idsToDelete.length} node(s)`);
         }
       }
     };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        shiftPressed.current = false;
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedWireId, selectedNodeId]);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [selectedWireId, selectedNodeIds]);
 
   useEffect(() => {
     const closeMenu = () => setContextMenu(null);
@@ -416,7 +477,7 @@ const newNode: NodeState = {
           // If we clicked background with left mouse, deselect
           if (e.button === 0) {
              setSelectedWireId(null);
-             setSelectedNodeId(null);
+             setSelectedNodeIds(new Set());
           }
           return;
        }
@@ -425,7 +486,7 @@ const newNode: NodeState = {
        // Only clear selection if we are actually clicking background
        if (isBackground) {
            setSelectedWireId(null);
-           setSelectedNodeId(null);
+           setSelectedNodeIds(new Set());
        }
        
        (containerRef.current || target).setPointerCapture(e.pointerId);
@@ -441,11 +502,28 @@ const newNode: NodeState = {
     } else if (dragMode === 'NODE_DRAG' && draggedNodeId && initialDragState) {
       const deltaX = (e.clientX - initialDragState.mousePos.x) / zoom;
       const deltaY = (e.clientY - initialDragState.mousePos.y) / zoom;
-      setNodes(prev => prev.map(n => 
-        n.id === draggedNodeId 
-          ? { ...n, position: { x: initialDragState.nodePos.x + deltaX, y: initialDragState.nodePos.y + deltaY } } 
-          : n
-      ));
+
+      // If multiple nodes are selected, move all of them together
+      if (selectedNodeIds.size > 1 && selectedNodeIds.has(draggedNodeId)) {
+        setNodes(prev => prev.map(n => {
+          if (selectedNodeIds.has(n.id)) {
+            return { ...n, position: { x: n.position.x + deltaX, y: n.position.y + deltaY } };
+          }
+          return n;
+        }));
+        // Update initial drag state for next frame
+        setInitialDragState(prev => prev ? {
+          ...prev,
+          mousePos: { x: e.clientX, y: e.clientY }
+        } : null);
+      } else {
+        // Single node drag
+        setNodes(prev => prev.map(n =>
+          n.id === draggedNodeId
+            ? { ...n, position: { x: initialDragState.nodePos.x + deltaX, y: initialDragState.nodePos.y + deltaY } }
+            : n
+        ));
+      }
     } else if (dragMode === 'RESIZE_NODE' && draggedNodeId && initialDragState) {
        const deltaX = (e.clientX - initialDragState.mousePos.x) / zoom;
        const deltaY = (e.clientY - initialDragState.mousePos.y) / zoom;
@@ -568,13 +646,33 @@ const newNode: NodeState = {
   const handleNodeDown = (e: React.PointerEvent, id: string) => {
     if (e.button === 1 || e.button === 2) return;
 
-    e.stopPropagation(); 
+    e.stopPropagation();
     e.preventDefault();
     setDragMode('NODE_DRAG');
     setDraggedNodeId(id);
-    setSelectedNodeId(id);
-    setSelectedWireId(null); 
-    
+    setSelectedWireId(null);
+
+    // Handle shift+click for multi-select
+    if (shiftPressed.current) {
+      setSelectedNodeIds(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(id)) {
+          // Deselect if already selected
+          newSet.delete(id);
+        } else {
+          // Add to selection
+          newSet.add(id);
+        }
+        return newSet;
+      });
+    } else {
+      // Normal click: if node is already selected, keep current selection (for dragging multiple nodes)
+      // Otherwise, select only this node
+      if (!selectedNodeIds.has(id)) {
+        setSelectedNodeIds(new Set([id]));
+      }
+    }
+
     const node = nodes.find(n => n.id === id);
     if (node) {
         setInitialDragState({
@@ -719,6 +817,15 @@ const newNode: NodeState = {
            </button>
         </div>
 
+        {/* Multi-Selection Counter */}
+        {selectedNodeIds.size > 1 && (
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 bg-black text-white px-3 py-1.5 rounded-full shadow-lg pointer-events-none">
+            <span className="text-[10px] font-mono font-medium tracking-wider">
+              {selectedNodeIds.size} NODES SELECTED
+            </span>
+          </div>
+        )}
+
         {/* Ghost Node During Drag */}
         {dragMode === 'NEW_NODE_DRAG' && newNodeType && (
           <div
@@ -780,7 +887,7 @@ const newNode: NodeState = {
               connections={connections}
               nodes={nodes}
               selectedWireId={selectedWireId}
-              onSelectWire={(id) => { setSelectedWireId(id); setSelectedNodeId(null); }}
+              onSelectWire={(id) => { setSelectedWireId(id); setSelectedNodeIds(new Set()); }}
               isTempInvalid={!!isDragInvalid}
               tempConnection={dragMode === 'WIRE_CREATE' && tempWireStart ? {
                   start: getSocketPos(tempWireStart.nodeId, tempWireStart.socketId, tempWireStart.isInput),
@@ -793,7 +900,7 @@ const newNode: NodeState = {
             <NodeContainer
               key={node.id}
               node={node}
-              isSelected={selectedNodeId === node.id}
+              isSelected={selectedNodeIds.has(node.id)}
               hoveredSocket={hoveredSocket}
               connectedSockets={connections.reduce((acc, c) => {
                 if (c.fromNodeId === node.id) acc.add(c.fromSocketId);
