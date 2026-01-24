@@ -5,7 +5,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   ArrowUpRight, Layers, RefreshCw, MousePointer2,
   Box, FileText, Image as ImageIcon, BarChart, Activity, List, Mail, GripHorizontal, Zap,
-  ChevronLeft, ChevronRight, Trash2, Briefcase, Share2, Maximize, X
+  ChevronLeft, ChevronRight, Trash2, Briefcase, Share2, Maximize, X, Video
 } from 'lucide-react';
 import { ProjectData, JobData, NodeState, Position, NodeType, Connection, DragMode } from '@/types/content';
 import { GridBackground } from './GridBackground';
@@ -79,7 +79,7 @@ const TOOLBAR_ITEMS = [
   { type: NodeType.DETAILS, label: 'Details', icon: FileText },
   { type: NodeType.VIEWER_3D, label: '3D Viewer', icon: Box },
   { type: NodeType.IMAGE, label: 'Gallery', icon: ImageIcon },
-  { type: NodeType.DATA, label: 'Data', icon: BarChart },
+  { type: NodeType.VIDEO, label: 'Video', icon: Video },
   { type: NodeType.CONTACT, label: 'Contact', icon: Mail },
 ];
 
@@ -454,9 +454,62 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   };
 
   const handleNodeDataChange = (nodeId: string, newData: any) => {
-    setNodes(prev => prev.map(n => 
+    setNodes(prev => prev.map(n =>
       n.id === nodeId ? { ...n, data: { ...n.data, ...newData } } : n
     ));
+  };
+
+  const handleSpawnNode = (nodeType: NodeType, sourceNodeId: string) => {
+    const sourceNode = nodes.find(n => n.id === sourceNodeId);
+    if (!sourceNode) return;
+
+    // Position new node to the right of source node
+    const newNodeX = sourceNode.position.x + sourceNode.width + 50;
+    const newNodeY = sourceNode.position.y;
+
+    const timestamp = Date.now();
+    const newNodeId = `n-${timestamp}`;
+
+    // Determine socket IDs based on node type
+    let inputSocketId = 'in-1';
+    let inputSocketLabel = 'Input';
+
+    if (nodeType === NodeType.IMAGE) {
+      inputSocketId = 'in-img-data';
+      inputSocketLabel = 'Visual Data';
+    } else if (nodeType === NodeType.VIEWER_3D) {
+      inputSocketId = 'in-geo';
+      inputSocketLabel = 'Geometry';
+    }
+
+    // Create new node
+    const newNode: NodeState = {
+      id: newNodeId,
+      type: nodeType,
+      position: { x: newNodeX, y: newNodeY },
+      title: getNodeTitle(nodeType),
+      inputs: [{ id: inputSocketId, label: inputSocketLabel }],
+      outputs: [],
+      width: 400,
+      height: 300,
+      data: nodeType === NodeType.IMAGE ? { imageIndex: 0 } : undefined
+    };
+
+    // Create connection from source output to new node input
+    const newConnection: Connection = {
+      id: `c-${timestamp}`,
+      fromNodeId: sourceNodeId,
+      fromSocketId: 'out-meta', // DETAILS node output socket
+      toNodeId: newNodeId,
+      toSocketId: inputSocketId
+    };
+
+    // Add node and connection to state
+    setNodes(prev => [...prev, newNode]);
+    setConnections(prev => [...prev, newConnection]);
+    setSelectedNodeIds(new Set([newNodeId]));
+
+    console.log(`✨ Auto-spawned ${nodeType} node connected to ${sourceNodeId}`);
   };
 
   const checkConnectionValidity = (start: typeof tempWireStart, end: typeof hoveredSocket) => {
@@ -576,7 +629,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         width: 300
       };
       
-      if (newNodeType === NodeType.VIEWER_3D || newNodeType === NodeType.IMAGE) {
+      if (newNodeType === NodeType.VIEWER_3D || newNodeType === NodeType.IMAGE || newNodeType === NodeType.VIDEO) {
         newNode.height = 300; newNode.width = 400;
         if (newNodeType === NodeType.IMAGE) newNode.data = { imageIndex: 0 };
       }
@@ -999,6 +1052,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
                   onOpenFullscreen={(gallery, currentIndex, projectTitle) => {
                     setFullscreenImage({ gallery, currentIndex, projectTitle });
                   }}
+                  onSpawnNode={handleSpawnNode}
                />
             </NodeContainer>
           ))}

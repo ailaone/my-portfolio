@@ -5,6 +5,32 @@ import { ProjectData, ProjectJson } from '@/types/content';
 
 const CONTENT_DIR = path.join((process as any).cwd(), 'content', 'projects');
 
+// Helper to convert YouTube/Vimeo URLs to embed URLs
+function getVideoEmbedUrl(url?: string): string | undefined {
+  if (!url) return undefined;
+
+  // YouTube patterns
+  const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const youtubeMatch = url.match(youtubeRegex);
+  if (youtubeMatch) {
+    return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+  }
+
+  // Vimeo patterns
+  const vimeoRegex = /vimeo\.com\/(?:video\/)?(\d+)/;
+  const vimeoMatch = url.match(vimeoRegex);
+  if (vimeoMatch) {
+    return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  }
+
+  // If already an embed URL, return as-is
+  if (url.includes('youtube.com/embed/') || url.includes('player.vimeo.com/video/')) {
+    return url;
+  }
+
+  return undefined;
+}
+
 // Configure marked for safe HTML rendering with links opening in new tabs
 marked.use({
   gfm: true, // GitHub Flavored Markdown
@@ -117,6 +143,7 @@ export function getProjectBySlug(slug: string): ProjectData | null {
       heroImageUrl: getImageUrl(heroImage),
       galleryUrls: existingImages.map(img => getImageUrl(img)!).filter(Boolean),
       modelUrl: getModelUrl(projectJson.model),
+      videoEmbedUrl: getVideoEmbedUrl(projectJson.videoUrl),
     };
 
     return projectData;

@@ -2,7 +2,7 @@
 import React from 'react';
 import { ProjectData, JobData, NodeState, NodeType, Connection } from '@/types/content';
 import { ThreeScene } from '../ThreeScene';
-import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Video, Maximize } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Video, Maximize, Image as ImageIcon } from 'lucide-react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface ContentProps {
@@ -13,6 +13,7 @@ interface ContentProps {
   jobs: JobData[];
   onNodeDataChange: (nodeId: string, data: any) => void;
   onOpenFullscreen: (gallery: string[], currentIndex: number, projectTitle: string) => void;
+  onSpawnNode?: (nodeType: NodeType, sourceNodeId: string) => void;
 }
 
 // --- Helper: Recursive Graph Traversal ---
@@ -58,7 +59,7 @@ const findUpstreamData = (
 const isProject = (data: any): data is ProjectData => !!data && 'slug' in data;
 const isJob = (data: any): data is JobData => !!data && 'company' in data;
 
-export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, connections, projects, jobs, onNodeDataChange, onOpenFullscreen }) => {
+export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, connections, projects, jobs, onNodeDataChange, onOpenFullscreen, onSpawnNode }) => {
   
   const handleImageNav = (direction: 'prev' | 'next', currentProject: ProjectData) => {
      const gallery = currentProject.galleryUrls || [];
@@ -151,7 +152,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
         return (
           <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center">
             <Plug size={16} />
-            <span className="text-[10px] uppercase tracking-widest">Connect Project or Job</span>
+            <span className="text-[10px] uppercase tracking-widest">Connect Project or Work Experience</span>
           </div>
         );
       }
@@ -182,29 +183,87 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
       }
 
       // Default: Project
+      const hasImages = upstreamData.galleryUrls && upstreamData.galleryUrls.length > 0;
+      const hasVideo = !!upstreamData.videoEmbedUrl;
+      const has3D = !!upstreamData.modelUrl;
+      const hasAnyContent = hasImages || hasVideo || has3D;
+
       return (
         <div className="p-6 flex flex-col h-full overflow-y-auto bg-[#FAFAF7]">
-          <h2 className="text-2xl font-serif text-black leading-tight mb-4">{upstreamData.title}</h2>
-          
+          <div className="mb-4">
+            <h2 className="text-xl font-serif text-black leading-tight">{upstreamData.title}</h2>
+            <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">{upstreamData.category}</p>
+          </div>
+
           {/* Summary */}
           {upstreamData.summaryHtml && (
-            <div className="font-serif text-xs text-gray-600 leading-relaxed mb-4 prose prose-sm" 
+            <div className="font-serif text-sm text-gray-800 leading-relaxed mb-4 italic prose prose-sm"
                  dangerouslySetInnerHTML={{ __html: upstreamData.summaryHtml }} />
           )}
-          
+
           {/* Description */}
           {upstreamData.descriptionHtml && (
-            <div className="font-serif text-xs text-gray-600 leading-relaxed mb-4 prose prose-sm" 
+            <div className="font-sans text-xs text-gray-600 leading-relaxed mb-4 prose prose-sm"
                  dangerouslySetInnerHTML={{ __html: upstreamData.descriptionHtml }} />
           )}
-          
+
           {!upstreamData.summaryHtml && !upstreamData.descriptionHtml && (
-            <p className="font-serif text-xs text-gray-600 leading-relaxed mb-4">No description available.</p>
+            <p className="font-sans text-xs text-gray-600 leading-relaxed mb-4">No description available.</p>
           )}
-          
-          <div className="mt-auto grid grid-cols-2 gap-4 border-t border-black/10 pt-4">
-             <div><h3 className="text-[9px] tracking-widest uppercase text-gray-400">Role</h3><p className="text-xs">{upstreamData.role.join(', ')}</p></div>
-             <div><h3 className="text-[9px] tracking-widest uppercase text-gray-400">Year</h3><p className="text-xs">{upstreamData.year}</p></div>
+
+          <div className="mt-auto">
+            <div className="grid grid-cols-2 gap-4 border-t border-black/10 pt-4 mb-3">
+               <div><h3 className="text-[9px] tracking-widest uppercase text-gray-400">Role</h3><p className="text-xs">{upstreamData.role.join(', ')}</p></div>
+               <div><h3 className="text-[9px] tracking-widest uppercase text-gray-400">Year</h3><p className="text-xs">{upstreamData.year}</p></div>
+            </div>
+
+            {/* Available Content */}
+            {hasAnyContent && (
+              <div className="border-t border-black/10 pt-3">
+                <h3 className="text-[9px] tracking-widest uppercase text-gray-400 mb-2">Available Content</h3>
+                <div className="flex gap-2">
+                  {hasImages && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSpawnNode?.(NodeType.IMAGE, node.id);
+                      }}
+                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-black/5 hover:bg-black/10 transition-colors group"
+                      title="Create Gallery node"
+                    >
+                      <ImageIcon size={12} className="text-black/60 group-hover:text-black" />
+                      <span className="text-[9px] uppercase tracking-wider text-black/60 group-hover:text-black">Gallery</span>
+                    </button>
+                  )}
+                  {hasVideo && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSpawnNode?.(NodeType.VIDEO, node.id);
+                      }}
+                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-black/5 hover:bg-black/10 transition-colors group"
+                      title="Create Video node"
+                    >
+                      <Video size={12} className="text-black/60 group-hover:text-black" />
+                      <span className="text-[9px] uppercase tracking-wider text-black/60 group-hover:text-black">Video</span>
+                    </button>
+                  )}
+                  {has3D && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSpawnNode?.(NodeType.VIEWER_3D, node.id);
+                      }}
+                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-black/5 hover:bg-black/10 transition-colors group"
+                      title="Create 3D Viewer node"
+                    >
+                      <Box size={12} className="text-black/60 group-hover:text-black" />
+                      <span className="text-[9px] uppercase tracking-wider text-black/60 group-hover:text-black">3D</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       );
@@ -362,6 +421,42 @@ case NodeType.VIEWER_3D:
                  </ResponsiveContainer>
             </div>
          </div>
+      );
+
+    case NodeType.VIDEO:
+      if (!upstreamData || !isProject(upstreamData)) {
+        return (
+          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center bg-[#FAFAF7]">
+            <Video size={16} />
+            <span className="text-[10px] uppercase tracking-widest">Connect Input to Project</span>
+          </div>
+        );
+      }
+
+      // Check if video is available for this project
+      if (!upstreamData.videoEmbedUrl) {
+        return (
+          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center bg-[#FAFAF7]">
+            <Video size={16} />
+            <span className="text-[10px] uppercase tracking-widest">Video Not Available for This Project</span>
+            <span className="text-[9px] text-gray-500 mt-1">{upstreamData.title}</span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="w-full h-full relative bg-[#000000]">
+          <iframe
+            src={upstreamData.videoEmbedUrl}
+            className="absolute inset-0 w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title={upstreamData.title}
+          />
+          <div className="absolute bottom-2 right-2 text-[9px] font-mono text-white/50 uppercase tracking-wider pointer-events-none z-20 bg-black/30 px-2 py-1 rounded">
+            {upstreamData.slug}
+          </div>
+        </div>
       );
 
     case NodeType.CONTACT:

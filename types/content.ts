@@ -29,6 +29,7 @@ export interface ProjectJson {
   process_file?: string;
   images: string[];
   model?: string;
+  videoUrl?: string;
   stats?: ProjectStats;
   layout?: ProjectLayout;
   jobId?: string; // Link to CV Data ID
@@ -46,6 +47,7 @@ export interface ProjectData extends ProjectJson {
   heroImageUrl?: string;
   galleryUrls?: string[];
   modelUrl?: string;
+  videoEmbedUrl?: string;
 }
 
 export interface JobData {
@@ -66,13 +68,14 @@ export interface Position {
 
 export enum NodeType {
   HEADER = 'HEADER',
-  SOCIAL = 'SOCIAL', // New
+  SOCIAL = 'SOCIAL',
   PROJECT_LIST = 'PROJECT_LIST',
-  CV = 'CV', // New
+  CV = 'CV',
   VIEWER_3D = 'VIEWER_3D',
   DETAILS = 'DETAILS',
   DATA = 'DATA',
   IMAGE = 'IMAGE',
+  VIDEO = 'VIDEO',
   CONTACT = 'CONTACT',
 }
 
