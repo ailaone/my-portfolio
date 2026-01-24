@@ -88,7 +88,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
           </h1>
           <div className="w-12 h-[1px] bg-black mb-4"></div>
           <p className="text-xs font-sans tracking-widest text-gray-500 uppercase">
-            Computational Designer / Architect
+          CREATIVE TECHNOLOGIST / COMPUTATIONAL DESIGNER
           </p>
         </div>
       );

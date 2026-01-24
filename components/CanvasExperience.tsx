@@ -122,26 +122,26 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
     return [
       // COLUMN 1: LEFT STACK
       { id: 'n-header', type: NodeType.HEADER, position: { x: 50, y: 50 }, title: 'WhoIs', inputs: [], outputs: [], width: 350 },
-      
-      { id: 'n-social', type: NodeType.SOCIAL, position: { x: 50, y: 200 }, title: 'Social', inputs: [], outputs: [], width: 350 },
-      
-      { 
-        id: 'n-cv', 
-        type: NodeType.CV, 
-        position: { x: 50, y: 320 }, 
-        title: 'Work Experience', 
-        inputs: [], 
-        outputs: jobOutputs, 
+
+      { id: 'n-social', type: NodeType.SOCIAL, position: { x: 50, y: 250 }, title: 'Social', inputs: [], outputs: [], width: 350 },
+
+      {
+        id: 'n-cv',
+        type: NodeType.CV,
+        position: { x: 50, y: 375 },
+        title: 'Work Experience',
+        inputs: [],
+        outputs: jobOutputs,
         width: 350,
         height: cvHeight,
         socketStride: socketStride,
-        data: {} 
+        data: {}
       },
 
       {
         id: 'n-list',
         type: NodeType.PROJECT_LIST,
-        position: { x: 50, y: 320 + cvHeight + 50 }, // Positioned below CV
+        position: { x: 50, y: 390 + cvHeight + 10 }, // Positioned below CV
         title: 'Project Index',
         inputs: [{ id: 'in-filter', label: 'Filter by Job' }],
         outputs: [],
