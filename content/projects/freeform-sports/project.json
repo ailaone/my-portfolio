@@ -1,19 +1,19 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "freeform-sports",
+    "title": "Protective Sports Padding",
+    "year": "2023 - Ongoing",
+    "category": "Sports Equipment",
+    "role": ["Product + Computational Designer"],
+    "client": "Freeform Sports",
+    "technologies": ["Rhino", "Grasshopper", "Python", "C#", "Carbon Design Engine", "3D Printing"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "freeform-sports_01.jpg",
+      "freeform-sports_02.jpg",
+      "freeform-sports_03.jpg"
     ],
     "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "jmf"
+    "geometryType": "padding",
+    "jobID": "slice"
   }

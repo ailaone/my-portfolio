@@ -1,19 +1,19 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "runway-stylegans",
+    "title": "Runway StyleGANs",
+    "year": "2021",
+    "category": "AI Exploration",
+    "role": ["Designer / Explorer"],
+    "client": "Runway",
+    "technologies": ["RunwayML", "StyleGAN", "Diffusion Models", "Image Scrapping"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "runway-stylegans_01.jpg",
+      "runway-stylegans_02.jpg",
+      "runway-stylegans_03.jpg"
     ],
     "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "jmf"
+    "geometryType": "abstract",
+    "jobID": "solo"
   }

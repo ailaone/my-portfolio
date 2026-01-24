@@ -2,7 +2,7 @@
     "slug": "isnap",
     "title": "iSnap macOS App",
     "year": "2026",
-    "category": "Solo Project",
+    "category": "Vibe-Dev",
     "role": ["Developer"],
     "client": "Personal",
     "technologies": ["Swift", "SwiftUI", "Swift Package Manager"],

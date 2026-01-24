@@ -2,10 +2,10 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { 
-  ArrowUpRight, Layers, RefreshCw, MousePointer2, 
+import {
+  ArrowUpRight, Layers, RefreshCw, MousePointer2,
   Box, FileText, Image as ImageIcon, BarChart, Activity, List, Mail, GripHorizontal, Zap,
-  ChevronLeft, ChevronRight, Trash2, Briefcase, Share2
+  ChevronLeft, ChevronRight, Trash2, Briefcase, Share2, Maximize, X
 } from 'lucide-react';
 import { ProjectData, JobData, NodeState, Position, NodeType, Connection, DragMode } from '@/types/content';
 import { GridBackground } from './GridBackground';
@@ -186,6 +186,11 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   const [selectedNodeIds, setSelectedNodeIds] = useState<Set<string>>(new Set());
   const [selectedWireId, setSelectedWireId] = useState<string | null>(null);
   const [copiedData, setCopiedData] = useState<{ nodes: NodeState[], connections: Connection[] } | null>(null);
+  const [fullscreenImage, setFullscreenImage] = useState<{
+    gallery: string[];
+    currentIndex: number;
+    projectTitle: string;
+  } | null>(null);
   const nodesRef = useRef(nodes);
   const connectionsRef = useRef(connections);
   const copiedDataRef = useRef(copiedData);
@@ -324,6 +329,13 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         shiftPressed.current = true;
       }
 
+      // ESC key: Close fullscreen
+      if (e.key === 'Escape' && fullscreenImage) {
+        e.preventDefault();
+        setFullscreenImage(null);
+        return;
+      }
+
       // Copy: Cmd/Ctrl + C (copy all selected nodes and their internal connections)
       if ((e.metaKey || e.ctrlKey) && e.key === 'c' && selectedNodeIds.size > 0) {
         e.preventDefault();
@@ -425,7 +437,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [selectedWireId, selectedNodeIds]);
+  }, [selectedWireId, selectedNodeIds, fullscreenImage]);
 
   useEffect(() => {
     const closeMenu = () => setContextMenu(null);
@@ -837,6 +849,67 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
           </div>
         )}
 
+        {/* Fullscreen Image Overlay */}
+        {fullscreenImage && (
+          <div className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center pointer-events-auto">
+            {/* Close button */}
+            <button
+              onClick={() => setFullscreenImage(null)}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-10"
+            >
+              <X size={20} className="text-white" />
+            </button>
+
+            {/* Image */}
+            <div className="relative w-full h-full flex items-center justify-center p-8">
+              <img
+                src={fullscreenImage.gallery[fullscreenImage.currentIndex]}
+                alt={fullscreenImage.projectTitle}
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+
+            {/* Navigation */}
+            {fullscreenImage.gallery.length > 1 && (
+              <>
+                <button
+                  onClick={() => {
+                    setFullscreenImage(prev => {
+                      if (!prev) return null;
+                      const newIndex = prev.currentIndex === 0 ? prev.gallery.length - 1 : prev.currentIndex - 1;
+                      return { ...prev, currentIndex: newIndex };
+                    });
+                  }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                >
+                  <ChevronLeft size={24} className="text-white" />
+                </button>
+                <button
+                  onClick={() => {
+                    setFullscreenImage(prev => {
+                      if (!prev) return null;
+                      const newIndex = prev.currentIndex === prev.gallery.length - 1 ? 0 : prev.currentIndex + 1;
+                      return { ...prev, currentIndex: newIndex };
+                    });
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                >
+                  <ChevronRight size={24} className="text-white" />
+                </button>
+              </>
+            )}
+
+            {/* Info bar */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-4">
+              <span className="text-white text-sm font-mono">{fullscreenImage.projectTitle}</span>
+              <div className="w-px h-4 bg-white/20"></div>
+              <span className="text-white/70 text-xs font-mono">
+                {fullscreenImage.currentIndex + 1} / {fullscreenImage.gallery.length}
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Context Menu */}
         {contextMenu && (
           <div
@@ -923,6 +996,9 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
                   projects={initialProjects}
                   jobs={CV_DATA}
                   onNodeDataChange={handleNodeDataChange}
+                  onOpenFullscreen={(gallery, currentIndex, projectTitle) => {
+                    setFullscreenImage({ gallery, currentIndex, projectTitle });
+                  }}
                />
             </NodeContainer>
           ))}

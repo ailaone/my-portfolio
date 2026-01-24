@@ -1,17 +1,17 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "noisy",
+    "title": "Music and Dance Conservatory",
+    "year": "2015",
+    "category": "Architecture",
+    "role": ["Facade Designer"],
+    "client": "Noisy-le-Sec",
+    "technologies": ["Rhino", "Grasshopper", "AutoCAD"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "noisy_01.jpg",
+      "noisy_02.jpg",
+      "noisy_03.jpg"
     ],
     "model": "test.glb",
     "geometryType": "chair",

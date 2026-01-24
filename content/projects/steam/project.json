@@ -5,7 +5,7 @@
     "category": "Furniture",
     "role": ["Designer"],
     "client": "R&D",
-    "technologies": ["Rhino", "Grasshopper", "SubD", "3D Printing"],
+    "technologies": ["Rhino", "Grasshopper", "SubD", "Maya", "3D Printing"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [

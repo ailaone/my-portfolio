@@ -1,17 +1,17 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "wanderlust",
+    "title": "Wanderlust Paris - Outdoor Club",
+    "year": "2012",
+    "category": "Architecture",
+    "role": ["Designer + Project Manager"],
+    "client": "Savoir Faire",
+    "technologies": ["Rhino", "Grasshopper", "AutoCAD"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "wanderlust_01.jpg",
+      "wanderlust_02.jpg",
+      "wanderlust_03.jpg"
     ],
     "model": "test.glb",
     "geometryType": "chair",

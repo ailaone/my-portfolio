@@ -1,19 +1,19 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "workshop",
+    "title": "Controlled Randomization Workshop",
+    "year": "2024",
+    "category": "Architecture + Education",
+    "role": ["Educator"],
+    "client": "New York Institute of Technology",
+    "technologies": ["Rhino", "Grasshopper", "Hoster", "Pufferfish", "Dendro", "Tapeworm"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "workshop_randomization_01.jpg",
+      "workshop_randomization_02.jpg",
+      "workshop_randomization_03.jpg"
     ],
     "model": "test.glb",
     "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "solo"
   }

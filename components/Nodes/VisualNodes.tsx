@@ -2,7 +2,7 @@
 import React from 'react';
 import { ProjectData, JobData, NodeState, NodeType, Connection } from '@/types/content';
 import { ThreeScene } from '../ThreeScene';
-import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Video } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Video, Maximize } from 'lucide-react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface ContentProps {
@@ -12,6 +12,7 @@ interface ContentProps {
   projects: ProjectData[];
   jobs: JobData[];
   onNodeDataChange: (nodeId: string, data: any) => void;
+  onOpenFullscreen: (gallery: string[], currentIndex: number, projectTitle: string) => void;
 }
 
 // --- Helper: Recursive Graph Traversal ---
@@ -57,7 +58,7 @@ const findUpstreamData = (
 const isProject = (data: any): data is ProjectData => !!data && 'slug' in data;
 const isJob = (data: any): data is JobData => !!data && 'company' in data;
 
-export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, connections, projects, jobs, onNodeDataChange }) => {
+export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, connections, projects, jobs, onNodeDataChange, onOpenFullscreen }) => {
   
   const handleImageNav = (direction: 'prev' | 'next', currentProject: ProjectData) => {
      const gallery = currentProject.galleryUrls || [];
@@ -282,7 +283,19 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
    
            <div className="absolute bottom-0 left-0 right-0 p-2 bg-black/50 border-t border-white/10 backdrop-blur-sm translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-between items-center z-20">
               <p className="text-[9px] font-mono uppercase text-white/90">{upstreamData.slug}</p>
-              <p className="text-[9px] font-mono text-white/90">{gallery.length > 0 ? idx + 1 : 0} / {gallery.length}</p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenFullscreen(gallery, idx, upstreamData.title);
+                  }}
+                  className="w-6 h-6 rounded bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                  title="Fullscreen"
+                >
+                  <Maximize size={12} className="text-white" />
+                </button>
+                <p className="text-[9px] font-mono text-white/90">{gallery.length > 0 ? idx + 1 : 0} / {gallery.length}</p>
+              </div>
            </div>
         </div>
      );
