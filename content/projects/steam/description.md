@@ -1,4 +1,6 @@
-The inspiration behind the Steam Lounge Chair’s design was found in the unpredictable movement of steam as it travels through the air. This furniture piece highlights the potential this concept has in providing a physical form for a unique lounge experience. The fluidity of the overall shape is a dynamic form that echos these elements, resulting in a unique and visually striking design. <br> <br> This chair takes a freeform approach in capturing a snapshot of this geometry, creating an elusive shape with a relaxing floating feeling for one to get lost in the flow of their thoughts. Since steam is immaterial and ephemeral, we wanted to give the impression that this chair’s form could change or be gone like thought, and just the same as steam disappears moments after it forms.
-<br> <br>
-Material: Recycled PLA & PETG. Available in other colors. <br>
+The inspiration behind the Steam Lounge Chair’s design was found in the unpredictable movement of steam as it travels through the air. This furniture piece highlights the potential this concept has in providing a physical form for a unique lounge experience. The fluidity of the overall shape is a dynamic form that echos these elements, resulting in a unique and visually striking design. 
+
+This chair takes a freeform approach in capturing a snapshot of this geometry, creating an elusive shape with a relaxing floating feeling for one to get lost in the flow of their thoughts. Since steam is immaterial and ephemeral, we wanted to give the impression that this chair’s form could change or be gone like thought, and just the same as steam disappears moments after it forms.
+
+Material: Recycled PLA & PETG. Available in other colors.
 Custom Made per order.
