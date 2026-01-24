@@ -167,9 +167,9 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       { id: 'c3', fromNodeId: 'n-details', fromSocketId: 'out-meta', toNodeId: 'n-viewer', toSocketId: 'in-geo' },
     ];
 
-    // Connect first CV item to Details
+    // Connect solo developer CV item to Details
     if (CV_DATA.length > 0) {
-        conns.push({ id: 'c1', fromNodeId: 'n-cv', fromSocketId: `out-cv-${CV_DATA[0].id}`, toNodeId: 'n-details', toSocketId: 'in-select' });
+        conns.push({ id: 'c1', fromNodeId: 'n-cv', fromSocketId: `out-cv-${CV_DATA[2].id}`, toNodeId: 'n-details', toSocketId: 'in-select' });
     }
 
     return conns;
