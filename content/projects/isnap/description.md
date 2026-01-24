@@ -1,4 +1,4 @@
-iSnap is a lightweight macOS screenshot + instant markup tool built for speed.
+**iSnap** is a lightweight macOS screenshot + instant markup tool built for speed.
 
 It was 99% vibe-coded using Antigravity as an experiment to test its capabilities.
 
