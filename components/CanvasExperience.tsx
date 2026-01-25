@@ -463,6 +463,59 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
     ));
   };
 
+  const handleSmartSwitch = (nodeId: string, socketId: string) => {
+    // Find all connections FROM this node
+    const outgoingConnections = connections.filter(c => c.fromNodeId === nodeId);
+
+    // If no outgoing connections, do nothing
+    if (outgoingConnections.length === 0) return;
+
+    const sourceNode = nodes.find(n => n.id === nodeId);
+    if (!sourceNode) return;
+
+    // Update all outgoing connections to use the new socketId
+    setConnections(prev => prev.map(conn => {
+      if (conn.fromNodeId === nodeId) {
+        return { ...conn, fromSocketId: socketId };
+      }
+      return conn;
+    }));
+
+    // Special handling for CV nodes: cascade to project list and auto-select first project
+    if (sourceNode.type === NodeType.CV) {
+      // Find if this CV connects to a PROJECT_LIST via the filter input
+      const cvToProjectListConn = outgoingConnections.find(c => c.toSocketId === 'in-filter');
+
+      if (cvToProjectListConn) {
+        const projectListNode = nodes.find(n => n.id === cvToProjectListConn.toNodeId);
+
+        if (projectListNode && projectListNode.type === NodeType.PROJECT_LIST) {
+          // Extract jobId from socketId (format: "out-cv-{jobId}")
+          const jobId = socketId.replace('out-cv-', '');
+
+          // Find projects with this jobId
+          const filteredProjects = initialProjects.filter(p => p.jobId === jobId);
+
+          if (filteredProjects.length > 0) {
+            const firstProject = filteredProjects[0];
+            const firstProjectSocketId = `out-p-${firstProject.slug}`;
+
+            // Find if PROJECT_LIST connects to DETAILS
+            const projectListConnections = connections.filter(c => c.fromNodeId === projectListNode.id);
+
+            // Update PROJECT_LIST → DETAILS connection to use first project
+            setConnections(prev => prev.map(conn => {
+              if (conn.fromNodeId === projectListNode.id && conn.toSocketId === 'in-select') {
+                return { ...conn, fromSocketId: firstProjectSocketId };
+              }
+              return conn;
+            }));
+          }
+        }
+      }
+    }
+  };
+
   const handleSpawnNode = (nodeType: NodeType, sourceNodeId: string) => {
     const sourceNode = nodes.find(n => n.id === sourceNodeId);
     if (!sourceNode) return;
@@ -1064,6 +1117,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
                     setFullscreenImage({ gallery, currentIndex, projectTitle });
                   }}
                   onSpawnNode={handleSpawnNode}
+                  onSmartSwitch={handleSmartSwitch}
                />
             </NodeContainer>
           ))}

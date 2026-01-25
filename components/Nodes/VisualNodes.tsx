@@ -14,6 +14,7 @@ interface ContentProps {
   onNodeDataChange: (nodeId: string, data: any) => void;
   onOpenFullscreen: (gallery: string[], currentIndex: number, projectTitle: string) => void;
   onSpawnNode?: (nodeType: NodeType, sourceNodeId: string) => void;
+  onSmartSwitch?: (nodeId: string, socketId: string) => void;
 }
 
 // --- Helper: Recursive Graph Traversal ---
@@ -59,7 +60,7 @@ const findUpstreamData = (
 const isProject = (data: any): data is ProjectData => !!data && 'slug' in data;
 const isJob = (data: any): data is JobData => !!data && 'company' in data;
 
-export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, connections, projects, jobs, onNodeDataChange, onOpenFullscreen, onSpawnNode }) => {
+export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, connections, projects, jobs, onNodeDataChange, onOpenFullscreen, onSpawnNode, onSmartSwitch }) => {
   
   const handleImageNav = (direction: 'prev' | 'next', currentProject: ProjectData) => {
      const gallery = currentProject.galleryUrls || [];
@@ -112,7 +113,12 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
         <div className="flex flex-col h-full bg-node overflow-hidden transition-colors duration-300">
            <div className="flex flex-col h-full">
             {projectList.map((p: ProjectData) => (
-              <div key={p.slug} className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-hover transition-colors shrink-0" style={{ height: node.socketStride || 40 }}>
+              <div
+                key={p.slug}
+                className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-hover transition-colors shrink-0 cursor-pointer"
+                style={{ height: node.socketStride || 40 }}
+                onClick={() => onSmartSwitch?.(node.id, `out-p-${p.slug}`)}
+              >
                 <div className="flex flex-col justify-center h-full">
                     <span className="font-serif text-sm text-primary leading-tight line-clamp-2 transition-colors duration-300">{p.title}</span>
                     <span className="text-[9px] text-secondary leading-none mt-1 transition-colors duration-300">{p.category}</span>
@@ -135,7 +141,12 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
         <div className="flex flex-col h-full bg-node overflow-hidden transition-colors duration-300">
            <div className="flex flex-col">
             {jobs.map((j) => (
-              <div key={j.id} className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-hover transition-colors shrink-0" style={{ height: node.socketStride || 40 }}>
+              <div
+                key={j.id}
+                className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-hover transition-colors shrink-0 cursor-pointer"
+                style={{ height: node.socketStride || 40 }}
+                onClick={() => onSmartSwitch?.(node.id, `out-cv-${j.id}`)}
+              >
                 <div className="flex flex-col justify-center h-full w-[85%]">
                     <span className="font-serif text-sm text-primary leading-tight line-clamp-1 transition-colors duration-300">{j.role}</span>
                     <span className="text-[9px] text-secondary leading-none mt-1 uppercase tracking-wide transition-colors duration-300">{j.company} — {j.year}</span>
