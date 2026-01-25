@@ -37,21 +37,21 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
   const getSocketColor = (socketId: string, isInput: boolean) => {
     const isConnected = connectedSockets.has(socketId);
     const isHovered = hoveredSocket?.nodeId === node.id && hoveredSocket?.socketId === socketId;
-    
+
     // If dragging an invalid wire to this socket
     if (isHovered && isDragInvalid) {
-      return "bg-red-500 border-red-600";
+      return "border-2" ;
     }
     // If dragging a valid wire to this socket (snap preview)
     if (isHovered && !isDragInvalid) {
-      return "bg-green-400 border-green-500 scale-125";
+      return "scale-125 border-2 socket-glow";
     }
     // Standard connected state
     if (isConnected) {
-      return "bg-green-500 border-green-600";
+      return "socket-glow border-2";
     }
     // Default empty state
-    return "bg-[#FAFAF7] border-black hover:bg-black";
+    return "border-2";
   };
 
   const stride = node.socketStride || 40;
@@ -62,8 +62,8 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
 
   return (
     <div
-      className={`absolute flex flex-col bg-[#FAFAF7] border shadow-editorial rounded-[2px] transition-shadow duration-300 ${
-        isSelected ? 'border-black z-20 shadow-xl' : 'border-black/20 z-10 hover:border-black/40'
+      className={`absolute flex flex-col bg-node border shadow-editorial rounded-[2px] transition-all duration-300 node-container ${
+        isSelected ? 'border-primary z-20 shadow-hover' : 'border-secondary z-10 hover:border-[var(--hover-border)]'
       }`}
       style={{
         left: node.position.x,
@@ -82,33 +82,33 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
     >
       {/* Header */}
       <div
-        className="h-[32px] flex items-center justify-between px-3 pt-1 border-b border-black/5 cursor-grab active:cursor-grabbing select-none bg-[#FAFAF7]"
+        className="h-[32px] flex items-center justify-between px-3 pt-1 border-b border-tertiary cursor-grab active:cursor-grabbing select-none bg-node node-header transition-colors duration-300"
         onPointerDown={(e) => onHeaderDown(e, node.id)}
       >
         <div className="flex items-center gap-2 pointer-events-none">
-          <div className={`w-1.5 h-1.5 rounded-full border border-black/50 ${isSelected ? 'bg-black' : 'bg-transparent'}`} />
-          <span className="text-[9px] font-sans font-medium tracking-[0.2em] uppercase text-black">
+          <div className={`w-1.5 h-1.5 rounded-full border border-secondary transition-colors duration-300 ${isSelected ? 'bg-primary' : 'bg-transparent'}`} />
+          <span className="text-[9px] font-sans font-medium tracking-[0.2em] uppercase text-primary transition-colors duration-300">
             {node.title}
           </span>
         </div>
         <div className="flex gap-[2px] opacity-20 pointer-events-none">
-           <div className="w-[2px] h-[2px] bg-black rounded-full"></div>
-           <div className="w-[2px] h-[2px] bg-black rounded-full"></div>
-           <div className="w-[2px] h-[2px] bg-black rounded-full"></div>
+           <div className="w-[2px] h-[2px] bg-primary rounded-full transition-colors duration-300"></div>
+           <div className="w-[2px] h-[2px] bg-primary rounded-full transition-colors duration-300"></div>
+           <div className="w-[2px] h-[2px] bg-primary rounded-full transition-colors duration-300"></div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-hidden relative bg-[#FAFAF7] cursor-default">
+      <div className="flex-1 overflow-hidden relative bg-node cursor-default transition-colors duration-300">
          {children}
       </div>
 
       {/* Resize */}
-      <div 
-        className="absolute bottom-0 right-0 w-6 h-6 cursor-nwse-resize flex items-end justify-end p-1 z-50 opacity-50 hover:opacity-100"
+      <div
+        className="absolute bottom-0 right-0 w-6 h-6 cursor-nwse-resize flex items-end justify-end p-1 z-50 opacity-50 hover:opacity-100 transition-opacity duration-200"
         onPointerDown={(e) => { e.stopPropagation(); e.preventDefault(); onResizeDown(e, node.id); }}
       >
-         <div className="w-1.5 h-1.5 border-r border-b border-black mb-1 mr-1"></div>
+         <div className="w-1.5 h-1.5 border-r border-b border-primary mb-1 mr-1 transition-colors duration-300"></div>
       </div>
 
       {/* Inputs */}
@@ -132,12 +132,18 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
               >
                  <div className="relative w-[10px] h-[10px]">
                     {isConnected && (
-                        <div className="absolute inset-0 bg-green-400 rounded-full animate-pulse-ring opacity-75 pointer-events-none" />
+                        <div className="absolute inset-0 rounded-full animate-pulse-ring opacity-75 pointer-events-none" style={{ backgroundColor: 'var(--socket-hover-valid)' }} />
                     )}
-                    <div className={`absolute inset-0 border rounded-full transition-all duration-200 ${getSocketColor(input.id, true)}`} />
+                    <div
+                      className={`absolute inset-0 rounded-full transition-all duration-200 ${getSocketColor(input.id, true)}`}
+                      style={{
+                        backgroundColor: isConnected ? 'var(--socket-connected)' : (hoveredSocket?.nodeId === node.id && hoveredSocket?.socketId === input.id && isDragInvalid) ? 'var(--socket-hover-invalid)' : (hoveredSocket?.nodeId === node.id && hoveredSocket?.socketId === input.id) ? 'var(--socket-hover-valid)' : 'var(--socket-empty)',
+                        borderColor: isConnected ? 'var(--socket-connected-dark)' : 'var(--border-primary)'
+                      }}
+                    />
                  </div>
               </div>
-              <span className="absolute left-5 text-[9px] font-sans tracking-wider text-black bg-[#FAFAF7] px-1 border border-black/10 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity shadow-sm z-40">
+              <span className="absolute left-5 text-[9px] font-sans tracking-wider text-primary bg-node px-1 border border-tertiary opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-all duration-300 shadow-sm z-40">
                 {input.label}
               </span>
             </div>
@@ -155,7 +161,7 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
               className="absolute right-0 flex items-center justify-end group w-6 h-6"
               style={{ top: getSocketTop(index) }}
             >
-               <span className="absolute right-5 text-[9px] font-sans tracking-wider text-black bg-[#FAFAF7] px-1 border border-black/10 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity shadow-sm z-40">
+               <span className="absolute right-5 text-[9px] font-sans tracking-wider text-primary bg-node px-1 border border-tertiary opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-all duration-300 shadow-sm z-40">
                 {output.label}
               </span>
               <div 
@@ -169,9 +175,15 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
               >
                  <div className="relative w-[10px] h-[10px]">
                     {isConnected && (
-                        <div className="absolute inset-0 bg-green-400 rounded-full animate-pulse-ring opacity-75 pointer-events-none" />
+                        <div className="absolute inset-0 rounded-full animate-pulse-ring opacity-75 pointer-events-none" style={{ backgroundColor: 'var(--socket-hover-valid)' }} />
                     )}
-                    <div className={`absolute inset-0 border rounded-full transition-all duration-200 ${getSocketColor(output.id, false)}`} />
+                    <div
+                      className={`absolute inset-0 rounded-full transition-all duration-200 ${getSocketColor(output.id, false)}`}
+                      style={{
+                        backgroundColor: isConnected ? 'var(--socket-connected)' : (hoveredSocket?.nodeId === node.id && hoveredSocket?.socketId === output.id && isDragInvalid) ? 'var(--socket-hover-invalid)' : (hoveredSocket?.nodeId === node.id && hoveredSocket?.socketId === output.id) ? 'var(--socket-hover-valid)' : 'var(--socket-empty)',
+                        borderColor: isConnected ? 'var(--socket-connected-dark)' : 'var(--border-primary)'
+                      }}
+                    />
                  </div>
               </div>
             </div>

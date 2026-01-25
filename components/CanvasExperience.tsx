@@ -5,13 +5,14 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   ArrowUpRight, Layers, RefreshCw, MousePointer2,
   Box, FileText, Image as ImageIcon, BarChart, Activity, List, Mail, GripHorizontal, Zap,
-  ChevronLeft, ChevronRight, Trash2, Briefcase, Share2, Maximize, X, Video
+  ChevronLeft, ChevronRight, Trash2, Briefcase, Share2, Maximize, X, Video, Palette
 } from 'lucide-react';
 import { ProjectData, JobData, NodeState, Position, NodeType, Connection, DragMode } from '@/types/content';
 import { GridBackground } from './GridBackground';
 import { NodeContainer } from './NodeContainer';
 import { WireConnections } from './WireConnections';
 import { VisualNodeContent } from './Nodes/VisualNodes';
+import { useTheme } from '@/lib/ThemeContext';
 
 const CV_DATA: JobData[] = [
   {
@@ -107,7 +108,10 @@ interface CanvasExperienceProps {
 }
 
 export default function CanvasExperience({ initialProjects }: CanvasExperienceProps) {
-  
+
+  // --- Theme ---
+  const { theme, cycleTheme } = useTheme();
+
   // --- Initialize State with Dynamic Props ---
   
   const getInitialNodes = (projects: ProjectData[]): NodeState[] => {
@@ -860,31 +864,38 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       {/* Fixed UI Layer - Never transforms */}
       <div className="fixed inset-0 pointer-events-none z-50">
         {/* Toolbar */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 h-14 bg-white/80 backdrop-blur-md border border-black/5 rounded-full shadow-editorial flex items-center px-2 gap-1 pointer-events-auto">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 h-14 backdrop-blur-md border rounded-full shadow-editorial flex items-center px-2 gap-1 pointer-events-auto transition-all duration-300" style={{ backgroundColor: 'var(--toolbar-bg)', borderColor: 'var(--toolbar-border)' }}>
            {TOOLBAR_ITEMS.map((item) => {
               const Icon = item.icon;
               return (
                 <div
                   key={item.label}
-                  className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-full hover:bg-black/5 cursor-grab active:cursor-grabbing transition-colors"
+                  className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-full hover:bg-hover cursor-grab active:cursor-grabbing transition-all duration-200"
                   onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); setDragMode('NEW_NODE_DRAG'); setNewNodeType(item.type); setGhostNodePos({ x: e.clientX, y: e.clientY }); }}
                 >
-                   <Icon strokeWidth={1.5} className="w-5 h-5 text-black/70 group-hover:text-black group-hover:scale-110 transition-transform" />
-                   <span className="absolute -bottom-8 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                   <Icon strokeWidth={1.5} className="w-5 h-5 text-secondary group-hover:text-primary group-hover:scale-110 transition-all duration-200" />
+                   <span className="absolute -bottom-8 bg-primary text-canvas text-[9px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                       {item.label}
                    </span>
                 </div>
               )
            })}
-           <div className="w-[1px] h-6 bg-black/10 mx-2"></div>
-           <button onClick={handleReset} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition-colors">
+           <div className="w-[1px] h-6 mx-2 transition-colors duration-300" style={{ backgroundColor: 'var(--border-tertiary)' }}></div>
+           <button
+             onClick={cycleTheme}
+             className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-primary hover:text-canvas transition-all duration-200 group text-secondary hover:text-canvas"
+             title={`Theme: ${theme} (click to cycle)`}
+           >
+               <Palette className="w-4 h-4" />
+           </button>
+           <button onClick={handleReset} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-primary hover:text-canvas transition-all duration-200 text-secondary hover:text-canvas">
                <RefreshCw className="w-4 h-4" />
            </button>
         </div>
 
         {/* Multi-Selection Counter */}
         {selectedNodeIds.size > 1 && (
-          <div className="absolute top-20 left-1/2 -translate-x-1/2 bg-black text-white px-3 py-1.5 rounded-full shadow-lg pointer-events-none">
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 bg-primary text-canvas px-3 py-1.5 rounded-full shadow-lg pointer-events-none transition-colors duration-300">
             <span className="text-[10px] font-mono font-medium tracking-wider">
               {selectedNodeIds.size} NODES SELECTED
             </span>
@@ -894,11 +905,11 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         {/* Ghost Node During Drag */}
         {dragMode === 'NEW_NODE_DRAG' && newNodeType && (
           <div
-             className="absolute pointer-events-none bg-white border border-black/50 shadow-xl rounded p-2 flex items-center gap-2 opacity-80"
+             className="absolute pointer-events-none bg-node border border-secondary shadow-xl rounded p-2 flex items-center gap-2 opacity-80 transition-colors duration-300"
              style={{ left: ghostNodePos.x, top: ghostNodePos.y, transform: 'translate(-50%, -50%)' }}
           >
-             <div className="w-2 h-2 bg-black rounded-full animate-pulse"></div>
-             <span className="text-xs font-mono uppercase">Adding {newNodeType}...</span>
+             <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+             <span className="text-xs font-mono uppercase text-primary">Adding {newNodeType}...</span>
           </div>
         )}
 

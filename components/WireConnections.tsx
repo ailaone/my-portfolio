@@ -45,10 +45,10 @@ export const WireConnections: React.FC<WireConnectionsProps> = ({
   const renderPath = (start: Position, end: Position, id?: string, isTemp: boolean = false, isSelected: boolean = false, isInvalid: boolean = false) => {
     const dist = Math.abs(end.x - start.x);
     const controlPointOffset = Math.max(dist * 0.5, 50);
-    
+
     const path = `M ${start.x} ${start.y} C ${start.x + controlPointOffset} ${start.y}, ${end.x - controlPointOffset} ${end.y}, ${end.x} ${end.y}`;
-    
-    const strokeColor = isInvalid ? "#ef4444" : (isSelected ? "#3b82f6" : (isTemp ? "#A1A1AA" : "black"));
+
+    const strokeColor = isInvalid ? "var(--socket-hover-invalid)" : (isSelected ? "var(--wire-selected)" : (isTemp ? "var(--wire-temp)" : "var(--wire-color)"));
     const strokeWidth = isSelected ? "2" : (isTemp ? "1.5" : "1");
 
     return (
@@ -68,13 +68,13 @@ export const WireConnections: React.FC<WireConnectionsProps> = ({
            />
          )}
          {/* Visible Path */}
-         <path 
-            d={path} 
-            stroke={strokeColor} 
+         <path
+            d={path}
+            stroke={strokeColor}
             strokeWidth={strokeWidth}
             strokeDasharray={isTemp && !isInvalid ? "4,4" : "none"}
-            fill="none" 
-            className="pointer-events-none transition-colors duration-200"
+            fill="none"
+            className="pointer-events-none transition-colors duration-200 wire-path"
           />
       </g>
     );
