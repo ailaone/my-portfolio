@@ -82,12 +82,12 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
   switch (node.type) {
     case NodeType.HEADER:
       return (
-        <div className="p-6 flex flex-col h-full justify-center bg-[#FAFAF7]">
-          <h1 className="text-4xl font-serif tracking-tight mb-2 text-black">
+        <div className="p-6 flex flex-col h-full justify-center bg-node transition-colors duration-300">
+          <h1 className="text-4xl font-serif tracking-tight mb-2 text-primary transition-colors duration-300">
             ARTHUR<span className="italic font-light">AZOULAI</span>
           </h1>
-          <div className="w-12 h-[1px] bg-black mb-4"></div>
-          <p className="text-xs font-sans tracking-widest text-gray-500 uppercase">
+          <div className="w-12 h-[1px] bg-primary mb-4 transition-colors duration-300"></div>
+          <p className="text-xs font-sans tracking-widest text-secondary uppercase transition-colors duration-300">
           CREATIVE TECHNOLOGIST / COMPUTATIONAL DESIGNER
           </p>
         </div>
@@ -95,35 +95,35 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
 
     case NodeType.SOCIAL:
       return (
-        <div className="p-6 flex items-center justify-around h-full bg-[#FAFAF7]">
-           <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="text-black/60 hover:text-black hover:scale-110 transition-transform"><Linkedin strokeWidth={1.5} size={20} /></a>
-           <a href="https://github.com" target="_blank" rel="noreferrer" className="text-black/60 hover:text-black hover:scale-110 transition-transform"><Github strokeWidth={1.5} size={20} /></a>
-           <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-black/60 hover:text-black hover:scale-110 transition-transform"><Instagram strokeWidth={1.5} size={20} /></a>
-           <a href="https://vimeo.com" target="_blank" rel="noreferrer" className="text-black/60 hover:text-black hover:scale-110 transition-transform"><Video strokeWidth={1.5} size={20} /></a>
-           <a href="https://youtube.com" target="_blank" rel="noreferrer" className="text-black/60 hover:text-black hover:scale-110 transition-transform"><Youtube strokeWidth={1.5} size={20} /></a>
+        <div className="p-6 flex items-center justify-around h-full bg-node transition-colors duration-300">
+           <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Linkedin strokeWidth={1.5} size={20} /></a>
+           <a href="https://github.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Github strokeWidth={1.5} size={20} /></a>
+           <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Instagram strokeWidth={1.5} size={20} /></a>
+           <a href="https://vimeo.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Video strokeWidth={1.5} size={20} /></a>
+           <a href="https://youtube.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Youtube strokeWidth={1.5} size={20} /></a>
         </div>
       );
 
     case NodeType.PROJECT_LIST:
       // Use dynamic data if available (filtered list), otherwise show all
       const projectList = node.data?.displayedProjects || projects;
-      
+
       return (
-        <div className="flex flex-col h-full bg-[#FAFAF7] overflow-hidden">
-           <div className="flex flex-col h-full"> 
+        <div className="flex flex-col h-full bg-node overflow-hidden transition-colors duration-300">
+           <div className="flex flex-col h-full">
             {projectList.map((p: ProjectData) => (
-              <div key={p.slug} className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-black/5 transition-colors shrink-0" style={{ height: node.socketStride || 40 }}>
+              <div key={p.slug} className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-hover transition-colors shrink-0" style={{ height: node.socketStride || 40 }}>
                 <div className="flex flex-col justify-center h-full">
-                    <span className="font-serif text-sm text-black leading-tight line-clamp-2">{p.title}</span>
-                    <span className="text-[9px] text-gray-500 leading-none mt-1">{p.category}</span>
+                    <span className="font-serif text-sm text-primary leading-tight line-clamp-2 transition-colors duration-300">{p.title}</span>
+                    <span className="text-[9px] text-secondary leading-none mt-1 transition-colors duration-300">{p.category}</span>
                 </div>
-                <div className="w-1 h-1 bg-black/20 rounded-full opacity-0 group-hover:opacity-100" />
+                <div className="w-1 h-1 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             ))}
             {projectList.length === 0 && (
                 <div className="flex-1 flex flex-col items-center justify-center p-4 gap-2">
-                  <Plug size={16} className="text-gray-400" />
-                  <p className="text-center text-[10px] text-gray-400 uppercase tracking-widest">Connect Work Experience</p>
+                  <Plug size={16} className="text-tertiary" />
+                  <p className="text-center text-[10px] text-tertiary uppercase tracking-widest transition-colors duration-300">Connect Work Experience</p>
                 </div>
             )}
           </div>
@@ -132,15 +132,15 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
 
     case NodeType.CV:
       return (
-        <div className="flex flex-col h-full bg-[#FAFAF7] overflow-hidden">
-           <div className="flex flex-col"> 
+        <div className="flex flex-col h-full bg-node overflow-hidden transition-colors duration-300">
+           <div className="flex flex-col">
             {jobs.map((j) => (
-              <div key={j.id} className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-black/5 transition-colors shrink-0" style={{ height: node.socketStride || 40 }}>
+              <div key={j.id} className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-hover transition-colors shrink-0" style={{ height: node.socketStride || 40 }}>
                 <div className="flex flex-col justify-center h-full w-[85%]">
-                    <span className="font-serif text-sm text-black leading-tight line-clamp-1">{j.role}</span>
-                    <span className="text-[9px] text-gray-500 leading-none mt-1 uppercase tracking-wide">{j.company} — {j.year}</span>
+                    <span className="font-serif text-sm text-primary leading-tight line-clamp-1 transition-colors duration-300">{j.role}</span>
+                    <span className="text-[9px] text-secondary leading-none mt-1 uppercase tracking-wide transition-colors duration-300">{j.company} — {j.year}</span>
                 </div>
-                <div className="w-1 h-1 bg-black/20 rounded-full opacity-0 group-hover:opacity-100" />
+                <div className="w-1 h-1 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             ))}
           </div>
@@ -150,7 +150,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
     case NodeType.DETAILS:
       if (!upstreamData) {
         return (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center">
+          <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center transition-colors duration-300">
             <Plug size={16} />
             <span className="text-[10px] uppercase tracking-widest">Connect Project or Work Experience</span>
           </div>
@@ -159,24 +159,24 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
 
       if (isJob(upstreamData)) {
          return (
-            <div className="p-6 flex flex-col h-full overflow-y-auto bg-[#FAFAF7]">
+            <div className="p-6 flex flex-col h-full overflow-y-auto bg-node transition-colors duration-300">
                 <div className="mb-4">
-                    <h2 className="text-xl font-serif text-black leading-tight">{upstreamData.role}</h2>
-                    <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">{upstreamData.company}</p>
+                    <h2 className="text-xl font-serif text-primary leading-tight transition-colors duration-300">{upstreamData.role}</h2>
+                    <p className="text-xs text-secondary uppercase tracking-widest mt-1 transition-colors duration-300">{upstreamData.company}</p>
                 </div>
-                <p className="font-serif text-sm text-gray-800 leading-relaxed mb-4 italic">
+                <p className="font-serif text-sm text-primary leading-relaxed mb-4 italic opacity-80 transition-colors duration-300">
                     {upstreamData.description}
                 </p>
                 {upstreamData.details && (
                     <ul className="list-disc list-inside space-y-1 mb-6">
                         {upstreamData.details.map((d, i) => (
-                            <li key={i} className="text-xs text-gray-600 font-sans leading-relaxed">{d}</li>
+                            <li key={i} className="text-xs text-secondary font-sans leading-relaxed transition-colors duration-300">{d}</li>
                         ))}
                     </ul>
                 )}
-                <div className="mt-auto border-t border-black/10 pt-4">
-                    <h3 className="text-[9px] tracking-widest uppercase text-gray-400">Timeline</h3>
-                    <p className="text-xs">{upstreamData.year}</p>
+                <div className="mt-auto border-t border-tertiary pt-4 transition-colors duration-300">
+                    <h3 className="text-[9px] tracking-widest uppercase text-tertiary transition-colors duration-300">Timeline</h3>
+                    <p className="text-xs text-primary transition-colors duration-300">{upstreamData.year}</p>
                 </div>
             </div>
          );
@@ -189,38 +189,38 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
       const hasAnyContent = hasImages || hasVideo || has3D;
 
       return (
-        <div className="p-6 flex flex-col h-full overflow-y-auto bg-[#FAFAF7]">
+        <div className="p-6 flex flex-col h-full overflow-y-auto bg-node transition-colors duration-300">
           <div className="mb-4">
-            <h2 className="text-xl font-serif text-black leading-tight">{upstreamData.title}</h2>
-            <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">{upstreamData.category}</p>
+            <h2 className="text-xl font-serif text-primary leading-tight transition-colors duration-300">{upstreamData.title}</h2>
+            <p className="text-xs text-secondary uppercase tracking-widest mt-1 transition-colors duration-300">{upstreamData.category}</p>
           </div>
 
           {/* Summary */}
           {upstreamData.summaryHtml && (
-            <div className="font-serif text-sm text-gray-800 leading-relaxed mb-4 italic prose prose-sm"
+            <div className="font-serif text-sm text-primary leading-relaxed mb-4 italic prose prose-sm opacity-80 transition-colors duration-300"
                  dangerouslySetInnerHTML={{ __html: upstreamData.summaryHtml }} />
           )}
 
           {/* Description */}
           {upstreamData.descriptionHtml && (
-            <div className="font-sans text-xs text-gray-600 leading-relaxed mb-4 prose prose-sm"
+            <div className="font-sans text-xs text-secondary leading-relaxed mb-4 prose prose-sm transition-colors duration-300"
                  dangerouslySetInnerHTML={{ __html: upstreamData.descriptionHtml }} />
           )}
 
           {!upstreamData.summaryHtml && !upstreamData.descriptionHtml && (
-            <p className="font-sans text-xs text-gray-600 leading-relaxed mb-4">No description available.</p>
+            <p className="font-sans text-xs text-secondary leading-relaxed mb-4 transition-colors duration-300">No description available.</p>
           )}
 
           <div className="mt-auto">
-            <div className="grid grid-cols-2 gap-4 border-t border-black/10 pt-4 mb-3">
-               <div><h3 className="text-[9px] tracking-widest uppercase text-gray-400">Role</h3><p className="text-xs">{upstreamData.role.join(', ')}</p></div>
-               <div><h3 className="text-[9px] tracking-widest uppercase text-gray-400">Year</h3><p className="text-xs">{upstreamData.year}</p></div>
+            <div className="grid grid-cols-2 gap-4 border-t border-tertiary pt-4 mb-3 transition-colors duration-300">
+               <div><h3 className="text-[9px] tracking-widest uppercase text-tertiary transition-colors duration-300">Role</h3><p className="text-xs text-primary transition-colors duration-300">{upstreamData.role.join(', ')}</p></div>
+               <div><h3 className="text-[9px] tracking-widest uppercase text-tertiary transition-colors duration-300">Year</h3><p className="text-xs text-primary transition-colors duration-300">{upstreamData.year}</p></div>
             </div>
 
             {/* Available Content */}
             {hasAnyContent && (
-              <div className="border-t border-black/10 pt-3">
-                <h3 className="text-[9px] tracking-widest uppercase text-gray-400 mb-2">Available Content</h3>
+              <div className="border-t border-tertiary pt-3 transition-colors duration-300">
+                <h3 className="text-[9px] tracking-widest uppercase text-tertiary mb-2 transition-colors duration-300">Available Content</h3>
                 <div className="flex gap-2">
                   {hasImages && (
                     <button
@@ -228,11 +228,11 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
                         e.stopPropagation();
                         onSpawnNode?.(NodeType.IMAGE, node.id);
                       }}
-                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-black/5 hover:bg-black/10 transition-colors group"
+                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-hover hover:bg-primary/20 transition-colors group"
                       title="Create Gallery node"
                     >
-                      <ImageIcon size={12} className="text-black/60 group-hover:text-black" />
-                      <span className="text-[9px] uppercase tracking-wider text-black/60 group-hover:text-black">Gallery</span>
+                      <ImageIcon size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
+                      <span className="text-[9px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">Gallery</span>
                     </button>
                   )}
                   {hasVideo && (
@@ -241,11 +241,11 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
                         e.stopPropagation();
                         onSpawnNode?.(NodeType.VIDEO, node.id);
                       }}
-                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-black/5 hover:bg-black/10 transition-colors group"
+                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-hover hover:bg-primary/20 transition-colors group"
                       title="Create Video node"
                     >
-                      <Video size={12} className="text-black/60 group-hover:text-black" />
-                      <span className="text-[9px] uppercase tracking-wider text-black/60 group-hover:text-black">Video</span>
+                      <Video size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
+                      <span className="text-[9px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">Video</span>
                     </button>
                   )}
                   {has3D && (
@@ -254,11 +254,11 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
                         e.stopPropagation();
                         onSpawnNode?.(NodeType.VIEWER_3D, node.id);
                       }}
-                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-black/5 hover:bg-black/10 transition-colors group"
+                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-hover hover:bg-primary/20 transition-colors group"
                       title="Create 3D Viewer node"
                     >
-                      <Box size={12} className="text-black/60 group-hover:text-black" />
-                      <span className="text-[9px] uppercase tracking-wider text-black/60 group-hover:text-black">3D</span>
+                      <Box size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
+                      <span className="text-[9px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">3D</span>
                     </button>
                   )}
                 </div>
@@ -271,7 +271,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
     case NodeType.IMAGE:
       if (!upstreamData || !isProject(upstreamData)) {
         return (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center bg-[#f0f0f0]">
+          <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
             <Plug size={16} />
             <span className="text-[10px] uppercase tracking-widest">Connect Input to Project</span>
           </div>
@@ -283,10 +283,10 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
       // Check if there are no images available for this project
       if (gallery.length === 0) {
         return (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center bg-[#f0f0f0]">
+          <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
             <Plug size={16} />
             <span className="text-[10px] uppercase tracking-widest">Images Not Available for This Project</span>
-            <span className="text-[9px] text-gray-500 mt-1">{upstreamData.title}</span>
+            <span className="text-[9px] text-secondary mt-1 transition-colors duration-300">{upstreamData.title}</span>
           </div>
         );
       }
@@ -362,7 +362,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
 case NodeType.VIEWER_3D:
   if (!upstreamData || !isProject(upstreamData)) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center">
+      <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center transition-colors duration-300">
         <Box size={16} />
         <span className="text-[10px] uppercase tracking-widest">Connect Input to Project</span>
       </div>
@@ -372,10 +372,10 @@ case NodeType.VIEWER_3D:
   // Check if 3D model is available for this project
   if (!upstreamData.modelUrl) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center bg-[#FAFAF7]">
+      <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
         <Box size={16} />
         <span className="text-[10px] uppercase tracking-widest">3D Not Available for This Project</span>
-        <span className="text-[9px] text-gray-500 mt-1">{upstreamData.title}</span>
+        <span className="text-[9px] text-secondary mt-1 transition-colors duration-300">{upstreamData.title}</span>
       </div>
     );
   }
@@ -386,7 +386,7 @@ case NodeType.VIEWER_3D:
         geometryType={upstreamData.geometryType || 'cube'}
         modelUrl={upstreamData.modelUrl}
       />
-      <div className="absolute bottom-3 right-3 text-[9px] font-mono text-black/50 uppercase tracking-wider pointer-events-none z-20">
+      <div className="absolute bottom-3 right-3 text-[9px] font-mono text-secondary uppercase tracking-wider pointer-events-none z-20 transition-colors duration-300">
          Geo: {upstreamData.geometryType || 'Standard'}
       </div>
     </>
@@ -395,7 +395,7 @@ case NodeType.VIEWER_3D:
     case NodeType.DATA:
       if (!upstreamData || !isProject(upstreamData)) {
         return (
-          <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-2 p-4 text-center bg-[#FAFAF7]">
+          <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
             <BarChartIcon size={16} />
             <span className="text-[10px] uppercase tracking-widest">Waiting for Data...</span>
           </div>
@@ -406,17 +406,17 @@ case NodeType.VIEWER_3D:
       const chartData = Object.entries(stats).map(([k, v]) => ({ name: k, value: typeof v === 'number' ? v : 0 }));
 
       return (
-         <div className="p-4 h-full flex flex-col font-mono text-[10px] bg-[#FAFAF7]">
+         <div className="p-4 h-full flex flex-col font-mono text-[10px] bg-node transition-colors duration-300">
             <div className="h-32 w-full mt-auto">
                  <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData}>
-                        <XAxis dataKey="name" tick={{fontSize: 9}} axisLine={false} tickLine={false} />
-                        <Tooltip 
-                            contentStyle={{ backgroundColor: '#000', color: '#fff', borderRadius: '0px', border: 'none', fontSize: '12px' }}
-                            itemStyle={{ color: '#fff' }}
-                            cursor={{fill: 'rgba(0,0,0,0.05)'}}
+                        <XAxis dataKey="name" tick={{fontSize: 9, fill: 'var(--text-secondary)'}} axisLine={false} tickLine={false} />
+                        <Tooltip
+                            contentStyle={{ backgroundColor: 'var(--node-bg)', color: 'var(--text-primary)', borderRadius: '2px', border: '1px solid var(--border-secondary)', fontSize: '12px' }}
+                            itemStyle={{ color: 'var(--text-primary)' }}
+                            cursor={{fill: 'var(--hover-bg)'}}
                         />
-                        <Bar dataKey="value" fill="#1a1a1a" radius={[2, 2, 0, 0]} barSize={30} />
+                        <Bar dataKey="value" fill="var(--text-primary)" radius={[2, 2, 0, 0]} barSize={30} />
                     </BarChart>
                  </ResponsiveContainer>
             </div>
@@ -426,7 +426,7 @@ case NodeType.VIEWER_3D:
     case NodeType.VIDEO:
       if (!upstreamData || !isProject(upstreamData)) {
         return (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center bg-[#FAFAF7]">
+          <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
             <Video size={16} />
             <span className="text-[10px] uppercase tracking-widest">Connect Input to Project</span>
           </div>
@@ -436,10 +436,10 @@ case NodeType.VIEWER_3D:
       // Check if video is available for this project
       if (!upstreamData.videoEmbedUrl) {
         return (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2 p-4 text-center bg-[#FAFAF7]">
+          <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
             <Video size={16} />
             <span className="text-[10px] uppercase tracking-widest">Video Not Available for This Project</span>
-            <span className="text-[9px] text-gray-500 mt-1">{upstreamData.title}</span>
+            <span className="text-[9px] text-secondary mt-1 transition-colors duration-300">{upstreamData.title}</span>
           </div>
         );
       }
@@ -461,14 +461,14 @@ case NodeType.VIEWER_3D:
 
     case NodeType.CONTACT:
        return (
-          <div className="p-6 flex flex-col items-center justify-center h-full gap-4">
-             <a href="mailto:hello@example.com" className="flex items-center gap-2 text-sm hover:underline"><Mail size={14}/> Email Me</a>
-             <div className="w-full h-[1px] bg-black/10"></div>
-             <p className="text-[10px] text-gray-400 uppercase tracking-widest">Open for collaborations</p>
+          <div className="p-6 flex flex-col items-center justify-center h-full gap-4 bg-node transition-colors duration-300">
+             <a href="mailto:hello@example.com" className="flex items-center gap-2 text-sm text-primary hover:underline hover:text-secondary transition-colors duration-200"><Mail size={14}/> Email Me</a>
+             <div className="w-full h-[1px] bg-border-tertiary transition-colors duration-300"></div>
+             <p className="text-[10px] text-tertiary uppercase tracking-widest transition-colors duration-300">Open for collaborations</p>
           </div>
        )
 
     default:
-      return <div className="p-4 text-gray-400 flex items-center justify-center h-full text-xs uppercase tracking-widest">Coming Soon</div>;
+      return <div className="p-4 text-tertiary flex items-center justify-center h-full text-xs uppercase tracking-widest bg-node transition-colors duration-300">Coming Soon</div>;
   }
 };
