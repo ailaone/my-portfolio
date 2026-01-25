@@ -96,11 +96,11 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
     case NodeType.SOCIAL:
       return (
         <div className="p-6 flex items-center justify-around h-full bg-node transition-colors duration-300">
-           <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Linkedin strokeWidth={1.5} size={20} /></a>
-           <a href="https://github.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Github strokeWidth={1.5} size={20} /></a>
-           <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Instagram strokeWidth={1.5} size={20} /></a>
-           <a href="https://vimeo.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Video strokeWidth={1.5} size={20} /></a>
-           <a href="https://youtube.com" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Youtube strokeWidth={1.5} size={20} /></a>
+           <a href="https://www.linkedin.com/in/arthurazoulai/" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Linkedin strokeWidth={1.5} size={20} /></a>
+           <a href="https://github.com/ailaone" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Github strokeWidth={1.5} size={20} /></a>
+           <a href="https://www.instagram.com/arthurazoulai/" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Instagram strokeWidth={1.5} size={20} /></a>
+           <a href="https://vimeo.com/arthurazoulai" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Video strokeWidth={1.5} size={20} /></a>
+           <a href="https://www.youtube.com/@slicelab3819" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Youtube strokeWidth={1.5} size={20} /></a>
         </div>
       );
 
