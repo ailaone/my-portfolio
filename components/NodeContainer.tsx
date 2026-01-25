@@ -62,7 +62,7 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
 
   return (
     <div
-      className={`absolute flex flex-col bg-node border shadow-editorial rounded-[2px] transition-all duration-300 node-container ${
+      className={`absolute flex flex-col bg-node border shadow-editorial rounded-[2px] node-container ${
         isSelected ? 'border-primary z-20 shadow-hover' : 'border-secondary z-10 hover:border-[var(--hover-border)]'
       }`}
       style={{
@@ -71,6 +71,7 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
         width: node.width,
         height: node.height ? node.height : 'auto',
         transformOrigin: '0 0',
+        transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
       }}
       onPointerDown={(e) => {
          // Stop propagation only for Left click (0).

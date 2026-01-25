@@ -71,7 +71,7 @@
   --text-tertiary: #6b7280;
 
   /* Borders & Strokes */
-  --border-primary: #404040;
+  --border-primary: #ffffff;
   --border-secondary: rgba(255, 255, 255, 0.2);
   --border-tertiary: rgba(255, 255, 255, 0.1);
 
@@ -105,55 +105,6 @@
   --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* ===== WINAMP 90s THEME ===== */
-.winamp {
-  /* Canvas & Backgrounds */
-  --background: #0a0a0a;
-  --canvas-bg: #0a0a0a;
-  --node-bg: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
-  --grid-color: #00ff41;
-  --grid-opacity: 0.3;
-
-  /* Text Colors */
-  --foreground: #00ff41;
-  --text-primary: #00ff41;
-  --text-secondary: #00d9ff;
-  --text-tertiary: #ff006e;
-
-  /* Borders & Strokes */
-  --border-primary: #00ff41;
-  --border-secondary: rgba(0, 255, 65, 0.4);
-  --border-tertiary: rgba(0, 255, 65, 0.2);
-
-  /* UI Chrome */
-  --toolbar-bg: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
-  --toolbar-border: #00ff41;
-  --node-header-bg: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
-
-  /* Interactive States */
-  --hover-bg: rgba(0, 255, 65, 0.1);
-  --hover-border: #00ff41;
-  --selected-border: #ff006e;
-
-  /* Sockets & Wires */
-  --socket-empty: #2a2a2a;
-  --socket-connected: #ff006e;
-  --socket-connected-dark: #cc0058;
-  --socket-hover-valid: #00ff41;
-  --socket-hover-invalid: #ff006e;
-  --wire-color: #00d9ff;
-  --wire-selected: #ff006e;
-  --wire-temp: #00ff41;
-
-  /* Scrollbar */
-  --scrollbar-track: transparent;
-  --scrollbar-thumb: #00ff41;
-  --scrollbar-thumb-hover: #ff006e;
-
-  /* Shadows */
-  --shadow-editorial: 0 0 10px rgba(0, 255, 65, 0.3), 0 0 20px rgba(0, 255, 65, 0.2);
-  --shadow-hover: 0 0 20px rgba(255, 0, 110, 0.5);
-}
 
 html, body {
   background-color: var(--background);
@@ -257,25 +208,3 @@ canvas {
   margin-top: 0;
 }
 
-/* ===== WINAMP THEME SPECIAL EFFECTS ===== */
-.winamp .node-header {
-  border-style: ridge;
-  border-width: 2px;
-  text-shadow: 0 0 5px currentColor;
-}
-
-.winamp .node-container {
-  border-style: outset;
-  border-width: 2px;
-  box-shadow:
-    0 0 10px rgba(0, 255, 65, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.winamp .wire-path {
-  filter: drop-shadow(0 0 3px currentColor);
-}
-
-.winamp .socket-glow {
-  box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
-}

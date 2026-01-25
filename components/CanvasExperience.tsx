@@ -883,12 +883,12 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
            <div className="w-[1px] h-6 mx-2 transition-colors duration-300" style={{ backgroundColor: 'var(--border-tertiary)' }}></div>
            <button
              onClick={cycleTheme}
-             className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-primary hover:text-canvas transition-all duration-200 group text-secondary hover:text-canvas"
-             title={`Theme: ${theme} (click to cycle)`}
+             className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-hover transition-all duration-200 group text-secondary hover:text-primary"
+             title={`Theme: ${theme} (click to toggle)`}
            >
                <Palette className="w-4 h-4" />
            </button>
-           <button onClick={handleReset} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-primary hover:text-canvas transition-all duration-200 text-secondary hover:text-canvas">
+           <button onClick={handleReset} className="w-12 h-12 flex items-center justify-center rounded-full hover:bg-hover transition-all duration-200 text-secondary hover:text-primary">
                <RefreshCw className="w-4 h-4" />
            </button>
         </div>

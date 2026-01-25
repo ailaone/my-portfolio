@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type Theme = 'light' | 'dark' | 'winamp';
+export type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
   theme: Theme;
@@ -18,7 +18,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Load saved theme from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem('portfolio-theme') as Theme;
-    if (saved && ['light', 'dark', 'winamp'].includes(saved)) {
+    if (saved && ['light', 'dark'].includes(saved)) {
       setThemeState(saved);
     }
   }, []);
@@ -34,11 +34,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   const cycleTheme = () => {
-    setThemeState(prev => {
-      if (prev === 'light') return 'dark';
-      if (prev === 'dark') return 'winamp';
-      return 'light';
-    });
+    setThemeState(prev => prev === 'light' ? 'dark' : 'light');
   };
 
   return (
