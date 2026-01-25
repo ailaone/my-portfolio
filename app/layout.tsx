@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import ThemeProviderWrapper from "@/components/ThemeProviderWrapper";
 
 // Configure Fonts
 const inter = Inter({
@@ -39,7 +40,9 @@ export default function RootLayout({
         className={`${inter.variable} ${playfair.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        {children}
+        <ThemeProviderWrapper>
+          {children}
+        </ThemeProviderWrapper>
       </body>
     </html>
   );

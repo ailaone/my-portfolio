@@ -12,8 +12,30 @@ const config: Config = {
         serif: ['var(--font-playfair)', 'serif'],
         sans: ['var(--font-inter)', 'sans-serif'],
       },
+      colors: {
+        canvas: 'var(--canvas-bg)',
+        node: 'var(--node-bg)',
+        primary: 'var(--text-primary)',
+        secondary: 'var(--text-secondary)',
+        tertiary: 'var(--text-tertiary)',
+        'border-primary': 'var(--border-primary)',
+        'border-secondary': 'var(--border-secondary)',
+        'border-tertiary': 'var(--border-tertiary)',
+      },
+      backgroundColor: {
+        canvas: 'var(--canvas-bg)',
+        node: 'var(--node-bg)',
+        toolbar: 'var(--toolbar-bg)',
+        hover: 'var(--hover-bg)',
+      },
+      borderColor: {
+        primary: 'var(--border-primary)',
+        secondary: 'var(--border-secondary)',
+        tertiary: 'var(--border-tertiary)',
+      },
       boxShadow: {
-        'editorial': '0 2px 10px rgba(0, 0, 0, 0.03), 0 10px 25px rgba(0, 0, 0, 0.04)',
+        'editorial': 'var(--shadow-editorial)',
+        'hover': 'var(--shadow-hover)',
       },
       // Add the animation here so Tailwind knows about it
       animation: {
