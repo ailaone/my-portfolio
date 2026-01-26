@@ -156,12 +156,12 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       },
 
       // COLUMN 2: CENTER
-      { id: 'n-details', type: NodeType.DETAILS, position: { x: 600, y: 350 }, title: 'Details', inputs: [{ id: 'in-select', label: 'Context' }], outputs: [{ id: 'out-meta', label: 'Metadata' }], width: 450 },
+      { id: 'n-details', type: NodeType.DETAILS, position: { x: 600, y: 350 }, title: 'Details', inputs: [{ id: 'in-select', label: 'Context' }], outputs: [{ id: 'out-meta', label: 'Metadata' }], width: 550 },
       
       // COLUMN 3: RIGHT
-      { id: 'n-image', type: NodeType.IMAGE, position: { x: 1150, y: 250 }, title: 'Gallery', inputs: [{ id: 'in-img-data', label: 'Visual Data' }], outputs: [], width: 500, height: 400, data: { imageIndex: 0 } },
+      { id: 'n-image', type: NodeType.IMAGE, position: { x: 1250, y: 250 }, title: 'Gallery', inputs: [{ id: 'in-img-data', label: 'Visual Data' }], outputs: [], width: 500, height: 400, data: { imageIndex: 0 } },
       
-      { id: 'n-viewer', type: NodeType.VIEWER_3D, position: { x: 1150, y: 700 }, title: '3D Viewer', inputs: [{ id: 'in-geo', label: 'Geometry' }], outputs: [], width: 500, height: 400 },
+      { id: 'n-viewer', type: NodeType.VIEWER_3D, position: { x: 1250, y: 700 }, title: '3D Viewer', inputs: [{ id: 'in-geo', label: 'Geometry' }], outputs: [], width: 500, height: 400 },
     ];
   };
 

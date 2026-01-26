@@ -120,8 +120,8 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
                 onClick={() => onSmartSwitch?.(node.id, `out-p-${p.slug}`)}
               >
                 <div className="flex flex-col justify-center h-full">
-                    <span className="font-serif text-sm text-primary leading-tight line-clamp-2 transition-colors duration-300">{p.title}</span>
-                    <span className="text-[9px] text-secondary leading-none mt-1 transition-colors duration-300">{p.category}</span>
+                    <span className="font-serif font-normal text-base text-primary leading-tight line-clamp-2 transition-colors duration-300">{p.title}</span>
+                    <span className="text-[10px] text-secondary uppercase leading-none mt-1 transition-colors duration-300">{p.category}</span>
                 </div>
                 <div className="w-1 h-1 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
@@ -148,8 +148,8 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
                 onClick={() => onSmartSwitch?.(node.id, `out-cv-${j.id}`)}
               >
                 <div className="flex flex-col justify-center h-full w-[85%]">
-                    <span className="font-serif text-sm text-primary leading-tight line-clamp-1 transition-colors duration-300">{j.role}</span>
-                    <span className="text-[9px] text-secondary leading-none mt-1 uppercase tracking-wide transition-colors duration-300">{j.company} — {j.year}</span>
+                    <span className="font-serif font-normal text-base text-primary leading-tight line-clamp-1 transition-colors duration-300">{j.role}</span>
+                    <span className="text-[10px] text-secondary leading-none mt-1 uppercase tracking-wide transition-colors duration-300">{j.company} — {j.year}</span>
                 </div>
                 <div className="w-1 h-1 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
@@ -175,13 +175,13 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
                     <h2 className="text-xl font-serif text-primary leading-tight transition-colors duration-300">{upstreamData.role}</h2>
                     <p className="text-xs text-secondary uppercase tracking-widest mt-1 transition-colors duration-300">{upstreamData.company}</p>
                 </div>
-                <p className="font-serif text-sm text-primary leading-relaxed mb-4 italic opacity-80 transition-colors duration-300">
+                <p className="font-serif font-medium text-base text-primary leading-relaxed mb-4 italic opacity-80 transition-colors duration-300">
                     {upstreamData.description}
                 </p>
                 {upstreamData.details && (
                     <ul className="list-disc list-inside space-y-1 mb-6">
                         {upstreamData.details.map((d, i) => (
-                            <li key={i} className="text-xs text-secondary font-sans leading-relaxed transition-colors duration-300">{d}</li>
+                            <li key={i} className="text-sm text-secondary font-sans leading-relaxed transition-colors duration-300">{d}</li>
                         ))}
                     </ul>
                 )}
@@ -208,30 +208,30 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
 
           {/* Summary */}
           {upstreamData.summaryHtml && (
-            <div className="font-serif text-sm text-primary leading-relaxed mb-4 italic prose prose-sm opacity-80 transition-colors duration-300"
+            <div className="font-serif font-medium text-base text-primary leading-relaxed mb-4 italic prose prose-sm opacity-80 transition-colors duration-300"
                  dangerouslySetInnerHTML={{ __html: upstreamData.summaryHtml }} />
           )}
 
           {/* Description */}
           {upstreamData.descriptionHtml && (
-            <div className="font-sans text-xs text-secondary leading-relaxed mb-4 prose prose-sm transition-colors duration-300"
+            <div className="font-sans text-sm text-secondary leading-relaxed mb-4 prose prose-sm transition-colors duration-300"
                  dangerouslySetInnerHTML={{ __html: upstreamData.descriptionHtml }} />
           )}
 
           {!upstreamData.summaryHtml && !upstreamData.descriptionHtml && (
-            <p className="font-sans text-xs text-secondary leading-relaxed mb-4 transition-colors duration-300">No description available.</p>
+            <p className="font-sans text-sm text-secondary leading-relaxed mb-4 transition-colors duration-300">No description available.</p>
           )}
 
           <div className="mt-auto">
             <div className="grid grid-cols-2 gap-4 border-t border-tertiary pt-4 mb-3 transition-colors duration-300">
-               <div><h3 className="text-[9px] tracking-widest uppercase text-tertiary transition-colors duration-300">Role</h3><p className="text-xs text-primary transition-colors duration-300">{upstreamData.role.join(', ')}</p></div>
-               <div><h3 className="text-[9px] tracking-widest uppercase text-tertiary transition-colors duration-300">Year</h3><p className="text-xs text-primary transition-colors duration-300">{upstreamData.year}</p></div>
+               <div><h3 className="text-[11px] tracking-widest uppercase text-tertiary transition-colors duration-300">Role</h3><p className="text-sm text-primary transition-colors duration-300">{upstreamData.role.join(', ')}</p></div>
+               <div><h3 className="text-[11px] tracking-widest uppercase text-tertiary transition-colors duration-300">Year</h3><p className="text-sm text-primary transition-colors duration-300">{upstreamData.year}</p></div>
             </div>
 
             {/* Available Content */}
             {hasAnyContent && (
               <div className="border-t border-tertiary pt-3 transition-colors duration-300">
-                <h3 className="text-[9px] tracking-widest uppercase text-tertiary mb-2 transition-colors duration-300">Available Content</h3>
+                <h3 className="text-[10px] tracking-widest uppercase text-tertiary mb-2 transition-colors duration-300">Available Content</h3>
                 <div className="flex gap-2">
                   {hasImages && (
                     <button
@@ -243,7 +243,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
                       title="Create Gallery node"
                     >
                       <ImageIcon size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
-                      <span className="text-[9px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">Gallery</span>
+                      <span className="text-[11px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">Gallery</span>
                     </button>
                   )}
                   {hasVideo && (
