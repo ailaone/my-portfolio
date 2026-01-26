@@ -1,19 +1,17 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "blue-school",
+    "title": "Blue School",
+    "year": "2018",
+    "category": "Architecture",
+    "role": ["Lead Designer"],
+    "client": "Blue School",
+    "technologies": ["Rhino", "AutoCAD"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "blue-school_01.jpg",
+      "blue-school_02.jpg",
+      "blue-school_03.jpg"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "rg"
   }

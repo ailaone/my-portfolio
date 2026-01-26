@@ -1,19 +1,17 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "viz-3",
+    "title": "Viz 3 Course",
+    "year": "2021 - Ongoing",
+    "category": "Architecture + Education",
+    "role": ["Lead Designer", "Educator"],
+    "client": "New York Institute of Technology",
+    "technologies": ["Rhino", "Midjourney", "Vizcom", "Enscape", "Photoshop", "Illustrator"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "viz-3_01.jpg",
+      "viz-3_02.jpg",
+      "viz-3_03.jpg"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "solo"
   }

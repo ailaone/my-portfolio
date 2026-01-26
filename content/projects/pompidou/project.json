@@ -1,19 +1,20 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "pompidou",
+    "title": "Pompidou Center Plaza AI Renovation",
+    "year": "2025",
+    "category": "Concept Design + Architecture",
+    "role": ["Lead Designer", "Generative AI Specialist"],
+    "client": "R&D",
+    "technologies": ["ComfyUI", "Rhino", "Midjourney", "NanoBanana", "ByteDance"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "pompidou_01.jpg",
+      "pompidou_02.jpg",
+      "pompidou_03.jpg"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "solo",
+    "presentationUrl": "https://docs.google.com/presentation/d/e/2PACX-1vS0-zvGt32IqpOWd29_jXbSq9XujN1FBlXEWc1vBfDQl9D0p-EMuIzsAxzostsk2tMWUgQ38HlEcpHf/pub?start=false&loop=false&delayms=3000",
+    "videoUrl": "https://youtu.be/1234567890",
+    "autoplayVideo": true
   }

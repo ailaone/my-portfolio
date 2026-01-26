@@ -1,0 +1,19 @@
+{
+    "slug": "cdfam",
+    "title": "CDFAM Conference",
+    "year": "2024",
+    "category": "Conference",
+    "role": ["Founder + Computational Designer"],
+    "client": "n/a",
+    "technologies": ["nTop", "Rhino", "Grasshopper", "3D Printing"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "cdfam_01.jpg",
+      "cdfam_02.jpg",
+      "cdfam_03.jpg"
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=XQBpV1BdnV8",
+    "jobID": "slice",
+    "presentationUrl": "https://docs.google.com/presentation/d/1FrVdbp9Z0HBxbSfJsE1XF-meIRWDFR0zgMuqfCKxLiw/edit?usp=sharing" 
+  }

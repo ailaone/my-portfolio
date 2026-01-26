@@ -89,12 +89,14 @@ const getNodeTitle = (nodeType: NodeType): string => {
   const toolbarItem = TOOLBAR_ITEMS.find(item => item.type === nodeType);
   if (toolbarItem) return toolbarItem.label;
   
-  // Fallback for node types not in toolbar (HEADER, SOCIAL)
+  // Fallback for node types not in toolbar (HEADER, SOCIAL, PRESENTATION)
   switch (nodeType) {
     case NodeType.HEADER:
       return 'WhoIs';
     case NodeType.SOCIAL:
       return 'Social';
+    case NodeType.PRESENTATION:
+      return 'Presentation';
     default:
       return nodeType.toString();
   }
@@ -125,14 +127,14 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
     return [
       // COLUMN 1: LEFT STACK
-      { id: 'n-header', type: NodeType.HEADER, position: { x: 50, y: 50 }, title: 'WhoIs', inputs: [], outputs: [], width: 350 },
+      { id: 'n-header', type: NodeType.HEADER, position: { x: 200, y: 50 }, title: 'WhoIs', inputs: [], outputs: [], width: 350 },
 
-      { id: 'n-social', type: NodeType.SOCIAL, position: { x: 50, y: 250 }, title: 'Social', inputs: [], outputs: [], width: 350 },
+      { id: 'n-social', type: NodeType.SOCIAL, position: { x: 200, y: 250 }, title: 'Social', inputs: [], outputs: [], width: 350 },
 
       {
         id: 'n-cv',
         type: NodeType.CV,
-        position: { x: 50, y: 375 },
+        position: { x: 200, y: 375 },
         title: 'Work Experience',
         inputs: [],
         outputs: jobOutputs,
@@ -145,7 +147,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       {
         id: 'n-list',
         type: NodeType.PROJECT_LIST,
-        position: { x: 50, y: 390 + cvHeight + 10 }, // Positioned below CV
+        position: { x: 200, y: 390 + cvHeight + 10 }, // Positioned below CV
         title: 'Project Index',
         inputs: [{ id: 'in-filter', label: 'Filter by Job' }],
         outputs: [],
@@ -156,12 +158,12 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       },
 
       // COLUMN 2: CENTER
-      { id: 'n-details', type: NodeType.DETAILS, position: { x: 600, y: 550 }, title: 'Details', inputs: [{ id: 'in-select', label: 'Context' }], outputs: [{ id: 'out-meta', label: 'Metadata' }], width: 550 },
+      { id: 'n-details', type: NodeType.DETAILS, position: { x: 800, y: 250 }, title: 'Details', inputs: [{ id: 'in-select', label: 'Context' }], outputs: [{ id: 'out-meta', label: 'Metadata' }], width: 550 },
       
       // COLUMN 3: RIGHT
-      { id: 'n-image', type: NodeType.IMAGE, position: { x: 1250, y: 250 }, title: 'Gallery', inputs: [{ id: 'in-img-data', label: 'Visual Data' }], outputs: [], width: 500, height: 400, data: { imageIndex: 0 } },
+      { id: 'n-image', type: NodeType.IMAGE, position: { x: 1450, y: 250 }, title: 'Gallery', inputs: [{ id: 'in-img-data', label: 'Visual Data' }], outputs: [], width: 500, height: 400, data: { imageIndex: 0 } },
       
-      { id: 'n-viewer', type: NodeType.VIEWER_3D, position: { x: 1250, y: 700 }, title: '3D Viewer', inputs: [{ id: 'in-geo', label: 'Geometry' }], outputs: [], width: 500, height: 400 },
+      { id: 'n-viewer', type: NodeType.VIEWER_3D, position: { x: 1450, y: 700 }, title: '3D Viewer', inputs: [{ id: 'in-geo', label: 'Geometry' }], outputs: [], width: 500, height: 400 },
     ];
   };
 
@@ -181,7 +183,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
   // --- State ---
   const [pan, setPan] = useState<Position>({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(0.75);
+  const [zoom, setZoom] = useState(0.70);
 
   // Initialize state once
   const [nodes, setNodes] = useState<NodeState[]>(() => getInitialNodes(initialProjects));
@@ -297,20 +299,9 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
     if (nodesUpdated) {
         setNodes(newNodes);
-        // Clean up connections that point to non-existent project outputs
-        // (This happens if we switch filters and the old project list disappears)
-        const validOutputIds = new Set<string>();
-        newNodes.forEach(n => n.outputs.forEach(o => validOutputIds.add(`${n.id}-${o.id}`)));
-        
-        // We only care about connections originating FROM the project list
-        setConnections(prev => prev.filter(c => {
-            const fromNode = newNodes.find(n => n.id === c.fromNodeId);
-            if (fromNode?.type === NodeType.PROJECT_LIST) {
-                // Check if this specific output still exists
-                return validOutputIds.has(`${c.fromNodeId}-${c.fromSocketId}`);
-            }
-            return true;
-        }));
+        // Note: We intentionally don't clean up connections when project outputs change.
+        // This allows connections to persist when switching CV filters, even if the
+        // connected project is temporarily not in the filtered list.
     }
 
   }, [connections, initialProjects, nodes]);
@@ -480,9 +471,16 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       width: 300
     };
 
-    if (newNodeType === NodeType.VIEWER_3D || newNodeType === NodeType.IMAGE || newNodeType === NodeType.VIDEO) {
+    if (newNodeType === NodeType.VIEWER_3D || newNodeType === NodeType.IMAGE || newNodeType === NodeType.VIDEO || newNodeType === NodeType.PRESENTATION) {
       newNode.height = 300; newNode.width = 400;
       if (newNodeType === NodeType.IMAGE) newNode.data = { imageIndex: 0 };
+    }
+
+    // Customize Details Node
+    if (newNodeType === NodeType.DETAILS) {
+      newNode.width = 550;
+      newNode.inputs = [{ id: 'in-select', label: 'Context' }];
+      newNode.outputs = [{ id: 'out-meta', label: 'Metadata' }];
     }
 
     // Customize Project List
@@ -588,6 +586,9 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
     } else if (nodeType === NodeType.VIEWER_3D) {
       inputSocketId = 'in-geo';
       inputSocketLabel = 'Geometry';
+    } else if (nodeType === NodeType.VIDEO || nodeType === NodeType.PRESENTATION) {
+      inputSocketId = 'in-media';
+      inputSocketLabel = 'Media';
     }
 
     // Create new node
@@ -888,19 +889,49 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       if (tempWireStart.nodeId !== nodeId && tempWireStart.isInput !== isInput) {
         const from = !tempWireStart.isInput ? tempWireStart : { nodeId, socketId };
         const to = tempWireStart.isInput ? tempWireStart : { nodeId, socketId };
-        
+
         // REPLACE LOGIC: Remove existing wire connected to the input
         setConnections(prev => {
             const targetInput = tempWireStart.isInput ? tempWireStart : { nodeId, socketId };
             // Remove any connection pointing TO this input
             const filtered = prev.filter(c => !(c.toNodeId === targetInput.nodeId && c.toSocketId === targetInput.socketId));
-            
+
             // Add new connection
-            return [...filtered, {
+            const newConnection = {
                 id: `c-${Date.now()}`,
                 fromNodeId: from.nodeId, fromSocketId: from.socketId,
-                toNodeId: to.nodeId, toSocketId: to.socketId 
-            }];
+                toNodeId: to.nodeId, toSocketId: to.socketId
+            };
+
+            // CASCADE: If connecting CV → PROJECT_LIST filter, auto-select first project
+            const fromNode = nodes.find(n => n.id === from.nodeId);
+            const toNode = nodes.find(n => n.id === to.nodeId);
+
+            if (fromNode?.type === NodeType.CV &&
+                toNode?.type === NodeType.PROJECT_LIST &&
+                to.socketId === 'in-filter' &&
+                from.socketId.startsWith('out-cv-')) {
+
+                // Extract jobId and find first project
+                const jobId = from.socketId.replace('out-cv-', '');
+                const filteredProjects = initialProjects.filter(p => p.jobId === jobId);
+
+                if (filteredProjects.length > 0) {
+                    const firstProjectSocketId = `out-p-${filteredProjects[0].slug}`;
+
+                    // Update any existing PROJECT_LIST → DETAILS connections to use first project
+                    const updatedConnections = filtered.map(conn => {
+                        if (conn.fromNodeId === to.nodeId && conn.toSocketId === 'in-select') {
+                            return { ...conn, fromSocketId: firstProjectSocketId };
+                        }
+                        return conn;
+                    });
+
+                    return [...updatedConnections, newConnection];
+                }
+            }
+
+            return [...filtered, newConnection];
         });
       }
     }
@@ -1104,8 +1135,11 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         )}
 
         {/* Coordinate & Scale Display */}
-        <div className="absolute bottom-12 left-12 text-black font-mono text-[10px] tracking-widest select-none bg-white/80 backdrop-blur-sm px-2 py-1 rounded border border-black/5 shadow-sm">
-          COORD: {pan.x.toFixed(0)} / {pan.y.toFixed(0)} :: SCALE: {(zoom * 100).toFixed(0)}%
+        <div className="absolute bottom-6 left-6 opacity-60">
+           <div className="flex flex-col items-start gap-1 text-[9px] font-mono tracking-wider text-black/70">
+              <div>SCALE: {(zoom * 100).toFixed(0)}%</div>
+              <div>COORD: {pan.x.toFixed(0)} / {pan.y.toFixed(0)}</div>
+           </div>
         </div>
 
         {/* Zoom Instructions */}

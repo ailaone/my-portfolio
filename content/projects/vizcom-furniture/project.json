@@ -1,19 +1,19 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "vizcom-furniture",
+    "title": "AI Furniture Design",
+    "year": "2025",
+    "category": "AI + Furniture Design",
+    "role": ["Designer"],
+    "client": "Personal R&D",
+    "technologies": ["Rhino", "Grasshopper", "Vizcom"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "vizcom-furniture_01.jpg",
+      "vizcom-furniture_02.jpg",
+      "vizcom-furniture_03.jpg"
     ],
     "model": "test.glb",
     "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "solo"
   }

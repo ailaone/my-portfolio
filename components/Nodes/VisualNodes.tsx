@@ -2,7 +2,7 @@
 import React from 'react';
 import { ProjectData, JobData, NodeState, NodeType, Connection } from '@/types/content';
 import { ThreeScene } from '../ThreeScene';
-import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Maximize, Image as ImageIcon, Calendar } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Maximize, Image as ImageIcon, Calendar, Video, Monitor } from 'lucide-react';
 import { NewTwitterIcon } from 'hugeicons-react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -198,7 +198,8 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
       const hasImages = upstreamData.galleryUrls && upstreamData.galleryUrls.length > 0;
       const hasVideo = !!upstreamData.videoEmbedUrl;
       const has3D = !!upstreamData.modelUrl;
-      const hasAnyContent = hasImages || hasVideo || has3D;
+      const hasPresentation = !!upstreamData.presentationEmbedUrl;
+      const hasAnyContent = hasImages || hasVideo || has3D || hasPresentation;
 
       return (
         <div className="p-6 flex flex-col h-full overflow-y-auto bg-node transition-colors duration-300">
@@ -271,6 +272,19 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
                     >
                       <Box size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
                       <span className="text-[9px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">3D</span>
+                    </button>
+                  )}
+                  {hasPresentation && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSpawnNode?.(NodeType.PRESENTATION, node.id);
+                      }}
+                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-hover hover:bg-primary/20 transition-colors group"
+                      title="Create Presentation node"
+                    >
+                      <Monitor size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
+                      <span className="text-[9px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">Slides</span>
                     </button>
                   )}
                 </div>
@@ -456,10 +470,17 @@ case NodeType.VIEWER_3D:
         );
       }
 
+      // Add autoplay parameters if enabled
+      let videoSrc = upstreamData.videoEmbedUrl;
+      if (upstreamData.autoplayVideo) {
+        const separator = videoSrc.includes('?') ? '&' : '?';
+        videoSrc = `${videoSrc}${separator}autoplay=1&mute=1`;
+      }
+
       return (
         <div className="w-full h-full relative bg-[#000000]">
           <iframe
-            src={upstreamData.videoEmbedUrl}
+            src={videoSrc}
             className="absolute inset-0 w-full h-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -468,6 +489,38 @@ case NodeType.VIEWER_3D:
           <div className="absolute bottom-2 right-2 text-[9px] font-mono text-white/50 uppercase tracking-wider pointer-events-none z-20 bg-black/30 px-2 py-1 rounded">
             {upstreamData.slug}
           </div>
+        </div>
+      );
+
+    case NodeType.PRESENTATION:
+      if (!upstreamData || !isProject(upstreamData)) {
+        return (
+          <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
+            <Monitor size={16} />
+            <span className="text-[10px] uppercase tracking-widest">Connect Input to Project</span>
+          </div>
+        );
+      }
+
+      // Check if presentation is available for this project
+      if (!upstreamData.presentationEmbedUrl) {
+        return (
+          <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
+            <Monitor size={16} />
+            <span className="text-[10px] uppercase tracking-widest">Presentation Not Available for This Project</span>
+            <span className="text-[9px] text-secondary mt-1 transition-colors duration-300">{upstreamData.title}</span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="w-full h-full relative bg-[#000000]">
+          <iframe
+            src={upstreamData.presentationEmbedUrl}
+            className="absolute inset-0 w-full h-full"
+            allowFullScreen
+            title={upstreamData.title}
+          />
         </div>
       );
 

@@ -30,6 +30,8 @@ export interface ProjectJson {
   images: string[];
   model?: string;
   videoUrl?: string;
+  autoplayVideo?: boolean; // Enable autoplay for video (will be muted)
+  presentationUrl?: string; // Google Slides embed URL
   stats?: ProjectStats;
   layout?: ProjectLayout;
   jobId?: string; // Link to CV Data ID
@@ -48,6 +50,7 @@ export interface ProjectData extends ProjectJson {
   galleryUrls?: string[];
   modelUrl?: string;
   videoEmbedUrl?: string;
+  presentationEmbedUrl?: string;
 }
 
 export interface JobData {
@@ -76,6 +79,7 @@ export enum NodeType {
   DATA = 'DATA',
   IMAGE = 'IMAGE',
   VIDEO = 'VIDEO',
+  PRESENTATION = 'PRESENTATION',
   CONTACT = 'CONTACT',
 }
 

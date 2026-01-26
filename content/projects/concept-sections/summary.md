@@ -1,1 +1,1 @@
-this is the euronews facade project
+Concept Section for Theater Renovation Project.

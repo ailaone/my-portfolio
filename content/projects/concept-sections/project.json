@@ -1,19 +1,27 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "concept-sections",
+    "title": "AI Concept Sections",
+    "year": "2025",
+    "category": "AI + Concept Design",
+    "role": ["Lead Designer", "Generative AI Specialist"],
+    "client": "Rockwell Group",
+    "technologies": ["ComfyUI", "Rhino", "Midjourney", "NanoBanana", "ByteDance"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "concept-sections_01.webp",
+      "concept-sections_02.webp",
+      "concept-sections_03.webp",
+      "concept-sections_04.webp",
+      "concept-sections_05.webp",
+      "concept-sections_06.webp",
+      "concept-sections_07.webp",
+      "concept-sections_08.webp",
+      "concept-sections_09.webp",
+      "concept-sections_10.webp",
+      "concept-sections_11.webp"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "rg",
+    "videoUrl": "https://youtu.be/CzqeMWy6cQk",
+    "autoplayVideo": true
   }

@@ -1,9 +1,9 @@
 {
     "slug": "noisy",
     "title": "Music and Dance Conservatory",
-    "year": "2015",
+    "year": "2017",
     "category": "Architecture",
-    "role": ["Facade Designer"],
+    "role": ["Lead Designer + Computational Specialist"],
     "client": "Noisy-le-Sec",
     "technologies": ["Rhino", "Grasshopper", "AutoCAD"],
     "description_file": "description.md",

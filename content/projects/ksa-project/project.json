@@ -1,0 +1,17 @@
+{
+    "slug": "blue-school",
+    "title": "Blue School",
+    "year": "2018",
+    "category": "Architecture",
+    "role": ["Lead Designer"],
+    "client": "Blue School",
+    "technologies": ["Rhino", "AutoCAD"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "blue-school_01.jpg",
+      "blue-school_02.jpg",
+      "blue-school_03.jpg"
+    ],
+    "jobID": "rg"
+  }

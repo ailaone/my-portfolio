@@ -31,6 +31,31 @@ function getVideoEmbedUrl(url?: string): string | undefined {
   return undefined;
 }
 
+// Helper to convert Google Slides URLs to embed URLs
+function getPresentationEmbedUrl(url?: string): string | undefined {
+  if (!url) return undefined;
+
+  // If already an embed URL, return as-is
+  if (url.includes('/embed')) {
+    return url;
+  }
+
+  // Published presentation: https://docs.google.com/presentation/d/e/{ID}/pub
+  // These keep the /e/ in the path
+  if (url.includes('/d/e/') && url.includes('/pub')) {
+    return url.replace(/\/pub(\?.*)?$/, '/embed?start=false');
+  }
+
+  // Regular sharing/edit URL: https://docs.google.com/presentation/d/{ID}/edit
+  const slidesRegex = /docs\.google\.com\/presentation\/d\/([a-zA-Z0-9_-]+)/;
+  const slidesMatch = url.match(slidesRegex);
+  if (slidesMatch) {
+    return `https://docs.google.com/presentation/d/${slidesMatch[1]}/embed?start=false`;
+  }
+
+  return undefined;
+}
+
 // Configure marked for safe HTML rendering with links opening in new tabs
 marked.use({
   gfm: true, // GitHub Flavored Markdown
@@ -144,6 +169,7 @@ export function getProjectBySlug(slug: string): ProjectData | null {
       galleryUrls: existingImages.map(img => getImageUrl(img)!).filter(Boolean),
       modelUrl: getModelUrl(projectJson.model),
       videoEmbedUrl: getVideoEmbedUrl(projectJson.videoUrl),
+      presentationEmbedUrl: getPresentationEmbedUrl(projectJson.presentationUrl),
     };
 
     return projectData;

@@ -1,19 +1,17 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "peak",
+    "title": "Peak Restaurant",
+    "year": "2020",
+    "category": "Hospitality",
+    "role": ["Lead Designer", "Project Manager"],
+    "client": "Related",
+    "technologies": ["Rhino", "AutoCAD"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "peak_01.jpg",
+      "peak_02.jpg",
+      "peak_03.jpg"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "rg"
   }

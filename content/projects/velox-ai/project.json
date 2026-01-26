@@ -1,19 +1,19 @@
 {
-    "slug": "euronews",
-    "title": "Euronews Facade",
-    "year": "2014",
-    "category": "Jakob + MacFarlane / Architecture",
-    "role": ["Lead Designer", "Computational Specialist"],
-    "client": "Euronews",
-    "technologies": ["Rhino", "Grasshopper", "Scriptographer"],
+    "slug": "velox-ai",
+    "title": "Velox AI",
+    "year": "2023",
+    "category": "AI + Product Design",
+    "role": ["Lead Designer", "Generative AI Specialist"],
+    "client": "Private / Variant3D",
+    "technologies": ["Rhino", "Grasshopper", "Midjourney", "Python", "3D Printing", "3D Knitting"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "euronews_01.jpg",
-      "euronews_02.jpg",
-      "euronews_03.jpg"
+      "velox-ai_01.jpg",
+      "velox-ai_02.jpg",
+      "velox-ai_03.jpg"
     ],
     "model": "test.glb",
     "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "slice"
   }
