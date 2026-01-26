@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ProjectData, JobData, NodeState, NodeType, Connection } from '@/types/content';
+import { ProjectData, JobData, ThemeData, NodeState, NodeType, Connection } from '@/types/content';
 import { ThreeScene } from '../ThreeScene';
 import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Maximize, Image as ImageIcon, Calendar, Video, Monitor } from 'lucide-react';
 import { NewTwitterIcon } from 'hugeicons-react';
@@ -12,6 +12,7 @@ interface ContentProps {
   connections: Connection[];
   projects: ProjectData[];
   jobs: JobData[];
+  themes: ThemeData[];
   onNodeDataChange: (nodeId: string, data: any) => void;
   onOpenFullscreen: (gallery: string[], currentIndex: number, projectTitle: string) => void;
   onSpawnNode?: (nodeType: NodeType, sourceNodeId: string) => void;
@@ -61,7 +62,7 @@ const findUpstreamData = (
 const isProject = (data: any): data is ProjectData => !!data && 'slug' in data;
 const isJob = (data: any): data is JobData => !!data && 'company' in data;
 
-export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, connections, projects, jobs, onNodeDataChange, onOpenFullscreen, onSpawnNode, onSmartSwitch }) => {
+export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, connections, projects, jobs, themes, onNodeDataChange, onOpenFullscreen, onSpawnNode, onSmartSwitch }) => {
   
   const handleImageNav = (direction: 'prev' | 'next', currentProject: ProjectData) => {
      const gallery = currentProject.galleryUrls || [];
@@ -130,9 +131,30 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
             {projectList.length === 0 && (
                 <div className="flex-1 flex flex-col items-center justify-center p-4 gap-2">
                   <Plug size={16} className="text-tertiary" />
-                  <p className="text-center text-[10px] text-tertiary uppercase tracking-widest transition-colors duration-300">Connect Work Experience</p>
+                  <p className="text-center text-[10px] text-tertiary uppercase tracking-widest transition-colors duration-300">Connect THEME or Work Experience</p>
                 </div>
             )}
+          </div>
+        </div>
+      );
+
+    case NodeType.THEME:
+      return (
+        <div className="flex flex-col h-full bg-node overflow-hidden transition-colors duration-300">
+           <div className="flex flex-col">
+            {themes.map((t) => (
+              <div
+                key={t.id}
+                className="px-3 group flex items-center justify-between border-b border-transparent hover:bg-hover transition-colors shrink-0 cursor-pointer"
+                style={{ height: node.socketStride || 40 }}
+                onClick={() => onSmartSwitch?.(node.id, `out-theme-${t.id}`)}
+              >
+                <div className="flex flex-col justify-center h-full w-[85%]">
+                    <span className="font-sans font-normal text-sm text-primary leading-tight line-clamp-1 transition-colors duration-300">{t.label}</span>
+                </div>
+                <div className="w-1 h-1 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+            ))}
           </div>
         </div>
       );

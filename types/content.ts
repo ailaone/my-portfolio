@@ -24,6 +24,7 @@ export interface ProjectJson {
   client?: string;
   technologies: string[];
   tags?: string[];
+  themes?: string[]; // Theme categories: ai-dev, comp-design, 3d-dfam, arch-fab, edu-conf
   description_file?: string;
   summary_file?: string;
   process_file?: string;
@@ -62,6 +63,11 @@ export interface JobData {
   details?: string[];
 }
 
+export interface ThemeData {
+  id: string;
+  label: string;
+}
+
 // --- Application Types for the Canvas ---
 
 export interface Position {
@@ -74,6 +80,7 @@ export enum NodeType {
   SOCIAL = 'SOCIAL',
   PROJECT_LIST = 'PROJECT_LIST',
   CV = 'CV',
+  THEME = 'THEME',
   VIEWER_3D = 'VIEWER_3D',
   DETAILS = 'DETAILS',
   DATA = 'DATA',

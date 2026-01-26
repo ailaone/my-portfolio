@@ -6,6 +6,7 @@
     "role": ["Developer"],
     "client": "Personal",
     "technologies": ["Swift", "SwiftUI", "Swift Package Manager"],
+    "themes": ["ai-dev"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [

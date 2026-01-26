@@ -6,6 +6,7 @@
     "role": ["Founder + Computational Designer"],
     "client": "n/a",
     "technologies": ["nTop", "Rhino", "Grasshopper", "3D Printing"],
+    "themes": ["comp-design", "3d-dfam", "edu-conf"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
@@ -15,5 +16,5 @@
     ],
     "videoUrl": "https://www.youtube.com/watch?v=XQBpV1BdnV8",
     "jobID": "slice",
-    "presentationUrl": "https://docs.google.com/presentation/d/1FrVdbp9Z0HBxbSfJsE1XF-meIRWDFR0zgMuqfCKxLiw/edit?usp=sharing" 
+    "presentationUrl": "https://docs.google.com/presentation/d/1FrVdbp9Z0HBxbSfJsE1XF-meIRWDFR0zgMuqfCKxLiw/edit?usp=sharing"
   }

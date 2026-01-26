@@ -7,7 +7,7 @@ import {
   Box, FileText, Image as ImageIcon, BarChart, Activity, List, Mail, GripHorizontal, Zap,
   ChevronLeft, ChevronRight, Trash2, Briefcase, Share2, Maximize, X, Video, Palette
 } from 'lucide-react';
-import { ProjectData, JobData, NodeState, Position, NodeType, Connection, DragMode } from '@/types/content';
+import { ProjectData, JobData, ThemeData, NodeState, Position, NodeType, Connection, DragMode } from '@/types/content';
 import { GridBackground } from './GridBackground';
 import { NodeContainer } from './NodeContainer';
 import { WireConnections } from './WireConnections';
@@ -74,6 +74,14 @@ const CV_DATA: JobData[] = [
   }
 ];
 
+const THEME_DATA: ThemeData[] = [
+  { id: 'ai-dev', label: 'AI / Dev' },
+  { id: 'comp-design', label: 'Computational Design' },
+  { id: '3d-dfam', label: '3D Printing / DFAM' },
+  { id: 'arch-fab', label: 'Architecture / Fabrication' },
+  { id: 'edu-conf', label: 'Education / Conferences' }
+];
+
 const TOOLBAR_ITEMS = [
   { type: NodeType.PROJECT_LIST, label: 'Project Index', icon: List },
   { type: NodeType.CV, label: 'Work Experience', icon: Briefcase },
@@ -89,12 +97,14 @@ const getNodeTitle = (nodeType: NodeType): string => {
   const toolbarItem = TOOLBAR_ITEMS.find(item => item.type === nodeType);
   if (toolbarItem) return toolbarItem.label;
   
-  // Fallback for node types not in toolbar (HEADER, SOCIAL, PRESENTATION)
+  // Fallback for node types not in toolbar (HEADER, SOCIAL, THEME, PRESENTATION)
   switch (nodeType) {
     case NodeType.HEADER:
       return 'WhoIs';
     case NodeType.SOCIAL:
       return 'Social';
+    case NodeType.THEME:
+      return 'Themes';
     case NodeType.PRESENTATION:
       return 'Presentation';
     default:
@@ -118,12 +128,14 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   
   const getInitialNodes = (projects: ProjectData[]): NodeState[] => {
     const jobOutputs = CV_DATA.map(j => ({ id: `out-cv-${j.id}`, label: '' }));
+    const themeOutputs = THEME_DATA.map(t => ({ id: `out-theme-${t.id}`, label: '' }));
 
     // Use 60px stride for lists to allow multi-line titles
     const socketStride = 60;
     const minContentHeight = 80; // Minimum height for empty state message
     const listHeight = 32 + minContentHeight;
     const cvHeight = 32 + (CV_DATA.length * socketStride);
+    const themeHeight = 32 + (THEME_DATA.length * socketStride);
 
     return [
       // COLUMN 1: LEFT STACK
@@ -132,9 +144,22 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       { id: 'n-social', type: NodeType.SOCIAL, position: { x: 200, y: 250 }, title: 'Social', inputs: [], outputs: [], width: 350 },
 
       {
+        id: 'n-theme',
+        type: NodeType.THEME,
+        position: { x: 200, y: 375 },
+        title: 'Themes',
+        inputs: [],
+        outputs: themeOutputs,
+        width: 350,
+        height: themeHeight,
+        socketStride: socketStride,
+        data: {}
+      },
+
+      {
         id: 'n-cv',
         type: NodeType.CV,
-        position: { x: 200, y: 375 },
+        position: { x: 200, y: 375 + themeHeight + 10 },
         title: 'Work Experience',
         inputs: [],
         outputs: jobOutputs,
@@ -144,12 +169,13 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         data: {}
       },
 
+      // COLUMN 2: CENTER
       {
         id: 'n-list',
         type: NodeType.PROJECT_LIST,
-        position: { x: 200, y: 390 + cvHeight + 10 }, // Positioned below CV
+        position: { x: 600, y: 375 },
         title: 'Project Index',
-        inputs: [{ id: 'in-filter', label: 'Filter by Job' }],
+        inputs: [{ id: 'in-filter', label: 'Filter by Theme/Job' }],
         outputs: [],
         width: 350,
         height: listHeight,
@@ -157,27 +183,23 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         data: { displayedProjects: [] }
       },
 
-      // COLUMN 2: CENTER
-      { id: 'n-details', type: NodeType.DETAILS, position: { x: 800, y: 250 }, title: 'Details', inputs: [{ id: 'in-select', label: 'Context' }], outputs: [{ id: 'out-meta', label: 'Metadata' }], width: 550 },
-      
       // COLUMN 3: RIGHT
-      { id: 'n-image', type: NodeType.IMAGE, position: { x: 1450, y: 250 }, title: 'Gallery', inputs: [{ id: 'in-img-data', label: 'Visual Data' }], outputs: [], width: 500, height: 400, data: { imageIndex: 0 } },
-      
-      { id: 'n-viewer', type: NodeType.VIEWER_3D, position: { x: 1450, y: 700 }, title: '3D Viewer', inputs: [{ id: 'in-geo', label: 'Geometry' }], outputs: [], width: 500, height: 400 },
+      { id: 'n-details', type: NodeType.DETAILS, position: { x: 1200, y: 250 }, title: 'Details', inputs: [{ id: 'in-select', label: 'Context' }], outputs: [{ id: 'out-meta', label: 'Metadata' }], width: 550 },
+
+      // COLUMN 4: FAR RIGHT
+      { id: 'n-image', type: NodeType.IMAGE, position: { x: 1800, y: 250 }, title: 'Gallery', inputs: [{ id: 'in-img-data', label: 'Visual Data' }], outputs: [], width: 500, height: 400, data: { imageIndex: 0 } },
+
+      { id: 'n-viewer', type: NodeType.VIEWER_3D, position: { x: 1800, y: 700 }, title: '3D Viewer', inputs: [{ id: 'in-geo', label: 'Geometry' }], outputs: [], width: 500, height: 400 },
     ];
   };
 
   const getInitialConnections = (projects: ProjectData[]): Connection[] => {
     const conns: Connection[] = [
-      { id: 'c2', fromNodeId: 'n-details', fromSocketId: 'out-meta', toNodeId: 'n-image', toSocketId: 'in-img-data' },
-      { id: 'c3', fromNodeId: 'n-details', fromSocketId: 'out-meta', toNodeId: 'n-viewer', toSocketId: 'in-geo' },
+      { id: 'c1', fromNodeId: 'n-details', fromSocketId: 'out-meta', toNodeId: 'n-image', toSocketId: 'in-img-data' },
+      { id: 'c2', fromNodeId: 'n-details', fromSocketId: 'out-meta', toNodeId: 'n-viewer', toSocketId: 'in-geo' },
     ];
 
-    // Connect Independent Development CV item to Project Index filter
-    if (CV_DATA.length > 0) {
-        conns.push({ id: 'c1', fromNodeId: 'n-cv', fromSocketId: `out-cv-${CV_DATA[2].id}`, toNodeId: 'n-list', toSocketId: 'in-filter' });
-    }
-
+    // No initial connections to PROJECT_LIST or DETAILS - let user explore
     return conns;
   };
 
@@ -244,13 +266,19 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         if (filterConn) {
           const fromNode = nodes.find(n => n.id === filterConn.fromNodeId);
           
-          // CASE 1: Direct - CV → Project List
-          if (fromNode && fromNode.type === NodeType.CV && filterConn.fromSocketId.startsWith('out-cv-')) {
+          // CASE 1: Direct - THEME → Project List
+          if (fromNode && fromNode.type === NodeType.THEME && filterConn.fromSocketId.startsWith('out-theme-')) {
+              const themeId = filterConn.fromSocketId.replace('out-theme-', '');
+              console.log('🎨 Direct THEME, themeId:', themeId);
+              displayedProjects = initialProjects.filter(p => p.themes?.includes(themeId));
+          }
+          // CASE 2: Direct - CV → Project List
+          else if (fromNode && fromNode.type === NodeType.CV && filterConn.fromSocketId.startsWith('out-cv-')) {
               const jobId = filterConn.fromSocketId.replace('out-cv-', '');
               console.log('🔍 Direct CV, jobId:', jobId);
               displayedProjects = initialProjects.filter(p => p.jobId === jobId);
-          } 
-          // CASE 2: Upstream - CV → Details → Project List
+          }
+          // CASE 3: Upstream - CV → Details → Project List
           else if (fromNode && fromNode.type === NodeType.DETAILS) {
               // Trace back to find CV
               const detailsInputConn = connections.find(c => c.toNodeId === fromNode.id && c.toSocketId === 'in-select');
@@ -551,6 +579,37 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
             // Find if PROJECT_LIST connects to DETAILS
             const projectListConnections = connections.filter(c => c.fromNodeId === projectListNode.id);
+
+            // Update PROJECT_LIST → DETAILS connection to use first project
+            setConnections(prev => prev.map(conn => {
+              if (conn.fromNodeId === projectListNode.id && conn.toSocketId === 'in-select') {
+                return { ...conn, fromSocketId: firstProjectSocketId };
+              }
+              return conn;
+            }));
+          }
+        }
+      }
+    }
+
+    // Special handling for THEME nodes: cascade to project list and auto-select first project
+    if (sourceNode.type === NodeType.THEME) {
+      // Find if this THEME connects to a PROJECT_LIST via the filter input
+      const themeToProjectListConn = outgoingConnections.find(c => c.toSocketId === 'in-filter');
+
+      if (themeToProjectListConn) {
+        const projectListNode = nodes.find(n => n.id === themeToProjectListConn.toNodeId);
+
+        if (projectListNode && projectListNode.type === NodeType.PROJECT_LIST) {
+          // Extract themeId from socketId (format: "out-theme-{themeId}")
+          const themeId = socketId.replace('out-theme-', '');
+
+          // Find projects with this themeId
+          const filteredProjects = initialProjects.filter(p => p.themes?.includes(themeId));
+
+          if (filteredProjects.length > 0) {
+            const firstProject = filteredProjects[0];
+            const firstProjectSocketId = `out-p-${firstProject.slug}`;
 
             // Update PROJECT_LIST → DETAILS connection to use first project
             setConnections(prev => prev.map(conn => {
@@ -931,6 +990,31 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
                 }
             }
 
+            // CASCADE: If connecting THEME → PROJECT_LIST filter, auto-select first project
+            if (fromNode?.type === NodeType.THEME &&
+                toNode?.type === NodeType.PROJECT_LIST &&
+                to.socketId === 'in-filter' &&
+                from.socketId.startsWith('out-theme-')) {
+
+                // Extract themeId and find first project
+                const themeId = from.socketId.replace('out-theme-', '');
+                const filteredProjects = initialProjects.filter(p => p.themes?.includes(themeId));
+
+                if (filteredProjects.length > 0) {
+                    const firstProjectSocketId = `out-p-${filteredProjects[0].slug}`;
+
+                    // Update any existing PROJECT_LIST → DETAILS connections to use first project
+                    const updatedConnections = filtered.map(conn => {
+                        if (conn.fromNodeId === to.nodeId && conn.toSocketId === 'in-select') {
+                            return { ...conn, fromSocketId: firstProjectSocketId };
+                        }
+                        return conn;
+                    });
+
+                    return [...updatedConnections, newConnection];
+                }
+            }
+
             return [...filtered, newConnection];
         });
       }
@@ -1210,6 +1294,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
                   connections={connections}
                   projects={initialProjects}
                   jobs={CV_DATA}
+                  themes={THEME_DATA}
                   onNodeDataChange={handleNodeDataChange}
                   onOpenFullscreen={(gallery, currentIndex, projectTitle) => {
                     setFullscreenImage({ gallery, currentIndex, projectTitle });
