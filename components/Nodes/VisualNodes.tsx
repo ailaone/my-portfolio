@@ -2,7 +2,8 @@
 import React from 'react';
 import { ProjectData, JobData, NodeState, NodeType, Connection } from '@/types/content';
 import { ThreeScene } from '../ThreeScene';
-import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Video, Maximize, Image as ImageIcon, Calendar } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Maximize, Image as ImageIcon, Calendar } from 'lucide-react';
+import { NewTwitterIcon } from 'hugeicons-react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface ContentProps {
@@ -100,7 +101,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
            <a href="https://www.linkedin.com/in/arthurazoulai/" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Linkedin strokeWidth={1.5} size={20} /></a>
            <a href="https://github.com/ailaone" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Github strokeWidth={1.5} size={20} /></a>
            <a href="https://www.instagram.com/arthurazoulai/" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Instagram strokeWidth={1.5} size={20} /></a>
-           <a href="https://vimeo.com/arthurazoulai" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Video strokeWidth={1.5} size={20} /></a>
+           <a href="https://x.com/arthurazoulai" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><NewTwitterIcon strokeWidth={1.5} size={20} /></a>
            <a href="https://www.youtube.com/@slicelab3819" target="_blank" rel="noreferrer" className="text-secondary hover:text-primary hover:scale-110 transition-all duration-200"><Youtube strokeWidth={1.5} size={20} /></a>
         </div>
       );
