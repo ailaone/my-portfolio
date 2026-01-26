@@ -2,7 +2,7 @@
 import React from 'react';
 import { ProjectData, JobData, NodeState, NodeType, Connection } from '@/types/content';
 import { ThreeScene } from '../ThreeScene';
-import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Video, Maximize, Image as ImageIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Video, Maximize, Image as ImageIcon, Calendar } from 'lucide-react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface ContentProps {
@@ -473,7 +473,8 @@ case NodeType.VIEWER_3D:
     case NodeType.CONTACT:
        return (
           <div className="p-6 flex flex-col items-center justify-center h-full gap-4 bg-node transition-colors duration-300">
-             <a href="mailto:hello@example.com" className="flex items-center gap-2 text-sm text-primary hover:underline hover:text-secondary transition-colors duration-200"><Mail size={14}/> Email Me</a>
+             <a href="mailto:arthur.azoulai@gmail.com" className="flex items-center gap-2 text-sm text-primary hover:underline hover:text-secondary transition-colors duration-200"><Mail size={14}/> Email Me</a>
+             <a href="https://calendly.com/arthur-azoulai/30min" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-primary hover:underline hover:text-secondary transition-colors duration-200"><Calendar size={14}/> Book a Meeting</a>
              <div className="w-full h-[1px] bg-border-tertiary transition-colors duration-300"></div>
              <p className="text-[10px] text-tertiary uppercase tracking-widest transition-colors duration-300">Open for collaborations</p>
           </div>

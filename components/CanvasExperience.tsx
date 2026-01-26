@@ -156,7 +156,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       },
 
       // COLUMN 2: CENTER
-      { id: 'n-details', type: NodeType.DETAILS, position: { x: 600, y: 350 }, title: 'Details', inputs: [{ id: 'in-select', label: 'Context' }], outputs: [{ id: 'out-meta', label: 'Metadata' }], width: 550 },
+      { id: 'n-details', type: NodeType.DETAILS, position: { x: 600, y: 550 }, title: 'Details', inputs: [{ id: 'in-select', label: 'Context' }], outputs: [{ id: 'out-meta', label: 'Metadata' }], width: 550 },
       
       // COLUMN 3: RIGHT
       { id: 'n-image', type: NodeType.IMAGE, position: { x: 1250, y: 250 }, title: 'Gallery', inputs: [{ id: 'in-img-data', label: 'Visual Data' }], outputs: [], width: 500, height: 400, data: { imageIndex: 0 } },
@@ -171,9 +171,9 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       { id: 'c3', fromNodeId: 'n-details', fromSocketId: 'out-meta', toNodeId: 'n-viewer', toSocketId: 'in-geo' },
     ];
 
-    // Connect solo developer CV item to Details
+    // Connect Independent Development CV item to Project Index filter
     if (CV_DATA.length > 0) {
-        conns.push({ id: 'c1', fromNodeId: 'n-cv', fromSocketId: `out-cv-${CV_DATA[2].id}`, toNodeId: 'n-details', toSocketId: 'in-select' });
+        conns.push({ id: 'c1', fromNodeId: 'n-cv', fromSocketId: `out-cv-${CV_DATA[2].id}`, toNodeId: 'n-list', toSocketId: 'in-filter' });
     }
 
     return conns;
@@ -220,6 +220,8 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   // New Node Drag
   const [newNodeType, setNewNodeType] = useState<NodeType | null>(null);
   const [ghostNodePos, setGhostNodePos] = useState<Position>({ x: 0, y: 0 });
+  const [isClickToPlace, setIsClickToPlace] = useState(false);
+  const toolbarDragStart = useRef<Position | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -331,6 +333,14 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       // Track shift key
       if (e.key === 'Shift') {
         shiftPressed.current = true;
+      }
+
+      // ESC key: Cancel click-to-place mode
+      if (e.key === 'Escape' && isClickToPlace) {
+        e.preventDefault();
+        setIsClickToPlace(false);
+        setNewNodeType(null);
+        return;
       }
 
       // ESC key: Close fullscreen
@@ -455,6 +465,47 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
       x: (screenX - pan.x) / zoom,
       y: (screenY - pan.y) / zoom
     };
+  };
+
+  const createNewNode = (dropPos: Position) => {
+    if (!newNodeType) return;
+
+    const newNode: NodeState = {
+      id: `n-${Date.now()}`,
+      type: newNodeType,
+      position: { x: dropPos.x - 150, y: dropPos.y - 20 },
+      title: getNodeTitle(newNodeType),
+      inputs: [{ id: 'in-1', label: 'Input' }],
+      outputs: [{ id: 'out-1', label: 'Output' }],
+      width: 300
+    };
+
+    if (newNodeType === NodeType.VIEWER_3D || newNodeType === NodeType.IMAGE || newNodeType === NodeType.VIDEO) {
+      newNode.height = 300; newNode.width = 400;
+      if (newNodeType === NodeType.IMAGE) newNode.data = { imageIndex: 0 };
+    }
+
+    // Customize Project List
+    if (newNodeType === NodeType.PROJECT_LIST) {
+      const socketStride = 60;
+      const minContentHeight = 80;
+      newNode.inputs = [{ id: 'in-filter', label: 'Filter by Job' }];
+      newNode.outputs = [];
+      newNode.height = 32 + minContentHeight;
+      newNode.socketStride = socketStride;
+      newNode.data = { displayedProjects: [] };
+    }
+
+    // Customize CV List
+    if (newNodeType === NodeType.CV) {
+      const socketStride = 60;
+      newNode.inputs = [];
+      newNode.outputs = CV_DATA.map(j => ({ id: `out-cv-${j.id}`, label: '' }));
+      newNode.height = 32 + (CV_DATA.length * socketStride);
+      newNode.socketStride = socketStride;
+    }
+
+    setNodes(prev => [...prev, newNode]);
   };
 
   const handleNodeDataChange = (nodeId: string, newData: any) => {
@@ -585,12 +636,22 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
   const handlePointerDown = (e: React.PointerEvent) => {
     if (e.defaultPrevented) return;
+
+    // Handle click-to-place mode: place node on canvas click
+    if (isClickToPlace && newNodeType && e.button === 0) {
+      const dropPos = screenToCanvas(e.clientX, e.clientY);
+      createNewNode(dropPos);
+      setIsClickToPlace(false);
+      setNewNodeType(null);
+      return;
+    }
+
     const target = e.target as Element;
-    const isBackground = target === containerRef.current || 
-                         target.id === 'canvas-transform-layer' || 
-                         target.tagName === 'svg' || 
+    const isBackground = target === containerRef.current ||
+                         target.id === 'canvas-transform-layer' ||
+                         target.tagName === 'svg' ||
                          target.id.includes('background');
-    
+
     const isPanButton = e.button === 1 || e.button === 2;
 
     if (isBackground || isPanButton) {
@@ -610,7 +671,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
            setSelectedWireId(null);
            setSelectedNodeIds(new Set());
        }
-       
+
        (containerRef.current || target).setPointerCapture(e.pointerId);
     }
   };
@@ -618,6 +679,24 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   const handlePointerMove = (e: React.PointerEvent) => {
     const canvasPos = screenToCanvas(e.clientX, e.clientY);
     setMousePos(canvasPos);
+
+    // Update ghost position for click-to-place mode or new node drag
+    if ((isClickToPlace || dragMode === 'NEW_NODE_DRAG') && newNodeType) {
+      setGhostNodePos({ x: e.clientX, y: e.clientY });
+    }
+
+    // Check if we should transition from toolbar button press to drag mode
+    if (toolbarDragStart.current && newNodeType && dragMode === 'NONE') {
+      const dx = e.clientX - toolbarDragStart.current.x;
+      const dy = e.clientY - toolbarDragStart.current.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // If moved more than 5px, enter drag mode
+      if (distance > 5) {
+        setDragMode('NEW_NODE_DRAG');
+        toolbarDragStart.current = null;
+      }
+    }
 
     if (dragMode === 'CANVAS_PAN') {
       setPan(prev => ({ x: prev.x + e.movementX, y: prev.y + e.movementY }));
@@ -649,24 +728,23 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
     } else if (dragMode === 'RESIZE_NODE' && draggedNodeId && initialDragState) {
        const deltaX = (e.clientX - initialDragState.mousePos.x) / zoom;
        const deltaY = (e.clientY - initialDragState.mousePos.y) / zoom;
-       setNodes(prev => prev.map(n => 
+       setNodes(prev => prev.map(n =>
         n.id === draggedNodeId
-          ? { 
-              ...n, 
+          ? {
+              ...n,
               width: Math.max(200, initialDragState.nodeSize.w + deltaX),
               height: n.height ? Math.max(150, (initialDragState.nodeSize.h || 0) + deltaY) : undefined
             }
           : n
        ));
-    } else if (dragMode === 'NEW_NODE_DRAG') {
-      setGhostNodePos({ x: e.clientX, y: e.clientY });
     }
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
-    if (dragMode === 'NEW_NODE_DRAG' && newNodeType) {
-      const isClick = e.clientY < 100; 
-      
+    // Handle drag-and-drop completion (only if we're in NEW_NODE_DRAG and not click-to-place)
+    if (dragMode === 'NEW_NODE_DRAG' && newNodeType && !isClickToPlace) {
+      const isClick = e.clientY < 100;
+
       let dropPos;
       if (isClick) {
          const centerX = (window.innerWidth / 2 - pan.x) / zoom;
@@ -676,50 +754,21 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
          dropPos = screenToCanvas(e.clientX, e.clientY);
       }
 
-      const newNode: NodeState = {
-        id: `n-${Date.now()}`,
-        type: newNodeType,
-        position: { x: dropPos.x - 150, y: dropPos.y - 20 },
-        title: getNodeTitle(newNodeType),
-        inputs: [{ id: 'in-1', label: 'Input' }],
-        outputs: [{ id: 'out-1', label: 'Output' }],
-        width: 300
-      };
-      
-      if (newNodeType === NodeType.VIEWER_3D || newNodeType === NodeType.IMAGE || newNodeType === NodeType.VIDEO) {
-        newNode.height = 300; newNode.width = 400;
-        if (newNodeType === NodeType.IMAGE) newNode.data = { imageIndex: 0 };
-      }
-      
-      // Customize Project List
-      if (newNodeType === NodeType.PROJECT_LIST) {
-        const socketStride = 60;
-        const minContentHeight = 80; // Minimum height for empty state message
-        newNode.inputs = [{ id: 'in-filter', label: 'Filter by Job' }];
-        newNode.outputs = [];
-        newNode.height = 32 + minContentHeight;
-        newNode.socketStride = socketStride;
-        newNode.data = { displayedProjects: [] };
-      }
-
-      // Customize CV List
-      if (newNodeType === NodeType.CV) {
-        const socketStride = 60;
-        newNode.inputs = [];
-        newNode.outputs = CV_DATA.map(j => ({ id: `out-cv-${j.id}`, label: '' }));
-        newNode.height = 32 + (CV_DATA.length * socketStride); 
-        newNode.socketStride = socketStride;
-      }
-
-      setNodes(prev => [...prev, newNode]);
+      createNewNode(dropPos);
       setNewNodeType(null);
+      toolbarDragStart.current = null;
     }
-    
+
+    // Clear toolbar drag start reference if still set
+    if (toolbarDragStart.current) {
+      toolbarDragStart.current = null;
+    }
+
     setDragMode('NONE');
     setDraggedNodeId(null);
     setInitialDragState(null);
     setTempWireStart(null);
-    
+
     if (containerRef.current && (e.target as Element).hasPointerCapture(e.pointerId)) {
        (e.target as Element).releasePointerCapture(e.pointerId);
     }
@@ -924,7 +973,22 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
                 <div
                   key={item.label}
                   className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-full hover:bg-hover cursor-grab active:cursor-grabbing transition-all duration-200"
-                  onPointerDown={(e) => { e.preventDefault(); e.stopPropagation(); setDragMode('NEW_NODE_DRAG'); setNewNodeType(item.type); setGhostNodePos({ x: e.clientX, y: e.clientY }); }}
+                  onPointerDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toolbarDragStart.current = { x: e.clientX, y: e.clientY };
+                    setNewNodeType(item.type);
+                    setGhostNodePos({ x: e.clientX, y: e.clientY });
+                  }}
+                  onPointerUp={(e) => {
+                    // If pointer up happens without entering drag mode, enter click-to-place
+                    if (toolbarDragStart.current && newNodeType && dragMode === 'NONE') {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsClickToPlace(true);
+                      toolbarDragStart.current = null;
+                    }
+                  }}
                 >
                    <Icon strokeWidth={1.5} className="w-5 h-5 text-secondary group-hover:text-primary group-hover:scale-110 transition-all duration-200" />
                    <span className="absolute -bottom-8 bg-primary text-canvas text-[9px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
@@ -955,8 +1019,8 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
           </div>
         )}
 
-        {/* Ghost Node During Drag */}
-        {dragMode === 'NEW_NODE_DRAG' && newNodeType && (
+        {/* Ghost Node During Drag or Click-to-Place */}
+        {((dragMode === 'NEW_NODE_DRAG' || isClickToPlace) && newNodeType) && (
           <div
              className="absolute pointer-events-none bg-node border border-secondary shadow-xl rounded p-2 flex items-center gap-2 opacity-80 transition-colors duration-300"
              style={{ left: ghostNodePos.x, top: ghostNodePos.y, transform: 'translate(-50%, -50%)' }}
