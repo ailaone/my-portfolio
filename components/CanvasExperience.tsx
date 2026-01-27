@@ -1163,7 +1163,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
         {/* Fullscreen Image Overlay */}
         {fullscreenImage && (
-          <div className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center pointer-events-auto">
+          <div className="fixed inset-0 bg-black/95 z-[100] flex flex-col pointer-events-auto">
             {/* Close button */}
             <button
               onClick={() => setFullscreenImage(null)}
@@ -1172,8 +1172,8 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
               <X size={20} className="text-white" />
             </button>
 
-            {/* Image */}
-            <div className="relative w-full h-full flex items-center justify-center p-8">
+            {/* Image container - reduced height to make room for thumbnails */}
+            <div className="flex-1 flex items-center justify-center p-8 pb-4 min-h-0">
               <img
                 src={fullscreenImage.gallery[fullscreenImage.currentIndex]}
                 alt={fullscreenImage.projectTitle}
@@ -1181,7 +1181,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
               />
             </div>
 
-            {/* Navigation */}
+            {/* Navigation arrows */}
             {fullscreenImage.gallery.length > 1 && (
               <>
                 <button
@@ -1211,13 +1211,44 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
               </>
             )}
 
-            {/* Info bar */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-4">
-              <span className="text-white text-sm font-mono">{fullscreenImage.projectTitle}</span>
-              <div className="w-px h-4 bg-white/20"></div>
-              <span className="text-white/70 text-xs font-mono">
-                {fullscreenImage.currentIndex + 1} / {fullscreenImage.gallery.length}
-              </span>
+            {/* Bottom section: Thumbnails and info */}
+            <div className="flex flex-col items-center gap-3 pb-6 px-4">
+              {/* Thumbnail strip */}
+              {fullscreenImage.gallery.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto px-4 py-2 bg-black/50 backdrop-blur-sm rounded-lg max-w-[90vw]">
+                  {fullscreenImage.gallery.map((imgUrl, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setFullscreenImage(prev => {
+                          if (!prev) return null;
+                          return { ...prev, currentIndex: idx };
+                        });
+                      }}
+                      className={`flex-shrink-0 h-16 rounded overflow-hidden transition-all duration-200 ${
+                        idx === fullscreenImage.currentIndex
+                          ? 'ring-2 ring-white opacity-100 scale-110'
+                          : 'opacity-50 hover:opacity-80'
+                      }`}
+                    >
+                      <img
+                        src={imgUrl}
+                        alt={`Thumbnail ${idx + 1}`}
+                        className="h-full w-auto object-contain"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Project info */}
+              <div className="bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-4">
+                <span className="text-white text-sm font-mono">{fullscreenImage.projectTitle}</span>
+                <div className="w-px h-4 bg-white/20"></div>
+                <span className="text-white/70 text-xs font-mono">
+                  {fullscreenImage.currentIndex + 1} / {fullscreenImage.gallery.length}
+                </span>
+              </div>
             </div>
           </div>
         )}

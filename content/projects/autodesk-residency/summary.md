@@ -1,1 +1,1 @@
-Autodesk Artist-i-Residence 2015 Cohort.
+DLP printed jewelry and lost-wax casting.

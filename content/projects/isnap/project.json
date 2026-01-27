@@ -5,7 +5,7 @@
     "category": "Vibe-Dev",
     "role": ["Developer"],
     "client": "Personal",
-    "technologies": ["Swift", "SwiftUI", "Swift Package Manager"],
+    "technologies": ["Swift", "SwiftUI", "Swift Package Manager", "Antigravity"],
     "themes": ["ai-dev"],
     "description_file": "description.md",
     "summary_file": "summary.md",

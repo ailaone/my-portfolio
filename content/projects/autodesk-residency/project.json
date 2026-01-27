@@ -1,6 +1,6 @@
 {
     "slug": "autodesk-residency",
-    "title": "Autodesk Residency",
+    "title": "Autodesk P9 Residency",
     "year": "2015",
     "category": "R&D",
     "role": ["Lead Designer", "Computational Specialist"],
@@ -13,8 +13,9 @@
       "autodesk-residency_02.jpg",
       "autodesk-residency_03.jpg"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
+    "model": "ring.glb",
+    "geometryType": "ring",
     "jobID": "slice",
-    "videoUrl": "https://www.youtube.com/watch?v=0G0irhxeDxE"                                           
+    "videoUrl": "https://www.youtube.com/watch?v=0G0irhxeDxE",
+    "themes": ["3d-dfam"]                                     
   }
