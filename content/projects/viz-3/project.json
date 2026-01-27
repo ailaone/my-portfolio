@@ -3,7 +3,7 @@
     "title": "Viz 3 Course",
     "year": "2021 - Ongoing",
     "category": "Architecture + Education",
-    "role": ["Lead Designer", "Educator"],
+    "role": ["Adjunct Professor", "Course Coordinator"],
     "client": "New York Institute of Technology",
     "technologies": ["Rhino", "Midjourney", "Vizcom", "Enscape", "Photoshop", "Illustrator"],
     "description_file": "description.md",
@@ -13,5 +13,6 @@
       "viz-3_02.jpg",
       "viz-3_03.jpg"
     ],
-    "jobID": "solo"
+    "jobID": "",
+    "themes": ["edu-conf"]
   }

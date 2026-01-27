@@ -6,7 +6,7 @@
     "role": ["Lead Designer + Computational Specialist"],
     "client": "Noisy-le-Sec",
     "technologies": ["Rhino", "Grasshopper", "AutoCAD"],
-    "themes": ["arch-fab", "comp-design"],
+    "themes": ["arch-fab"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [

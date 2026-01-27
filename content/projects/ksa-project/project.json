@@ -1,17 +1,14 @@
 {
-    "slug": "blue-school",
-    "title": "Blue School",
-    "year": "2018",
+    "slug": "ksa-project",
+    "title": "KSA Project",
+    "year": "2020-Ongoing",
     "category": "Architecture",
-    "role": ["Lead Designer"],
-    "client": "Blue School",
-    "technologies": ["Rhino", "AutoCAD"],
+    "role": ["Project Manager", "Lead Designer"],
+    "client": "Private",
+    "technologies": ["Rhino", "Grasshopper", "Revit", "AutoCAD"],
+    "images": [],
     "description_file": "description.md",
     "summary_file": "summary.md",
-    "images": [
-      "blue-school_01.jpg",
-      "blue-school_02.jpg",
-      "blue-school_03.jpg"
-    ],
-    "jobID": "rg"
+    "jobID": "rg",
+    "themes": ["arch-fab"]
   }

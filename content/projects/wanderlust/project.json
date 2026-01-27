@@ -5,7 +5,7 @@
     "category": "Architecture",
     "role": ["Designer + Project Manager"],
     "client": "Savoir Faire",
-    "technologies": ["Rhino", "Grasshopper", "AutoCAD"],
+    "technologies": ["Rhino", "T-Splines", "Grasshopper", "AutoCAD"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
@@ -15,5 +15,6 @@
     ],
     "model": "test.glb",
     "geometryType": "chair",
-    "jobID": "jmf"
+    "jobID": "jmf",
+    "themes": ["arch-fab"]
   }

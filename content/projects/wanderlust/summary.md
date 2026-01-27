@@ -1,1 +1,1 @@
-this is the euronews facade project
+Paris Wanderlust Club @ Les Docks.

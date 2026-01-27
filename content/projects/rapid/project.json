@@ -1,12 +1,12 @@
 {
     "slug": "rapid",
-    "title": "Rapid 2025 COnference",
+    "title": "Rapid 2025 C0nference",
     "year": "2025",
     "category": "Conference",
     "role": ["Founder + Computational Designer"],
     "client": "n/a",
     "technologies": ["nTop", "Rhino", "Grasshopper", "3D Printing"],
-    "themes": ["comp-design", "3d-dfam", "edu-conf"],
+    "themes": ["edu-conf"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
@@ -14,6 +14,6 @@
       "cdfam_02.jpg",
       "cdfam_03.jpg"
     ],
-    "jobID": "slice",
+    "jobID": "",
     "presentationUrl": "https://docs.google.com/presentation/d/1RwuHafae3QN5TqvAHMbSItfutqyk_mjyRqyciHRqZFY/edit?usp=sharing"
   }

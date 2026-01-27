@@ -5,6 +5,7 @@
     "category": "Concept Design + Architecture",
     "role": ["Lead Designer", "Generative AI Specialist"],
     "client": "R&D",
+    "themes": ["ai-dev"],
     "technologies": ["ComfyUI", "Rhino", "Midjourney", "NanoBanana", "ByteDance"],
     "description_file": "description.md",
     "summary_file": "summary.md",

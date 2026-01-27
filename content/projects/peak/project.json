@@ -13,5 +13,6 @@
       "peak_02.jpg",
       "peak_03.jpg"
     ],
-    "jobID": "rg"
+    "jobID": "rg",
+    "themes": ["arch-fab"]
   }

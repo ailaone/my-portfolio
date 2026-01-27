@@ -1,1 +1,1 @@
-this is the euronews facade project
+Two large-scale projects exploring the boundaries of contemporary architectural fabrication.

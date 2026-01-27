@@ -225,9 +225,66 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
 
       return (
         <div className="p-6 flex flex-col h-full overflow-y-auto bg-node transition-colors duration-300">
-          <div className="mb-4">
-            <h2 className="text-xl font-serif text-primary leading-tight transition-colors duration-300">{upstreamData.title}</h2>
-            <p className="text-xs text-secondary uppercase tracking-widest mt-1 transition-colors duration-300">{upstreamData.category}</p>
+          {/* Header with title and available content buttons */}
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <h2 className="text-xl font-serif text-primary leading-tight transition-colors duration-300">{upstreamData.title}</h2>
+              <p className="text-xs text-secondary uppercase tracking-widest mt-1 transition-colors duration-300">{upstreamData.category}</p>
+            </div>
+
+            {/* Available Content - Top Right */}
+            {hasAnyContent && (
+              <div className="flex gap-1.5 flex-shrink-0">
+                {hasImages && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSpawnNode?.(NodeType.IMAGE, node.id);
+                    }}
+                    className="flex items-center justify-center w-7 h-7 rounded bg-hover hover:bg-primary/20 transition-colors group"
+                    title="Open Gallery"
+                  >
+                    <ImageIcon size={14} className="text-secondary group-hover:text-primary transition-colors duration-200" />
+                  </button>
+                )}
+                {hasVideo && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSpawnNode?.(NodeType.VIDEO, node.id);
+                    }}
+                    className="flex items-center justify-center w-7 h-7 rounded bg-hover hover:bg-primary/20 transition-colors group"
+                    title="Open Video"
+                  >
+                    <Video size={14} className="text-secondary group-hover:text-primary transition-colors duration-200" />
+                  </button>
+                )}
+                {has3D && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSpawnNode?.(NodeType.VIEWER_3D, node.id);
+                    }}
+                    className="flex items-center justify-center w-7 h-7 rounded bg-hover hover:bg-primary/20 transition-colors group"
+                    title="Open 3D Viewer"
+                  >
+                    <Box size={14} className="text-secondary group-hover:text-primary transition-colors duration-200" />
+                  </button>
+                )}
+                {hasPresentation && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSpawnNode?.(NodeType.PRESENTATION, node.id);
+                    }}
+                    className="flex items-center justify-center w-7 h-7 rounded bg-hover hover:bg-primary/20 transition-colors group"
+                    title="Open Presentation"
+                  >
+                    <Monitor size={14} className="text-secondary group-hover:text-primary transition-colors duration-200" />
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Summary */}
@@ -247,68 +304,21 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
           )}
 
           <div className="mt-auto">
-            <div className="grid grid-cols-2 gap-4 border-t border-tertiary pt-4 mb-3 transition-colors duration-300">
+            <div className="grid grid-cols-2 gap-4 border-t border-tertiary pt-4 transition-colors duration-300">
                <div><h3 className="text-[11px] tracking-widest uppercase text-tertiary transition-colors duration-300">Role</h3><p className="text-sm text-primary transition-colors duration-300">{upstreamData.role.join(', ')}</p></div>
                <div><h3 className="text-[11px] tracking-widest uppercase text-tertiary transition-colors duration-300">Year</h3><p className="text-sm text-primary transition-colors duration-300">{upstreamData.year}</p></div>
             </div>
 
-            {/* Available Content */}
-            {hasAnyContent && (
-              <div className="border-t border-tertiary pt-3 transition-colors duration-300">
-                <h3 className="text-[10px] tracking-widest uppercase text-tertiary mb-2 transition-colors duration-300">Available Content</h3>
-                <div className="flex gap-2">
-                  {hasImages && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSpawnNode?.(NodeType.IMAGE, node.id);
-                      }}
-                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-hover hover:bg-primary/20 transition-colors group"
-                      title="Create Gallery node"
-                    >
-                      <ImageIcon size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
-                      <span className="text-[11px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">Gallery</span>
-                    </button>
-                  )}
-                  {hasVideo && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSpawnNode?.(NodeType.VIDEO, node.id);
-                      }}
-                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-hover hover:bg-primary/20 transition-colors group"
-                      title="Create Video node"
-                    >
-                      <Video size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
-                      <span className="text-[9px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">Video</span>
-                    </button>
-                  )}
-                  {has3D && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSpawnNode?.(NodeType.VIEWER_3D, node.id);
-                      }}
-                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-hover hover:bg-primary/20 transition-colors group"
-                      title="Create 3D Viewer node"
-                    >
-                      <Box size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
-                      <span className="text-[9px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">3D</span>
-                    </button>
-                  )}
-                  {hasPresentation && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSpawnNode?.(NodeType.PRESENTATION, node.id);
-                      }}
-                      className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-hover hover:bg-primary/20 transition-colors group"
-                      title="Create Presentation node"
-                    >
-                      <Monitor size={12} className="text-secondary group-hover:text-primary transition-colors duration-200" />
-                      <span className="text-[9px] uppercase tracking-wider text-secondary group-hover:text-primary transition-colors duration-200">Slides</span>
-                    </button>
-                  )}
+            {/* Technologies */}
+            {upstreamData.technologies && upstreamData.technologies.length > 0 && (
+              <div className="border-t border-tertiary pt-4 mt-4 transition-colors duration-300">
+                <h3 className="text-[11px] tracking-widest uppercase text-tertiary mb-2 transition-colors duration-300">Technologies</h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {upstreamData.technologies.map((tech, i) => (
+                    <span key={i} className="text-[10px] px-2 py-1 bg-hover text-secondary rounded tracking-wide transition-colors duration-300">
+                      {tech}
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
