@@ -8,6 +8,7 @@ interface NodeContainerProps {
   connectedSockets: Set<string>;
   hoveredSocket: { nodeId: string, socketId: string } | null;
   isDragInvalid: boolean;
+  isDraggingWire: boolean;
   onHeaderDown: (e: React.PointerEvent, id: string) => void;
   onSocketDown: (e: React.PointerEvent, nodeId: string, socketId: string, isInput: boolean) => void;
   onSocketUp: (e: React.PointerEvent, nodeId: string, socketId: string, isInput: boolean) => void;
@@ -24,6 +25,7 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
   connectedSockets,
   hoveredSocket,
   isDragInvalid,
+  isDraggingWire,
   onHeaderDown,
   onSocketDown,
   onSocketUp,
@@ -122,8 +124,8 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
               className="absolute left-0 flex items-center group w-6 h-6"
               style={{ top: getSocketTop(index) }}
             >
-              <div 
-                className="w-6 h-6 flex items-center justify-center cursor-crosshair relative"
+              <div
+                className={`w-6 h-6 flex items-center justify-center relative ${isDraggingWire ? 'cursor-grabbing' : 'cursor-grab'}`}
                 onPointerDown={(e) => onSocketDown(e, node.id, input.id, true)}
                 onPointerUp={(e) => onSocketUp(e, node.id, input.id, true)}
                 onPointerEnter={() => onSocketHover(node.id, input.id, true, true)}
@@ -165,8 +167,8 @@ export const NodeContainer: React.FC<NodeContainerProps> = ({
                <span className="absolute right-5 text-[9px] font-sans tracking-wider text-primary bg-node px-1 border border-tertiary opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-all duration-300 shadow-sm z-40">
                 {output.label}
               </span>
-              <div 
-                 className="w-6 h-6 flex items-center justify-center cursor-crosshair relative"
+              <div
+                 className={`w-6 h-6 flex items-center justify-center relative ${isDraggingWire ? 'cursor-grabbing' : 'cursor-grab'}`}
                  onPointerDown={(e) => onSocketDown(e, node.id, output.id, false)}
                  onPointerUp={(e) => onSocketUp(e, node.id, output.id, false)}
                  onPointerEnter={() => onSocketHover(node.id, output.id, false, true)}

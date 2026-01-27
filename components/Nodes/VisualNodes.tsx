@@ -150,7 +150,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
                 onClick={() => onSmartSwitch?.(node.id, `out-theme-${t.id}`)}
               >
                 <div className="flex flex-col justify-center h-full w-[85%]">
-                    <span className="font-sans font-normal text-sm text-primary leading-tight line-clamp-1 transition-colors duration-300">{t.label}</span>
+                    <span className="font-serif font-normal text-lg text-primary leading-tight line-clamp-1 transition-colors duration-300">{t.label}</span>
                 </div>
                 <div className="w-1 h-1 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
