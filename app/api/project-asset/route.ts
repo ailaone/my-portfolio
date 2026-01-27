@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import mime from 'mime'; // You might need to install 'mime' or write a simple helper
 
@@ -47,17 +47,25 @@ export async function GET(request: NextRequest) {
 
   const filePath = path.join((process as any).cwd(), 'content', 'projects', project, subfolder, file);
 
-  if (!fs.existsSync(filePath)) {
+  try {
+    // Use async file operations to avoid blocking event loop
+    await fs.access(filePath);
+    const fileBuffer = await fs.readFile(filePath);
+    const contentType = getMimeType(file);
+
+    // Use shorter cache for development, long cache for production
+    const isDev = process.env.NODE_ENV === 'development';
+    const cacheControl = isDev
+      ? 'public, max-age=3600' // 1 hour in dev
+      : 'public, max-age=31536000, immutable'; // 1 year in production
+
+    return new NextResponse(fileBuffer, {
+      headers: {
+        'Content-Type': contentType,
+        'Cache-Control': cacheControl,
+      },
+    });
+  } catch (error) {
     return new NextResponse('File not found', { status: 404 });
   }
-
-  const fileBuffer = fs.readFileSync(filePath);
-  const contentType = getMimeType(file);
-
-  return new NextResponse(fileBuffer, {
-    headers: {
-      'Content-Type': contentType,
-      'Cache-Control': 'public, max-age=31536000, immutable',
-    },
-  });
 }

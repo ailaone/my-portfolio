@@ -439,15 +439,16 @@ case NodeType.VIEWER_3D:
   }
 
   return (
-    <>
+    <div className="relative w-full h-full">
       <ThreeScene
+        key={upstreamData.modelUrl}
         geometryType={upstreamData.geometryType || 'cube'}
         modelUrl={upstreamData.modelUrl}
       />
       <div className="absolute bottom-3 right-3 text-[9px] font-mono text-secondary uppercase tracking-wider pointer-events-none z-20 transition-colors duration-300">
-         Geo: {upstreamData.geometryType || 'Standard'}
+         {upstreamData.geometryType || 'Standard'}
       </div>
-    </>
+    </div>
   );
 
     case NodeType.DATA:

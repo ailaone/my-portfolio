@@ -868,24 +868,25 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   };
 
   const handleWheel = (e: React.WheelEvent) => {
+    // ALWAYS prevent default to stop page scroll
+    e.preventDefault();
+
     // Explicit Zoom (Ctrl+Wheel or Pinch on some browsers)
     if (e.ctrlKey || e.metaKey) {
-        e.preventDefault(); // Prevent browser zoom
         zoomCanvas(e.clientX, e.clientY, -e.deltaY);
         return;
     }
 
     // Heuristic for Mouse Wheel Zoom vs Trackpad Pan
-    // Mouse wheels typically have large integer deltas (e.g., 53, 100) and deltaX is 0.
-    // Trackpads have smaller, fractional deltas and often have deltaX != 0.
-    const isMouseWheel = Math.abs(e.deltaY) >= 20 && e.deltaX === 0 && Number.isInteger(e.deltaY);
+    // Mouse wheels: only deltaY (no deltaX), larger values
+    // Trackpads: both deltaX and deltaY, smaller continuous values
+    const isMouseWheel = Math.abs(e.deltaX) < 1 && Math.abs(e.deltaY) > 0;
 
     if (isMouseWheel) {
-        // Zoom
-        e.preventDefault(); // Prevent browser zoom
+        // Mouse wheel: Zoom
         zoomCanvas(e.clientX, e.clientY, -e.deltaY);
     } else {
-        // Pan (Inverted for natural feeling)
+        // Trackpad: Pan (Inverted for natural feeling)
         setPan(prev => ({
             x: prev.x - e.deltaX,
             y: prev.y - e.deltaY

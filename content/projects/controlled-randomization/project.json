@@ -12,7 +12,7 @@
       "workshop_randomization_01.webp",
       "workshop_randomization_02.webp"
     ],
-    "model": "erosion.glb",
+    "model": "erosion2.glb",
     "geometryType": "erosion demo",
     "jobID": "",
     "themes": ["edu-conf", "comp-design"]
