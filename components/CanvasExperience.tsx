@@ -385,6 +385,23 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         return;
       }
 
+      // Arrow keys: Navigate fullscreen gallery
+      if (fullscreenImage && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        e.preventDefault();
+        setFullscreenImage(prev => {
+          if (!prev) return null;
+
+          if (e.key === 'ArrowLeft') {
+            const newIndex = prev.currentIndex === 0 ? prev.gallery.length - 1 : prev.currentIndex - 1;
+            return { ...prev, currentIndex: newIndex };
+          } else {
+            const newIndex = prev.currentIndex === prev.gallery.length - 1 ? 0 : prev.currentIndex + 1;
+            return { ...prev, currentIndex: newIndex };
+          }
+        });
+        return;
+      }
+
       // Copy: Cmd/Ctrl + C (copy all selected nodes and their internal connections)
       if ((e.metaKey || e.ctrlKey) && e.key === 'c' && selectedNodeIds.size > 0) {
         e.preventDefault();

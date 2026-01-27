@@ -1,1 +1,1 @@
-Presentation at CDFAM New York 2024 conference on computational design workflows across industries and scales.  
+CDFAM New York 2024 Presentation on computational design workflows across industries and scales.  

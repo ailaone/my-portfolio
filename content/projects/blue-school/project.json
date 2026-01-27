@@ -3,15 +3,23 @@
     "title": "Blue School",
     "year": "2018",
     "category": "Architecture",
-    "role": ["Lead Designer"],
+    "role": ["Architectural Designer"],
     "client": "Blue School",
     "technologies": ["Rhino", "AutoCAD"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "blue-school_01.jpg",
-      "blue-school_02.jpg",
-      "blue-school_03.jpg"
+      "blue-school_01.webp",
+      "blue-school_02.webp",
+      "blue-school_03.webp",
+      "blue-school_04.webp",
+      "blue-school_05.webp",
+      "blue-school_06.webp",
+      "blue-school_07.webp",
+      "blue-school_08.webp",
+      "blue-school_09.webp",
+      "blue-school_10.webp",
+      "blue-school_11.webp"
     ],
     "jobID": "rg",
     "themes": ["arch-fab"]

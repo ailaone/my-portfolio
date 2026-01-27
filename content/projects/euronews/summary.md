@@ -1,1 +1,1 @@
-this is the euronews facade project
+10,000 sqm headquarters for international news channel Euronews

@@ -3,7 +3,7 @@
     "title": "AI Concept Sections",
     "year": "2025",
     "category": "AI + Concept Design",
-    "role": ["Lead Designer", "Generative AI Specialist"],
+    "role": ["Generative AI Specialist"],
     "client": "Rockwell Group",
     "technologies": ["ComfyUI", "Rhino", "Midjourney", "NanoBanana", "ByteDance"],
     "description_file": "description.md",
@@ -21,7 +21,8 @@
       "concept-sections_10.webp",
       "concept-sections_11.webp"
     ],
-    "jobID": "rg",
+    "jobID": "",
     "videoUrl": "https://youtu.be/CzqeMWy6cQk",
-    "autoplayVideo": true
+    "autoplayVideo": true,
+    "themes": ["ai-dev"]
   }

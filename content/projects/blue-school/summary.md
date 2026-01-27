@@ -1,1 +1,1 @@
-this is the euronews facade project
+45,000 sq ft middle school in NYC's FiDi.

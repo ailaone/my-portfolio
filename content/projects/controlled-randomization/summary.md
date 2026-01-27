@@ -1,1 +1,1 @@
-NYIT WOrkshop
+Two-part workshop exploring procedural pattern generation and animation workflows in Rhino/Grasshopper.

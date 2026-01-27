@@ -2,18 +2,18 @@
     "slug": "workshop",
     "title": "Controlled Randomization Workshop",
     "year": "2024",
-    "category": "Architecture + Education",
-    "role": ["Educator"],
+    "category": "New York Institute of Technology Workshop",
+    "role": ["Adjunct Professor"],
     "client": "New York Institute of Technology",
     "technologies": ["Rhino", "Grasshopper", "Hoster", "Pufferfish", "Dendro", "Tapeworm"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "workshop_randomization_01.jpg",
-      "workshop_randomization_02.jpg",
-      "workshop_randomization_03.jpg"
+      "workshop_randomization_01.webp",
+      "workshop_randomization_02.webp"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "solo"
+    "model": "erosion.glb",
+    "geometryType": "erosion demo",
+    "jobID": "",
+    "themes": ["edu-conf", "comp-design"]
   }

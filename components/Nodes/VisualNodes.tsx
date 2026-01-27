@@ -516,11 +516,8 @@ case NodeType.VIEWER_3D:
             className="absolute inset-0 w-full h-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            title={upstreamData.title}
+           // title={upstreamData.title}
           />
-          <div className="absolute bottom-2 right-2 text-[9px] font-mono text-white/50 uppercase tracking-wider pointer-events-none z-20 bg-black/30 px-2 py-1 rounded">
-            {upstreamData.slug}
-          </div>
         </div>
       );
 
