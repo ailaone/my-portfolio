@@ -5,7 +5,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment, useGLTF, Bounds } from '@react-three/drei';
 import * as THREE from 'three';
-import { MousePointer2, Move, ZoomIn, Hand } from 'lucide-react';
+import { MousePointer2, Move, ZoomIn, Hand, RotateCcw } from 'lucide-react';
+import { Material3D, Lighting3D } from '@/types/content';
 
 // Augment the global JSX namespace to include React Three Fiber intrinsic elements
 declare global {
@@ -20,6 +21,8 @@ declare global {
 interface ThreeSceneProps {
   geometryType: 'cube' | 'sphere' | 'torus' | 'icosahedron';
   modelUrl?: string;
+  material?: Material3D;
+  lighting?: Lighting3D;
 }
 
 const GeometryMesh: React.FC<{ type: string }> = ({ type }) => {
@@ -65,8 +68,8 @@ const ErrorFallback: React.FC = () => {
   );
 };
 
-// Process GLB scene: remove non-mesh objects and center at origin
-function processScene(scene: THREE.Group): THREE.Group {
+// Process GLB scene: remove non-mesh objects, apply materials, and center at origin
+function processScene(scene: THREE.Group, materialOverride?: Material3D): THREE.Group {
   // Clone scene to avoid mutating cached version
   const clonedScene = scene.clone(true);
 
@@ -83,13 +86,60 @@ function processScene(scene: THREE.Group): THREE.Group {
   // Force update all matrices
   clonedScene.updateMatrixWorld(true);
 
-  // Compute bounding box for all geometries
+  // Compute bounding box and apply material overrides
   clonedScene.traverse((child) => {
     if ((child as THREE.Mesh).isMesh) {
       const mesh = child as THREE.Mesh;
       if (mesh.geometry) {
         mesh.geometry.computeBoundingBox();
         mesh.geometry.computeBoundingSphere();
+      }
+
+      // Apply material overrides if provided
+      if (materialOverride && mesh.material) {
+        const mat = mesh.material as THREE.MeshStandardMaterial;
+
+        if (materialOverride.color !== undefined) {
+          mat.color = new THREE.Color(materialOverride.color);
+        }
+        if (materialOverride.metalness !== undefined) {
+          mat.metalness = materialOverride.metalness;
+        }
+        if (materialOverride.roughness !== undefined) {
+          mat.roughness = materialOverride.roughness;
+        }
+        if (materialOverride.emissive !== undefined) {
+          mat.emissive = new THREE.Color(materialOverride.emissive);
+        }
+        if (materialOverride.emissiveIntensity !== undefined) {
+          mat.emissiveIntensity = materialOverride.emissiveIntensity;
+        }
+        if (materialOverride.opacity !== undefined) {
+          mat.opacity = materialOverride.opacity;
+          mat.transparent = materialOverride.opacity < 1;
+        }
+
+        mat.needsUpdate = true;
+      }
+
+      // Add wireframe overlay if enabled
+      if (materialOverride?.wireframe && mesh.geometry) {
+        const wireframeOpacity = materialOverride.wireframeOpacity ?? 0.1;
+        const wireframeColor = materialOverride.wireframeColor ?? '#000000';
+
+        // Create edges geometry (shows only significant edges, not all triangles)
+        const edges = new THREE.EdgesGeometry(mesh.geometry, 30); // 30 degree threshold
+        const lineMaterial = new THREE.LineBasicMaterial({
+          color: new THREE.Color(wireframeColor),
+          transparent: true,
+          opacity: wireframeOpacity,
+          depthTest: true,
+          depthWrite: false,
+        });
+        const wireframe = new THREE.LineSegments(edges, lineMaterial);
+
+        // Add wireframe as child of the mesh (inherits transforms)
+        mesh.add(wireframe);
       }
     }
   });
@@ -102,14 +152,14 @@ function processScene(scene: THREE.Group): THREE.Group {
   return clonedScene;
 }
 
-const ModelLoader: React.FC<{ url: string }> = ({ url }) => {
+const ModelLoader: React.FC<{ url: string; material?: Material3D }> = ({ url, material }) => {
   const { scene } = useGLTF(url);
 
-  // Process scene only once per URL
+  // Process scene synchronously with useMemo (Bounds needs this immediately)
   const processedScene = React.useMemo(() => {
-    const processed = processScene(scene);
+    const processed = processScene(scene, material);
 
-    // Log for debugging (only once)
+    // Log for debugging
     const box = new THREE.Box3().setFromObject(processed);
     const size = box.getSize(new THREE.Vector3());
     console.log('Model processed:', {
@@ -119,14 +169,44 @@ const ModelLoader: React.FC<{ url: string }> = ({ url }) => {
     });
 
     return processed;
-  }, [scene, url]);
+  }, [scene, url, material]);
 
-  // Clear cache on unmount to prevent memory leaks
+  // Cleanup on unmount - dispose of resources but don't clear cache immediately
   useEffect(() => {
     return () => {
-      useGLTF.clear(url);
+      // Dispose of geometries and materials to free GPU memory
+      processedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+
+          // Dispose wireframe if it exists
+          const wireframe = mesh.children.find(c => c.type === 'LineSegments') as THREE.LineSegments;
+          if (wireframe) {
+            if (wireframe.geometry) wireframe.geometry.dispose();
+            if (wireframe.material) {
+              if (Array.isArray(wireframe.material)) {
+                wireframe.material.forEach(mat => mat.dispose());
+              } else {
+                wireframe.material.dispose();
+              }
+            }
+          }
+
+          // Dispose main mesh
+          if (mesh.geometry) {
+            mesh.geometry.dispose();
+          }
+          if (mesh.material) {
+            if (Array.isArray(mesh.material)) {
+              mesh.material.forEach(mat => mat.dispose());
+            } else {
+              mesh.material.dispose();
+            }
+          }
+        }
+      });
     };
-  }, [url]);
+  }, [processedScene]);
 
   return <primitive object={processedScene} />;
 };
@@ -221,17 +301,51 @@ const CustomOrbitControls: React.FC = () => {
       minPolarAngle={Math.PI / 4}
       maxPolarAngle={Math.PI * 0.75}
       mouseButtons={{
-        LEFT: null,                // Disable left click
+        LEFT: THREE.MOUSE.ROTATE,  // Left click = rotate (required, can't be null)
         MIDDLE: THREE.MOUSE.PAN,   // Middle click = pan
         RIGHT: THREE.MOUSE.ROTATE  // Right click = orbit
       }}
+      enableRotate={true}
     />
   );
 };
 
-export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl }) => {
+// Calculate text color based on background luminance
+export function getContrastTextColor(hexColor: string): string {
+  // Remove # if present
+  const hex = hexColor.replace('#', '');
+
+  // Convert to RGB
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+
+  // Calculate relative luminance (WCAG formula)
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // If luminance > 0.5, background is light, use dark text
+  // If luminance <= 0.5, background is dark, use light text
+  return luminance > 0.5 ? '#333333' : '#e8e8e8';
+}
+
+export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, material, lighting }) => {
   const [isMac, setIsMac] = useState(false);
+  const [contextLost, setContextLost] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // Apply lighting defaults
+  const environmentPreset = lighting?.environment || 'studio';
+  const exposure = lighting?.exposure || 1.0;
+  const ambientIntensity = lighting?.ambientIntensity || 0.8;
+  const backgroundColor = lighting?.backgroundColor || '#f0f0f0';
+  const textColor = getContrastTextColor(backgroundColor);
+
+  // Handle refresh button click
+  const handleRefresh = () => {
+    setRefreshKey(prev => prev + 1);
+  };
 
   useEffect(() => {
     setIsMac(navigator.platform.toUpperCase().indexOf('MAC') >= 0);
@@ -239,6 +353,41 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl }
     // Auto-focus container so wheel events work immediately
     if (containerRef.current) {
       containerRef.current.focus();
+    }
+  }, []);
+
+  // Handle WebGL context loss and restore
+  useEffect(() => {
+    const handleContextLost = (e: Event) => {
+      e.preventDefault();
+      console.warn('WebGL context lost, attempting to restore...');
+      setContextLost(true);
+    };
+
+    const handleContextRestored = () => {
+      console.log('WebGL context restored');
+      setContextLost(false);
+    };
+
+    // Find the canvas element
+    const canvas = containerRef.current?.querySelector('canvas');
+    if (canvas) {
+      canvasRef.current = canvas;
+      canvas.addEventListener('webglcontextlost', handleContextLost);
+      canvas.addEventListener('webglcontextrestored', handleContextRestored);
+
+      return () => {
+        canvas.removeEventListener('webglcontextlost', handleContextLost);
+        canvas.removeEventListener('webglcontextrestored', handleContextRestored);
+      };
+    }
+  }, []);
+
+  // Warn about multiple 3D viewers
+  useEffect(() => {
+    const canvasCount = document.querySelectorAll('canvas').length;
+    if (canvasCount > 3) {
+      console.warn(`${canvasCount} WebGL contexts active. Browser limit is typically 8-16. Consider closing unused 3D viewers to prevent context loss.`);
     }
   }, []);
 
@@ -263,12 +412,12 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl }
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#FAFAF7] via-transparent to-transparent z-10 opacity-20" />
 
       {/* Instructions - Bottom Left */}
-      <div className="absolute bottom-3 left-3 text-[8px] font-mono text-secondary uppercase tracking-wider pointer-events-none z-20 transition-colors duration-300 space-y-1.5 opacity-60">
+      <div className="absolute bottom-3 left-3 text-[8px] font-mono uppercase tracking-wider pointer-events-none z-20 transition-colors duration-300 space-y-1.5 opacity-60" style={{ color: textColor }}>
         {/* Mouse Controls */}
         <div className="space-y-1">
           <div className="flex items-center gap-1.5">
             <MousePointer2 size={10} strokeWidth={1.5} />
-            <span>Right-Click: Orbit</span>
+            <span>Click & Drag: Orbit</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Move size={10} strokeWidth={1.5} />
@@ -293,37 +442,80 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl }
         </div>
       </div>
 
+      {/* Refresh Button - Top Right */}
+      <button
+        onClick={handleRefresh}
+        className="absolute top-3 right-3 flex items-center gap-1.5 text-[8px] font-mono uppercase tracking-wider z-20 transition-colors duration-300 opacity-60 hover:opacity-100 pointer-events-auto px-2 py-1.5 rounded border border-tertiary/30 bg-node/50 hover:bg-node/80"
+        style={{ color: textColor, borderColor: `${textColor}30` }}
+        title="Reset camera view"
+      >
+        <RotateCcw size={10} strokeWidth={1.5} />
+        <span>Refresh</span>
+      </button>
+
+      {contextLost && (
+        <div className="absolute inset-0 flex items-center justify-center z-30 bg-node/90">
+          <div className="text-center">
+            <div className="text-sm text-secondary mb-2">WebGL Context Lost</div>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 text-xs bg-primary text-white rounded hover:bg-primary/80"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      )}
+
       <Canvas
         style={{
           width: '100%',
           height: '100%',
           display: 'block'
         }}
-        gl={{ alpha: true, antialias: true }}
+        gl={{
+          alpha: true,
+          antialias: true,
+          preserveDrawingBuffer: true,
+          powerPreference: 'high-performance',
+          failIfMajorPerformanceCaveat: false,
+        }}
+        onCreated={({ gl }) => {
+          // Enable context loss detection - gl is THREE.WebGLRenderer
+          const context = gl.getContext();
+          const ext = context.getExtension('WEBGL_lose_context');
+          if (ext) {
+            console.log('WebGL context loss extension available');
+          }
+
+          // Apply tone mapping for exposure control
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = exposure;
+        }}
         resize={{ debounce: 0 }}
       >
-        <color attach="background" args={['#f0f0f0']} />
-        <PerspectiveCamera makeDefault position={[0, 0, 6]} />
+        <color attach="background" args={[backgroundColor]} />
+        <PerspectiveCamera makeDefault position={[0, 0, 6]} near={0.00001} far={100000} />
         <CustomOrbitControls />
 
-        <ambientLight intensity={0.8} />
+        <ambientLight intensity={ambientIntensity} />
         <directionalLight position={[5, 10, 5]} intensity={1} />
         <directionalLight position={[-5, 5, -5]} intensity={0.5} color="#e0e0e0" />
 
         {/* Bounds with fit auto-centers and zooms to model regardless of scale */}
         {modelUrl ? (
-          <Bounds fit margin={1.8}>
-            <React.Suspense key={modelUrl} fallback={<GeometryMesh type={geometryType} />}>
-              <ModelLoader url={modelUrl} />
+          <Bounds key={`${modelUrl}-${refreshKey}`} fit clip margin={2.0}>
+            <React.Suspense fallback={null}>
+              <ModelLoader url={modelUrl} material={material} />
             </React.Suspense>
           </Bounds>
         ) : (
-          <Bounds fit margin={1.8}>
+          <Bounds key={refreshKey} fit margin={2.0}>
             <GeometryMesh type={geometryType} />
           </Bounds>
         )}
 
-        <Environment preset="studio" />
+        <Environment preset={environmentPreset} />
       </Canvas>
     </div>
   );

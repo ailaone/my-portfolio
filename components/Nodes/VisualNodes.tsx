@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ProjectData, JobData, ThemeData, NodeState, NodeType, Connection } from '@/types/content';
-import { ThreeScene } from '../ThreeScene';
+import { ThreeScene, getContrastTextColor } from '../ThreeScene';
 import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Maximize, Image as ImageIcon, Calendar, Video, Monitor } from 'lucide-react';
 import { NewTwitterIcon } from 'hugeicons-react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
@@ -438,14 +438,18 @@ case NodeType.VIEWER_3D:
     );
   }
 
+  const backgroundColor = upstreamData.lighting?.backgroundColor || '#f0f0f0';
+  const textColor = getContrastTextColor(backgroundColor);
+
   return (
     <div className="relative w-full h-full">
       <ThreeScene
-        key={upstreamData.modelUrl}
         geometryType={upstreamData.geometryType || 'cube'}
         modelUrl={upstreamData.modelUrl}
+        material={upstreamData.material}
+        lighting={upstreamData.lighting}
       />
-      <div className="absolute bottom-3 right-3 text-[9px] font-mono text-secondary uppercase tracking-wider pointer-events-none z-20 transition-colors duration-300">
+      <div className="absolute bottom-3 right-3 text-[9px] font-mono uppercase tracking-wider pointer-events-none z-20 transition-colors duration-300" style={{ color: textColor }}>
          {upstreamData.geometryType || 'Standard'}
       </div>
     </div>

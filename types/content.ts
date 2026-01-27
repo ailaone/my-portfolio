@@ -15,6 +15,25 @@ export interface ProjectStats {
   [key: string]: number | string;
 }
 
+export interface Material3D {
+  color?: string;           // Hex color for mesh (e.g., "#D4AF37" for gold)
+  metalness?: number;       // 0-1, how metallic (0=plastic, 1=metal)
+  roughness?: number;       // 0-1, surface smoothness (0=mirror, 1=matte)
+  emissive?: string;        // Hex color for glow/self-illumination
+  emissiveIntensity?: number; // 0-1+, strength of glow
+  opacity?: number;         // 0-1, transparency (requires transparent: true)
+  wireframe?: boolean;      // Enable wireframe/edge overlay
+  wireframeOpacity?: number; // 0-1, how visible the wireframe is (default: 0.1)
+  wireframeColor?: string;  // Hex color for wireframe (default: "#000000")
+}
+
+export interface Lighting3D {
+  environment?: 'sunset' | 'dawn' | 'night' | 'warehouse' | 'forest' | 'apartment' | 'studio' | 'city' | 'park' | 'lobby';
+  exposure?: number;        // 0-2+, tone mapping exposure (like camera exposure)
+  ambientIntensity?: number; // 0-2, overall scene brightness
+  backgroundColor?: string;  // Hex color for scene background (e.g., "#f0f0f0")
+}
+
 export interface ProjectJson {
   slug: string;
   title: string;
@@ -38,6 +57,9 @@ export interface ProjectJson {
   jobId?: string; // Link to CV Data ID
   // Fallback visual property from old version
   geometryType?: 'cube' | 'sphere' | 'torus' | 'icosahedron';
+  // 3D Material and Lighting
+  material?: Material3D;
+  lighting?: Lighting3D;
 }
 
 export interface ProjectData extends ProjectJson {
