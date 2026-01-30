@@ -9,12 +9,16 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "autodesk-residency_01.jpg",
-      "autodesk-residency_02.jpg",
-      "autodesk-residency_03.jpg"
+      "autodesk-residency_01.webp",
+      "autodesk-residency_02.webp",
+      "autodesk-residency_03.webp",
+      "autodesk-residency_04.webp",
+      "autodesk-residency_05.webp",
+      "autodesk-residency_06.webp",
+      "autodesk-residency_07.webp"
     ],
     "model": "ring.glb",
-    "geometryType": "ring",
+    "geometryType": "Nexus ring",
     "jobID": "slice",
     "videoUrl": "https://www.youtube.com/watch?v=0G0irhxeDxE",
     "themes": ["3d-dfam"]

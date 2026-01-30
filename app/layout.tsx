@@ -18,8 +18,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Arthur Azoulai | Computational Portfolio",
-  description: "A node-based, infinite canvas portfolio.",
+  title: "Arthur Azoulai | Creative Technologist",
+  description: "My portfolio.",
 };
 
 export const viewport: Viewport = {

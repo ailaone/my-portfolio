@@ -1,0 +1,44 @@
+{
+    "slug": "delicate-density",
+    "title": "Delicate Density",
+    "year": "2015",
+    "category": "R&D Furniture",
+    "role": ["Product + Computational Designer"],
+    "client": "Private R&D",
+    "technologies": ["Rhino", "Grasshopper", "Fusion 360", "Maya", "3D Printing"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "delicate-density_01.webp",
+      "delicate-density_02.webp",
+      "delicate-density_03.webp",
+      "delicate-density_04.webp",
+      "delicate-density_05.webp",
+      "delicate-density_06.webp",
+      "delicate-density_07.webp",
+      "delicate-density_08.webp",
+      "delicate-density_09.webp",
+      "delicate-density_10.webp",
+      "delicate-density_11.webp",
+      "delicate-density_12.webp",
+      "delicate-density_13.webp",
+      "delicate-density_14.webp",
+      "delicate-density_15.webp"
+    ],
+    "model": "delicate-density.glb",
+    "geometryType": "Table",
+    "material": {                                                                                      
+      "color": "#b7b7b7",
+      "metalness": 0.0,
+      "roughness": 0.9,
+      "wireframe": false
+    },                                                                                                 
+    "lighting": {
+      "environment": "dawn",
+      "exposure": 1.0,
+      "backgroundColor": "#ffffff",
+      "ambientIntensity": 0.3
+    },
+    "jobID": "solo",
+    "themes": ["3d-dfam"]
+  }

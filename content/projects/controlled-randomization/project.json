@@ -12,22 +12,22 @@
       "workshop_randomization_01.webp",
       "workshop_randomization_02.webp"
     ],
-    "model": "erosion2.glb",
+    "model": "erosion-new.glb",
     "geometryType": "erosion demo",
-    "material": {                                                                                      
-      "color": "#ffb638",                                                                              
+    "material": {
+      "color": "#ffb638",
       "metalness": 0.0,
       "roughness": 0.7,
       "wireframe": true,
       "wireframeOpacity": 0.2,
       "wireframeColor": "#ffffff"
     },
-    "lighting": {                                                                                      
+    "lighting": {
       "environment": "city",
       "exposure": 1.0,
       "ambientIntensity": 0.3,
       "backgroundColor": "#111111"
-      },                                                                                 
+      },
     "jobID": "",
     "themes": ["edu-conf", "comp-design"]
   }

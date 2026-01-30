@@ -62,7 +62,7 @@ const CV_DATA: JobData[] = [
   },
   {
     id: 'jmf',
-    role: 'Architectural Designer / 3D Modeling Director',
+    role: 'Architectural Designer',
     company: 'Jakob + MacFarlane',
     year: '2011–2014',
     description: 'Produced architectural design and advanced 3D modeling for cultural and commercial buildings.',
@@ -77,7 +77,7 @@ const CV_DATA: JobData[] = [
 const THEME_DATA: ThemeData[] = [
   { id: 'ai-dev', label: 'AI / Dev' },
   { id: 'comp-design', label: 'Computational Design' },
-  { id: '3d-dfam', label: '3D Printing / DFAM' },
+  { id: '3d-dfam', label: '3D Printing / DfAM' },
   { id: 'arch-fab', label: 'Architecture / Fabrication' },
   { id: 'edu-conf', label: 'Education / Conferences' }
 ];
@@ -821,15 +821,34 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
     } else if (dragMode === 'RESIZE_NODE' && draggedNodeId && initialDragState) {
        const deltaX = (e.clientX - initialDragState.mousePos.x) / zoom;
        const deltaY = (e.clientY - initialDragState.mousePos.y) / zoom;
-       setNodes(prev => prev.map(n =>
-        n.id === draggedNodeId
-          ? {
-              ...n,
-              width: Math.max(200, initialDragState.nodeSize.w + deltaX),
-              height: n.height ? Math.max(150, (initialDragState.nodeSize.h || 0) + deltaY) : undefined
-            }
-          : n
-       ));
+       setNodes(prev => prev.map(n => {
+        if (n.id === draggedNodeId) {
+          // Calculate dynamic minimum height based on node type and content
+          let minHeight = 150; // Default minimum
+
+          if (n.type === NodeType.PROJECT_LIST) {
+            const socketStride = n.socketStride || 60;
+            const minContentHeight = 80;
+            const displayedProjects = (n.data?.displayedProjects as string[]) || [];
+            const calculatedHeight = displayedProjects.length * socketStride;
+            const contentHeight = displayedProjects.length === 0 ? minContentHeight : calculatedHeight;
+            minHeight = 32 + contentHeight;
+          } else if (n.type === NodeType.CV) {
+            const socketStride = n.socketStride || 60;
+            minHeight = 32 + (CV_DATA.length * socketStride);
+          } else if (n.type === NodeType.THEME) {
+            const socketStride = n.socketStride || 60;
+            minHeight = 32 + (THEME_DATA.length * socketStride);
+          }
+
+          return {
+            ...n,
+            width: Math.max(300, initialDragState.nodeSize.w + deltaX),
+            height: n.height ? Math.max(minHeight, (initialDragState.nodeSize.h || 0) + deltaY) : undefined
+          };
+        }
+        return n;
+       }));
     }
   };
 

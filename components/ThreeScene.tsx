@@ -504,13 +504,13 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, 
 
         {/* Bounds with fit auto-centers and zooms to model regardless of scale */}
         {modelUrl ? (
-          <Bounds key={`${modelUrl}-${refreshKey}`} fit clip margin={2.0}>
+          <Bounds key={`${modelUrl}-${refreshKey}`} fit clip margin={1.4}>
             <React.Suspense fallback={null}>
               <ModelLoader url={modelUrl} material={material} />
             </React.Suspense>
           </Bounds>
         ) : (
-          <Bounds key={refreshKey} fit margin={2.0}>
+          <Bounds key={refreshKey} fit margin={1.4}>
             <GeometryMesh type={geometryType} />
           </Bounds>
         )}

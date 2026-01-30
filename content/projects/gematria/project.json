@@ -15,14 +15,14 @@
     ],
     "model": "medallion.glb",
     "geometryType": "Ilan Medalion",
-    "material": {                                                                                      
+    "material": {
       "color": "#D4AF37",
       "metalness": 0.9,
       "roughness": 0.5,
       "wireframe": true,
       "wireframeOpacity": 0.2,
       "wireframeColor": "#000000"
-    },                                                                                                 
+    },
     "lighting": {
       "environment": "studio",
       "exposure": 1.3,

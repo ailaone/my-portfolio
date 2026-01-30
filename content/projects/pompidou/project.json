@@ -1,21 +1,42 @@
 {
     "slug": "pompidou",
-    "title": "Pompidou Center Plaza AI Renovation",
+    "title": "Pompidou Plaza Intervention",
     "year": "2025",
-    "category": "Concept Design + Architecture",
-    "role": ["Lead Designer", "Generative AI Specialist"],
+    "category": "AI + Architecture",
+    "role": ["Designer"],
     "client": "R&D",
     "themes": ["ai-dev"],
-    "technologies": ["ComfyUI", "Rhino", "Midjourney", "NanoBanana", "ByteDance"],
+    "technologies": ["ComfyUI", "Rhino", "Midjourney", "NanoBanana", "SeedDream", "Flux", "TripoAI"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "pompidou_01.jpg",
-      "pompidou_02.jpg",
-      "pompidou_03.jpg"
+      "pompidou-01.webp",
+      "pompidou-02.webp",
+      "pompidou-03.webp",
+      "pompidou-04.webp",
+      "pompidou-05.webp",
+      "pompidou-06.webp",
+      "pompidou-07.webp",
+      "pompidou-08.webp",
+      "pompidou-09.webp"
     ],
     "jobID": "solo",
     "presentationUrl": "https://docs.google.com/presentation/d/e/2PACX-1vS0-zvGt32IqpOWd29_jXbSq9XujN1FBlXEWc1vBfDQl9D0p-EMuIzsAxzostsk2tMWUgQ38HlEcpHf/pub?start=false&loop=false&delayms=3000",
-    "videoUrl": "https://youtu.be/1234567890",
-    "autoplayVideo": true
-  }
+    "videoUrl": "https://youtube.com/shorts/8w6Z45PH1wM",
+    "autoplayVideo": true,
+    "themes": ["ai-dev"],
+    "model": "pompidou3.glb",
+    "geometryType": "Pompidou Center Plaza",
+    "material": {
+      "color": "#b7b7b7",
+      "metalness": 0.0,
+      "roughness": 0.9,
+      "wireframe": false
+    },
+    "lighting": {
+      "environment": "dawn",
+      "exposure": 1.0,
+      "ambientIntensity": 0.3,
+      "backgroundColor": "#ffffff"
+    }
+}

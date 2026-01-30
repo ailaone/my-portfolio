@@ -1,0 +1,20 @@
+{
+    "slug": "ntop-skateframe",
+    "title": "G-Frames",
+    "year": "2022",
+    "category": "Sports Equipment",
+    "role": ["Product + Computational Designer"],
+    "client": "nTop",
+    "technologies": ["nTop", "Rhino", "Grasshopper", "MJF 3D Printing"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "ntop-skateframe_01.jpg",
+      "ntop-skateframe_02.jpg",
+      "ntop-skateframe_03.jpg"
+    ],
+    "model": "test.glb",
+    "geometryType": "frame",
+    "jobID": "slice",
+    "videoUrl": "https://youtu.be/hqvR0lw_PT8"
+  }

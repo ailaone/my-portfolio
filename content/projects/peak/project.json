@@ -9,9 +9,12 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "peak_01.jpg",
-      "peak_02.jpg",
-      "peak_03.jpg"
+      "peak_01.webp",
+      "peak_02.webp",
+      "peak_03.webp",
+      "peak_04.webp",
+      "peak_05.webp",
+      "peak_06.webp"
     ],
     "jobID": "rg",
     "themes": ["arch-fab"]
