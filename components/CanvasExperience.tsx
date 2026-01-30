@@ -512,6 +512,39 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
     return () => window.removeEventListener('click', closeMenu);
   }, []);
 
+  // Prevent Safari gesture zoom (trackpad pinch)
+  useEffect(() => {
+    const preventGesture = (e: Event) => {
+      e.preventDefault();
+    };
+
+    document.addEventListener('gesturestart', preventGesture, { passive: false });
+    document.addEventListener('gesturechange', preventGesture, { passive: false });
+    document.addEventListener('gestureend', preventGesture, { passive: false });
+
+    return () => {
+      document.removeEventListener('gesturestart', preventGesture);
+      document.removeEventListener('gesturechange', preventGesture);
+      document.removeEventListener('gestureend', preventGesture);
+    };
+  }, []);
+
+  // Prevent document-level zoom from wheel events with Ctrl/Cmd
+  useEffect(() => {
+    const preventZoom = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+      }
+    };
+
+    // Use passive: false to allow preventDefault
+    document.addEventListener('wheel', preventZoom, { passive: false });
+
+    return () => {
+      document.removeEventListener('wheel', preventZoom);
+    };
+  }, []);
+
   // --- Helpers ---
   const screenToCanvas = (screenX: number, screenY: number) => {
     return {
@@ -888,29 +921,33 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   };
 
   const handleWheel = (e: React.WheelEvent) => {
-    // ALWAYS prevent default to stop page scroll
+    // CRITICAL: Prevent all default behaviors including browser zoom
     e.preventDefault();
+    e.stopPropagation();
 
-    // Explicit Zoom (Ctrl+Wheel or Pinch on some browsers)
+    // Block browser zoom when Ctrl/Cmd is pressed (common zoom trigger)
     if (e.ctrlKey || e.metaKey) {
-        zoomCanvas(e.clientX, e.clientY, -e.deltaY);
-        return;
+      // Use our custom zoom instead of browser zoom
+      zoomCanvas(e.clientX, e.clientY, -e.deltaY);
+      return;
     }
 
-    // Heuristic for Mouse Wheel Zoom vs Trackpad Pan
-    // Mouse wheels: only deltaY (no deltaX), larger values
-    // Trackpads: both deltaX and deltaY, smaller continuous values
-    const isMouseWheel = Math.abs(e.deltaX) < 1 && Math.abs(e.deltaY) > 0;
+    // Improved heuristic for Mouse Wheel vs Trackpad
+    // Mouse wheel: pure vertical (deltaX = 0) with larger deltaY values
+    // Trackpad: has deltaX, or very small deltaY values
+    const hasHorizontalMovement = Math.abs(e.deltaX) > 0.5;
+    const isLargeVerticalScroll = Math.abs(e.deltaY) > 15;
+    const isMouseWheel = !hasHorizontalMovement && isLargeVerticalScroll;
 
     if (isMouseWheel) {
-        // Mouse wheel: Zoom
-        zoomCanvas(e.clientX, e.clientY, -e.deltaY);
+      // Mouse wheel: Zoom
+      zoomCanvas(e.clientX, e.clientY, -e.deltaY);
     } else {
-        // Trackpad: Pan (Inverted for natural feeling)
-        setPan(prev => ({
-            x: prev.x - e.deltaX,
-            y: prev.y - e.deltaY
-        }));
+      // Trackpad: Pan directly (no accumulation)
+      setPan(prev => ({
+        x: prev.x - e.deltaX,
+        y: prev.y - e.deltaY
+      }));
     }
   };
 

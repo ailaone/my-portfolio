@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ProjectData, JobData, ThemeData, NodeState, NodeType, Connection } from '@/types/content';
 import { ThreeScene, getContrastTextColor } from '../ThreeScene';
 import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Maximize, Image as ImageIcon, Calendar, Video, Monitor } from 'lucide-react';
@@ -63,17 +63,17 @@ const isProject = (data: any): data is ProjectData => !!data && 'slug' in data;
 const isJob = (data: any): data is JobData => !!data && 'company' in data;
 
 export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, connections, projects, jobs, themes, onNodeDataChange, onOpenFullscreen, onSpawnNode, onSmartSwitch }) => {
-  
+
   const handleImageNav = (direction: 'prev' | 'next', currentProject: ProjectData) => {
      const gallery = currentProject.galleryUrls || [];
      if (gallery.length === 0) return;
-     
+
      const currentIndex = node.data?.imageIndex || 0;
      let newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
-     
+
      if (newIndex >= gallery.length) newIndex = 0;
      if (newIndex < 0) newIndex = gallery.length - 1;
-     
+
      onNodeDataChange(node.id, { imageIndex: newIndex });
   };
 
@@ -81,6 +81,21 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
   const upstreamData = (node.type !== NodeType.PROJECT_LIST && node.type !== NodeType.CV && node.type !== NodeType.HEADER && node.type !== NodeType.CONTACT && node.type !== NodeType.SOCIAL)
     ? findUpstreamData(node.id, allNodes, connections, projects, jobs)
     : null;
+
+  // Reset imageIndex when project changes (IMAGE nodes only)
+  useEffect(() => {
+    if (node.type !== NodeType.IMAGE) return;
+    if (!upstreamData || !isProject(upstreamData)) return;
+
+    const gallery = upstreamData.galleryUrls || (upstreamData.heroImageUrl ? [upstreamData.heroImageUrl] : []);
+    const storedProjectSlug = node.data?.projectSlug;
+    const currentIndex = node.data?.imageIndex || 0;
+
+    // Reset if project changed or index is out of bounds
+    if (storedProjectSlug !== upstreamData.slug || currentIndex >= gallery.length) {
+      onNodeDataChange(node.id, { imageIndex: 0, projectSlug: upstreamData.slug });
+    }
+  }, [node.type, node.id, node.data?.projectSlug, node.data?.imageIndex, upstreamData, onNodeDataChange]);
 
   switch (node.type) {
     case NodeType.HEADER:
@@ -349,14 +364,12 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
         );
       }
 
-      // Reset imageIndex if project changed or index is out of bounds
+      // Get imageIndex (useEffect handles resetting when project changes)
       let idx = node.data?.imageIndex || 0;
-      const storedProjectSlug = node.data?.projectSlug;
 
-      if (storedProjectSlug !== upstreamData.slug || idx >= gallery.length) {
-        // Project changed or index is invalid - reset to 0
+      // Clamp to valid range
+      if (idx >= gallery.length) {
         idx = 0;
-        onNodeDataChange(node.id, { imageIndex: 0, projectSlug: upstreamData.slug });
       }
 
       const currentImage = gallery[idx] || null;
