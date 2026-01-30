@@ -349,7 +349,16 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
         );
       }
 
-      const idx = node.data?.imageIndex || 0;
+      // Reset imageIndex if project changed or index is out of bounds
+      let idx = node.data?.imageIndex || 0;
+      const storedProjectSlug = node.data?.projectSlug;
+
+      if (storedProjectSlug !== upstreamData.slug || idx >= gallery.length) {
+        // Project changed or index is invalid - reset to 0
+        idx = 0;
+        onNodeDataChange(node.id, { imageIndex: 0, projectSlug: upstreamData.slug });
+      }
+
       const currentImage = gallery[idx] || null;
 
       return (

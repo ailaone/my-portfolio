@@ -13,6 +13,7 @@ import { NodeContainer } from './NodeContainer';
 import { WireConnections } from './WireConnections';
 import { VisualNodeContent } from './Nodes/VisualNodes';
 import { useTheme } from '@/lib/ThemeContext';
+import { AssetPreloader } from './AssetPreloader';
 
 const CV_DATA: JobData[] = [
   {
@@ -1131,6 +1132,9 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
   return (
     <>
+      {/* Preload all assets in background */}
+      <AssetPreloader projects={initialProjects} showDebug={false} />
+
       {/* Fixed UI Layer - Never transforms */}
       <div className="fixed inset-0 pointer-events-none z-50">
         {/* Toolbar */}

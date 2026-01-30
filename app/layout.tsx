@@ -19,6 +19,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://arthurazoulai.com'),
   title: "Arthur Azoulai | Creative Technologist",
   description: "My portfolio.",
   openGraph: {
