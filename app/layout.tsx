@@ -21,6 +21,28 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Arthur Azoulai | Creative Technologist",
   description: "My portfolio.",
+  openGraph: {
+    title: "Arthur Azoulai | Creative Technologist",
+    description: "My portfolio.",
+    url: "https://arthurazoulai.com",
+    siteName: "Arthur Azoulai",
+    images: [
+      {
+        url: "/og-image.jpg", // Update this path to your actual image
+        width: 1200,
+        height: 630,
+        alt: "Arthur Azoulai Portfolio",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Arthur Azoulai | Creative Technologist",
+    description: "My portfolio",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export const viewport: Viewport = {
