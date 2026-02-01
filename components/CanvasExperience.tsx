@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import {
   ArrowUpRight, Layers, RefreshCw, MousePointer2,
   Box, FileText, Image as ImageIcon, BarChart, Activity, List, Mail, GripHorizontal, Zap,
@@ -251,22 +251,24 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   const containerRef = useRef<HTMLDivElement>(null);
 
   // --- EFFECT: Dynamic Node Updates (Filtering Projects) ---
+  // EFFECT 1: Update PROJECT_LIST nodes based on connections
+  // When connections change, filter projects and update node outputs/heights
+  // Dependencies: [connections, initialProjects] - NOT nodes to avoid circular updates
+  // Uses nodesRef.current to read latest node state without adding to dependencies
   useEffect(() => {
-    // We need to check if any Project List nodes have an input connection.
-    // If so, we must filter their contents and update their outputs/height.
-    
+    const currentNodes = nodesRef.current;
     let nodesUpdated = false;
-    const newNodes = nodes.map(node => {
+    const newNodes = currentNodes.map(node => {
         if (node.type !== NodeType.PROJECT_LIST) return node;
 
         // Check for incoming connection to 'in-filter'
         const filterConn = connections.find(c => c.toNodeId === node.id && c.toSocketId === 'in-filter');
-        
+
         let displayedProjects: ProjectData[] = [];
-        
+
         if (filterConn) {
-          const fromNode = nodes.find(n => n.id === filterConn.fromNodeId);
-          
+          const fromNode = currentNodes.find(n => n.id === filterConn.fromNodeId);
+
           // CASE 1: Direct - THEME → Project List
           if (fromNode && fromNode.type === NodeType.THEME && filterConn.fromSocketId.startsWith('out-theme-')) {
               const themeId = filterConn.fromSocketId.replace('out-theme-', '');
@@ -284,7 +286,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
               // Trace back to find CV
               const detailsInputConn = connections.find(c => c.toNodeId === fromNode.id && c.toSocketId === 'in-select');
               if (detailsInputConn) {
-                  const cvNode = nodes.find(n => n.id === detailsInputConn.fromNodeId);
+                  const cvNode = currentNodes.find(n => n.id === detailsInputConn.fromNodeId);
                   if (cvNode && cvNode.type === NodeType.CV && detailsInputConn.fromSocketId.startsWith('out-cv-')) {
                       const jobId = detailsInputConn.fromSocketId.replace('out-cv-', '');
                       console.log('🔗 Upstream through Details, jobId:', jobId);
@@ -328,28 +330,39 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
     if (nodesUpdated) {
         setNodes(newNodes);
-
-        // Clean up orphaned connections: remove connections where the socket no longer exists
-        // This happens when PROJECT_LIST goes from having projects to being empty
-        setConnections(prev => prev.filter(conn => {
-            const fromNode = newNodes.find(n => n.id === conn.fromNodeId);
-            const toNode = newNodes.find(n => n.id === conn.toNodeId);
-
-            // Check if output socket still exists on source node
-            if (fromNode && !fromNode.outputs.some(o => o.id === conn.fromSocketId)) {
-                return false; // Remove this connection
-            }
-
-            // Check if input socket still exists on target node
-            if (toNode && !toNode.inputs.some(i => i.id === conn.toSocketId)) {
-                return false; // Remove this connection
-            }
-
-            return true; // Keep this connection
-        }));
     }
 
-  }, [connections, initialProjects, nodes]);
+  }, [connections, initialProjects]); // Only connections and projects - NOT nodes
+
+  // EFFECT 2: Clean up orphaned connections when nodes change
+  // When nodes are updated, remove connections to sockets that no longer exist
+  // Dependencies: [nodes] - NOT connections to avoid circular updates
+  useEffect(() => {
+    setConnections(prev => {
+      const cleaned = prev.filter(conn => {
+        const fromNode = nodes.find(n => n.id === conn.fromNodeId);
+        const toNode = nodes.find(n => n.id === conn.toNodeId);
+
+        // Check if output socket still exists on source node
+        if (fromNode && !fromNode.outputs.some(o => o.id === conn.fromSocketId)) {
+            return false; // Remove this connection
+        }
+
+        // Check if input socket still exists on target node
+        if (toNode && !toNode.inputs.some(i => i.id === conn.toSocketId)) {
+            return false; // Remove this connection
+        }
+
+        return true; // Keep this connection
+      });
+
+      // Only update if there are actual changes (avoid unnecessary re-renders)
+      if (cleaned.length !== prev.length) {
+        return cleaned;
+      }
+      return prev;
+    });
+  }, [nodes]); // Only nodes - NOT connections
 
   useEffect(() => {
     nodesRef.current = nodes;
@@ -601,11 +614,11 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
     setNodes(prev => [...prev, newNode]);
   };
 
-  const handleNodeDataChange = (nodeId: string, newData: any) => {
+  const handleNodeDataChange = useCallback((nodeId: string, newData: any) => {
     setNodes(prev => prev.map(n =>
       n.id === nodeId ? { ...n, data: { ...n.data, ...newData } } : n
     ));
-  };
+  }, []); // Empty deps - uses functional update so no external dependencies
 
   const handleSmartSwitch = (nodeId: string, socketId: string) => {
     // Find all connections FROM this node
