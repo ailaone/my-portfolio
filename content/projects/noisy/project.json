@@ -12,7 +12,11 @@
     "images": [
       "noisy_01.jpg",
       "noisy_02.jpg",
-      "noisy_03.jpg"
+      "noisy_03.jpg",
+      "noisy_04.jpg",
+      "noisy_05.jpg",
+      "noisy_06.jpg",
+      "noisy_07.jpg"
     ],
     "model": "test.glb",
     "geometryType": "chair",
