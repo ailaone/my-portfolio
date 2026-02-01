@@ -18,37 +18,37 @@
       {
         "title": "StyleGAN2 Latent Walk - Black Background",
         "url": "https://vimeo.com/1160701412",
-        "autoplay": false
+        "autoplay": true
       },
       {
         "title": "StyleGAN2 Latent Walk - White Background",
         "url": "https://vimeo.com/manage/videos/1160701451",
-        "autoplay": false
+        "autoplay": true
       },
       {
         "title": "Flowers - Dall-E Experiment v1",
         "url": "https://vimeo.com/1160702498",
-        "autoplay": false
+        "autoplay": true
       },
       {
         "title": "Flowers - Dall-E Experiment v2",
         "url": "https://vimeo.com/1160702503",
-        "autoplay": false
+        "autoplay": true
       },
       {
         "title": "Flowers - Dall-E Experiment v3",
         "url": "https://vimeo.com/1160702512",
-        "autoplay": false
+        "autoplay": true
       },
       {
         "title": "Flowers - Dall-E Experiment v4a",
         "url": "https://vimeo.com/1160702485",
-        "autoplay": false
+        "autoplay": true
       },
       {
         "title": "Flowers - Dall-E Experiment v4b",
         "url": "https://vimeo.com/1160702493",
-        "autoplay": false
+        "autoplay": true
       }
     ],
     "jobID": "solo",

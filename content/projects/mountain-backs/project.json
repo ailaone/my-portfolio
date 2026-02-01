@@ -1,20 +1,25 @@
 {
-    "slug": "ntop-skateframe",
-    "title": "G-Frames",
-    "year": "2022",
-    "category": "Sports Equipment",
+    "slug": "mountain-backs",
+    "title": "Mountain Backs",
+    "year": "2021",
+    "category": "WinterSports Equipment",
     "role": ["Product + Computational Designer"],
-    "client": "nTop",
-    "technologies": ["nTop", "Rhino", "Grasshopper", "MJF 3D Printing"],
+    "client": "Henkel + Stratasys",
+    "technologies": ["Rhino", "Grasshopper", "Origin 3D Printing", "Millipede", "Crystallon", "ZBrush"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "ntop-skateframe_01.jpg",
-      "ntop-skateframe_02.jpg",
-      "ntop-skateframe_03.jpg"
+      "mountain-backs_01.webp",
+      "mountain-backs_02.webp",
+      "mountain-backs_03.webp",
+      "mountain-backs_04.webp",
+      "mountain-backs_05.webp",
+      "mountain-backs_06.webp"
     ],
     "model": "test.glb",
     "geometryType": "frame",
     "jobID": "slice",
-    "videoUrl": "https://youtu.be/hqvR0lw_PT8"
+    "videoUrl": "https://www.youtube.com/watch?v=_MHGKrkUaoo",
+    "autoplayVideo": true,
+    "themes": ["3d-dfam"]
   }

@@ -1,0 +1,19 @@
+{
+    "slug": "Records",
+    "title": "AI Record Collection",
+    "year": "2021",
+    "category": "AI Exploration",
+    "role": ["Designer / Explorer"],
+    "client": "Personal",
+    "technologies": ["RunwayML", "StyleGAN", "Diffusion Models", "Image Scrapping"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "records_01.webp",
+      "records_02.webp",
+      "records_03.webp"
+    ],
+    "model": "test.glb",
+    "geometryType": "abstract",
+    "jobID": "solo"
+  }

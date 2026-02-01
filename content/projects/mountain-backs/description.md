@@ -1,12 +1,11 @@
-A topology-optimized inline skate frame designed in nTopology for additive manufacturing. The structure was engineered using FEA to withstand extreme skating loads—hard turns, jumps, and rail grinding—while maintaining minimal weight. Strategic gyroid patterns fill low-stress areas between wheels, creating both structural efficiency and visual interest.
+The Mountain Backs were inspired by the Rocky Mountains in Colorado, which draw a sharp line across the landscape—flat high desert to the east, topographical wonder to the west. Similarly, these bindings feature a smooth back surface that transitions into a mountain range structure, providing extra support where needed. The design embraces geometric variability in both the mountain-like back and interior lattice, allowing bindings to be easily swapped for different rider preferences and conditions.
 
-## Fabrication
+## Development
 
-Printed on HP Jet Fusion 580 in PA-12, enabling full-color customization. Two initial designs were developed: a marble texture matching Danny Beer's THEM skates, and a gyroid-based pattern generated through advanced boolean operations in nTopology.
+A collaboration between Stratasys, Slicelab, and F Equals F produced 3D printed snowboard binding high-backs on the Stratasys Origin One printer using Loctite 3172™ High Impact material. FEA tools created a topology-optimized solution with varying lattice thickness while conforming to the boot. Strategic variations in the Colorado-inspired mountain range geometry provided additional support where needed. The bindings were functionally tested at Breckenridge, Colorado, and performed perfectly.
 
-## Customization
+The prints were oriented to fit a pair within the build volume while requiring only minimal support structure, eliminating post-processing needs. The high-back connects via two pivoting fasteners at the bottom and two ledges that lock onto the binding base rim.
 
-Multiple frame variants adapt to different skating styles. The design system allows for endless color patterns and surface textures.
+## Performance
 
-**Learn more:** [DfAM Substack by Duann Scott](https://www.designforam.com/p/computational-design-of-rollerblade)
-**Download files:** [Google Drive](https://drive.google.com/drive/folders/16CNl8zr_5vm0xYplc092xjiHg4orfkRp?usp=sharing)
+These bindings demonstrate high-performance functional parts achievable only with additive manufacturing—geometric complexity too difficult to traditionally injection mold. The Loctite 3172™ material delivers durability, impact resistance, high stiffness, and good surface finish with attributes similar to polypropylene.
