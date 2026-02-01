@@ -1,0 +1,20 @@
+{
+    "slug": "big-blue",
+    "title": "The Big Blue AI Interpolation",
+    "year": "2021",
+    "category": "RunwayML",
+    "role": ["Editor"],
+    "client": "Personal",
+    "technologies": ["RunwayML", "Adobe Premiere Pro"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "big-blue_01.webp",
+      "big-blue_02.webp",
+      "big-blue_03.webp"
+    ],
+    "jobID": "solo",
+    "themes": ["ai-dev"],
+    "videoUrl": "https://vimeo.com/1160661383",
+    "autoplayVideo": true
+  }
