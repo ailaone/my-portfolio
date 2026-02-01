@@ -10,9 +10,9 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "noisy_01.jpg",
-      "noisy_02.jpg",
       "noisy_03.jpg",
+      "noisy_02.jpg",
+      "noisy_01.jpg",
       "noisy_04.jpg",
       "noisy_05.jpg",
       "noisy_06.jpg",

@@ -9,9 +9,11 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "wanderlust_01.jpg",
-      "wanderlust_02.jpg",
-      "wanderlust_03.jpg"
+      "wanderlust_01.webp",
+      "wanderlust_02.webp",
+      "wanderlust_03.webp",
+      "wanderlust_04.webp",
+      "wanderlust_05.webp"
     ],
     "model": "test.glb",
     "geometryType": "chair",
