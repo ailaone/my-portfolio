@@ -9,11 +9,19 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "united-nude_01.jpg",
-      "united-nude_02.jpg",
-      "united-nude_03.jpg"
+      "united-nude_01.webp",
+      "united-nude_02.webp",
+      "united-nude_03.webp",
+      "united-nude_04.webp",
+      "united-nude_05.webp",
+      "united-nude_06.webp",
+      "united-nude_07.webp",
+      "united-nude_08.webp",
+      "united-nude_09.webp",
+      "united-nude_10.webp"
     ],
     "model": "test.glb",
     "geometryType": "chair",
-    "jobID": "fbs"
+    "jobID": "fbs",
+    "themes": ["3d-dfam"]
   }

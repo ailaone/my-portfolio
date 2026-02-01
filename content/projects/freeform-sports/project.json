@@ -1,6 +1,6 @@
 {
     "slug": "freeform-sports",
-    "title": "Protective Sports Padding",
+    "title": "Freeform Sports Protective Padding",
     "year": "2023 - Ongoing",
     "category": "Sports Equipment",
     "role": ["Product + Computational Designer"],
@@ -9,11 +9,19 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "freeform-sports_01.jpg",
-      "freeform-sports_02.jpg",
-      "freeform-sports_03.jpg"
+      "freeform-sports_01.webp",
+      "freeform-sports_02.webp",
+      "freeform-sports_03.webp",
+      "freeform-sports_04.webp",
+      "freeform-sports_05.webp",
+      "freeform-sports_06.webp", 
+      "freeform-sports_07.webp",
+      "freeform-sports_08.webp",
+      "freeform-sports_09.webp",
+      "freeform-sports_10.webp"
     ],
     "model": "test.glb",
     "geometryType": "padding",
-    "jobID": "slice"
+    "jobID": "slice",
+    "themes": ["3d-dfam"]
   }

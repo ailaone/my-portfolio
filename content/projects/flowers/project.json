@@ -1,0 +1,56 @@
+{
+    "slug": "flowers",
+    "title": "Flowers AI",
+    "year": "2022",
+    "category": "RunwayML + Dall-E Experiments",
+    "role": ["Editor"],
+    "client": "Personal",
+    "technologies": ["RunwayML", "Dall-E", "Premiere Pro"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "flowers_01a.webp",
+      "flowers_02a.webp",
+      "flowers_01b.webp",
+      "flowers_02b.webp"
+    ],
+    "videos": [
+      {
+        "title": "StyleGAN2 Latent Walk - Black Background",
+        "url": "https://vimeo.com/1160701412",
+        "autoplay": false
+      },
+      {
+        "title": "StyleGAN2 Latent Walk - White Background",
+        "url": "https://vimeo.com/manage/videos/1160701451",
+        "autoplay": false
+      },
+      {
+        "title": "Flowers - Dall-E Experiment v1",
+        "url": "https://vimeo.com/1160702498",
+        "autoplay": false
+      },
+      {
+        "title": "Flowers - Dall-E Experiment v2",
+        "url": "https://vimeo.com/1160702503",
+        "autoplay": false
+      },
+      {
+        "title": "Flowers - Dall-E Experiment v3",
+        "url": "https://vimeo.com/1160702512",
+        "autoplay": false
+      },
+      {
+        "title": "Flowers - Dall-E Experiment v4a",
+        "url": "https://vimeo.com/1160702485",
+        "autoplay": false
+      },
+      {
+        "title": "Flowers - Dall-E Experiment v4b",
+        "url": "https://vimeo.com/1160702493",
+        "autoplay": false
+      }
+    ],
+    "jobID": "solo",
+    "themes": ["ai-dev"]
+  }

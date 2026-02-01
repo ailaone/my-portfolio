@@ -157,6 +157,13 @@ export function getProjectBySlug(slug: string): ProjectData | null {
 
     const heroImage = existingImages.length > 0 ? existingImages[0] : undefined;
 
+    // Process videos array (new multi-video support)
+    const processedVideos = projectJson.videos?.map(video => ({
+      title: video.title,
+      embedUrl: getVideoEmbedUrl(video.url) || '',
+      autoplay: video.autoplay
+    })).filter(v => v.embedUrl) || [];
+
     const projectData: ProjectData = {
       ...projectJson,
       slug,
@@ -168,7 +175,8 @@ export function getProjectBySlug(slug: string): ProjectData | null {
       heroImageUrl: getImageUrl(heroImage),
       galleryUrls: existingImages.map(img => getImageUrl(img)!).filter(Boolean),
       modelUrl: getModelUrl(projectJson.model),
-      videoEmbedUrl: getVideoEmbedUrl(projectJson.videoUrl),
+      videoEmbedUrl: getVideoEmbedUrl(projectJson.videoUrl),  // Legacy: single video
+      videoEmbeds: processedVideos.length > 0 ? processedVideos : undefined, // NEW: video array
       presentationEmbedUrl: getPresentationEmbedUrl(projectJson.presentationUrl),
     };
 

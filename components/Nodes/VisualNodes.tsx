@@ -77,6 +77,19 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
      onNodeDataChange(node.id, { imageIndex: newIndex });
   };
 
+  const handleVideoNav = (direction: 'prev' | 'next', currentProject: ProjectData) => {
+     const videos = currentProject.videoEmbeds || [];
+     if (videos.length === 0) return;
+
+     const currentIndex = node.data?.videoIndex || 0;
+     let newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+
+     if (newIndex >= videos.length) newIndex = 0;
+     if (newIndex < 0) newIndex = videos.length - 1;
+
+     onNodeDataChange(node.id, { videoIndex: newIndex });
+  };
+
   // Find upstream data (Project or Job)
   const upstreamData = (node.type !== NodeType.PROJECT_LIST && node.type !== NodeType.CV && node.type !== NodeType.HEADER && node.type !== NodeType.CONTACT && node.type !== NodeType.SOCIAL)
     ? findUpstreamData(node.id, allNodes, connections, projects, jobs)
@@ -96,6 +109,21 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
       onNodeDataChange(node.id, { imageIndex: 0, projectSlug: upstreamData.slug });
     }
   }, [node.type, node.id, node.data?.projectSlug, node.data?.imageIndex, upstreamData, onNodeDataChange]);
+
+  // Reset videoIndex when project changes (VIDEO nodes only)
+  useEffect(() => {
+    if (node.type !== NodeType.VIDEO) return;
+    if (!upstreamData || !isProject(upstreamData)) return;
+
+    const videos = upstreamData.videoEmbeds || [];
+    const storedProjectSlug = node.data?.projectSlug;
+    const currentIndex = node.data?.videoIndex || 0;
+
+    // Reset if project changed or index is out of bounds
+    if (storedProjectSlug !== upstreamData.slug || currentIndex >= videos.length) {
+      onNodeDataChange(node.id, { videoIndex: 0, projectSlug: upstreamData.slug });
+    }
+  }, [node.type, node.id, node.data?.projectSlug, node.data?.videoIndex, upstreamData, onNodeDataChange]);
 
   switch (node.type) {
     case NodeType.HEADER:
@@ -233,7 +261,7 @@ export const VisualNodeContent: React.FC<ContentProps> = ({ node, allNodes, conn
 
       // Default: Project
       const hasImages = upstreamData.galleryUrls && upstreamData.galleryUrls.length > 0;
-      const hasVideo = !!upstreamData.videoEmbedUrl;
+      const hasVideo = !!upstreamData.videoEmbedUrl || (upstreamData.videoEmbeds && upstreamData.videoEmbeds.length > 0);
       const has3D = !!upstreamData.modelUrl;
       const hasPresentation = !!upstreamData.presentationEmbedUrl;
       const hasAnyContent = hasImages || hasVideo || has3D || hasPresentation;
@@ -518,8 +546,13 @@ case NodeType.VIEWER_3D:
         );
       }
 
+      // NEW: Support video array OR legacy single video
+      const videoGallery = upstreamData.videoEmbeds || [];
+      const hasLegacyVideo = !!upstreamData.videoEmbedUrl;
+      const hasVideos = videoGallery.length > 0 || hasLegacyVideo;
+
       // Check if video is available for this project
-      if (!upstreamData.videoEmbedUrl) {
+      if (!hasVideos) {
         return (
           <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
             <Video size={16} />
@@ -529,22 +562,71 @@ case NodeType.VIEWER_3D:
         );
       }
 
+      // Get current video (from array or legacy single video)
+      let currentVideoIndex = node.data?.videoIndex || 0;
+      let currentVideo;
+      let videoTitle;
+      let shouldAutoplay = false;
+
+      if (videoGallery.length > 0) {
+        // NEW: Use video array
+        if (currentVideoIndex >= videoGallery.length) currentVideoIndex = 0;
+        currentVideo = videoGallery[currentVideoIndex];
+        videoTitle = currentVideo.title;
+        shouldAutoplay = currentVideo.autoplay || false;
+      } else {
+        // LEGACY: Use single video
+        currentVideo = { embedUrl: upstreamData.videoEmbedUrl! };
+        shouldAutoplay = upstreamData.autoplayVideo || false;
+      }
+
       // Add autoplay parameters if enabled
-      let videoSrc = upstreamData.videoEmbedUrl;
-      if (upstreamData.autoplayVideo) {
+      let videoSrc = currentVideo.embedUrl;
+      if (shouldAutoplay) {
         const separator = videoSrc.includes('?') ? '&' : '?';
         videoSrc = `${videoSrc}${separator}autoplay=1&mute=1`;
       }
 
       return (
-        <div className="w-full h-full relative bg-[#000000]">
-          <iframe
-            src={videoSrc}
-            className="absolute inset-0 w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-           // title={upstreamData.title}
-          />
+        <div className="w-full h-full flex flex-col bg-[#000000]">
+          {/* Video container */}
+          <div className="relative flex-1 group">
+            <iframe
+              src={videoSrc}
+              className="absolute inset-0 w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title={videoTitle || upstreamData.title}
+            />
+
+            {/* Navigation controls (only show if multiple videos) - pointer-events on container disabled, enabled on buttons */}
+            {videoGallery.length > 1 && (
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleVideoNav('prev', upstreamData); }}
+                  className="w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center shadow-sm backdrop-blur-sm pointer-events-auto"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleVideoNav('next', upstreamData); }}
+                  className="w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center shadow-sm backdrop-blur-sm pointer-events-auto"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Info bar below video (not overlaying) */}
+          <div className="p-2 bg-black/90 border-t border-white/10 flex justify-between items-center flex-shrink-0">
+            <p className="text-[9px] font-mono uppercase text-white/90 truncate">
+              {videoTitle || upstreamData.slug}
+            </p>
+            {videoGallery.length > 1 && (
+              <p className="text-[9px] font-mono text-white/70 ml-2">{currentVideoIndex + 1}/{videoGallery.length}</p>
+            )}
+          </div>
         </div>
       );
 

@@ -34,6 +34,12 @@ export interface Lighting3D {
   backgroundColor?: string;  // Hex color for scene background (e.g., "#f0f0f0")
 }
 
+export interface VideoItem {
+  title?: string;        // Optional title for the video
+  url: string;           // YouTube or Vimeo URL
+  autoplay?: boolean;    // Enable autoplay for this video (will be muted)
+}
+
 export interface ProjectJson {
   slug: string;
   title: string;
@@ -49,8 +55,9 @@ export interface ProjectJson {
   process_file?: string;
   images: string[];
   model?: string;
-  videoUrl?: string;
-  autoplayVideo?: boolean; // Enable autoplay for video (will be muted)
+  videoUrl?: string;        // Legacy: single video URL (deprecated, use videos[] instead)
+  autoplayVideo?: boolean;  // Legacy: Enable autoplay for video (deprecated)
+  videos?: VideoItem[];     // NEW: Array of videos for gallery navigation
   presentationUrl?: string; // Google Slides embed URL
   stats?: ProjectStats;
   layout?: ProjectLayout;
@@ -60,6 +67,12 @@ export interface ProjectJson {
   // 3D Material and Lighting
   material?: Material3D;
   lighting?: Lighting3D;
+}
+
+export interface ProcessedVideo {
+  title?: string;
+  embedUrl: string;
+  autoplay?: boolean;
 }
 
 export interface ProjectData extends ProjectJson {
@@ -72,7 +85,8 @@ export interface ProjectData extends ProjectJson {
   heroImageUrl?: string;
   galleryUrls?: string[];
   modelUrl?: string;
-  videoEmbedUrl?: string;
+  videoEmbedUrl?: string;        // Legacy: single video embed (deprecated)
+  videoEmbeds?: ProcessedVideo[]; // NEW: Array of processed video embeds
   presentationEmbedUrl?: string;
 }
 
