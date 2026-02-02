@@ -9,9 +9,13 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "gematria_01.jpg",
-      "gematria_02.jpg",
-      "gematria_03.jpg"
+      "gematria_00.webp",
+      "gematria_00b.webp",
+      "gematria_01.webp",
+      "gematria_02.webp",
+      "gematria_03.webp",
+      "gematria_04.webp",
+      "gematria_05.webp"
     ],
     "themes": ["comp-design"],
     "model": "medallion.glb",
