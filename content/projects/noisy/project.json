@@ -18,7 +18,32 @@
       "noisy_06.jpg",
       "noisy_07.jpg"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
+    "model": "noisy2.glb",
+    "geometryType": "Noisy",
+    "materials": [
+      {
+        "color": "#c9c9c9",
+        "metalness": 0.0,
+        "roughness": 1.0,
+        "wireframe": false
+      },
+      {
+        "color": "#5d5d5d",
+        "metalness": 0.7,
+        "roughness": 0.9,
+        "wireframe": false
+      },
+      {
+        "color": "#A8C258",
+        "metalness": 0.9,
+        "roughness": 0.6,
+        "wireframe": false
+      }
+    ],
+    "lighting": {
+      "environment": "park",
+      "exposure": 1.0,
+      "backgroundColor": "#dfdfdf"
+    },
     "jobID": "jmf"
   }

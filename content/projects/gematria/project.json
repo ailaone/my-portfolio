@@ -13,6 +13,7 @@
       "gematria_02.jpg",
       "gematria_03.jpg"
     ],
+    "themes": ["comp-design"],
     "model": "medallion.glb",
     "geometryType": "Ilan Medalion",
     "material": {
@@ -26,7 +27,9 @@
     "lighting": {
       "environment": "studio",
       "exposure": 1.3,
-      "backgroundColor": "#ececec"
+      "backgroundColor": "#ececec",
+      "cameraNear": 0.01,
+      "cameraFar": 100
     },
     "jobID": "solo"
   }

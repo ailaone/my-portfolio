@@ -37,7 +37,9 @@
       "environment": "dawn",
       "exposure": 1.0,
       "backgroundColor": "#ffffff",
-      "ambientIntensity": 0.3
+      "ambientIntensity": 0.3,
+      "cameraNear": 0.01,
+      "cameraFar": 100
     },
     "jobID": "solo",
     "themes": ["3d-dfam"]

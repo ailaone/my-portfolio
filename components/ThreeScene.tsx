@@ -390,6 +390,8 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, 
   const exposure = lighting?.exposure || 1.0;
   const ambientIntensity = lighting?.ambientIntensity || 0.8;
   const backgroundColor = lighting?.backgroundColor || '#f0f0f0';
+  const cameraNear = lighting?.cameraNear ?? 0.1;  // Use ?? to allow 0 values
+  const cameraFar = lighting?.cameraFar ?? 1000;
   const textColor = getContrastTextColor(backgroundColor);
 
   // Handle refresh button click
@@ -545,7 +547,13 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, 
         resize={{ debounce: 0 }}
       >
         <color attach="background" args={[backgroundColor]} />
-        <PerspectiveCamera makeDefault position={[0, 0, 6]} near={0.00001} far={100000} />
+        <PerspectiveCamera
+          key={`camera-${cameraNear}-${cameraFar}`}
+          makeDefault
+          position={[0, 0, 6]}
+          near={cameraNear}
+          far={cameraFar}
+        />
         <CustomOrbitControls />
 
         <ambientLight intensity={ambientIntensity} />

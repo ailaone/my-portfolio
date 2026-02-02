@@ -32,6 +32,8 @@ export interface Lighting3D {
   exposure?: number;        // 0-2+, tone mapping exposure (like camera exposure)
   ambientIntensity?: number; // 0-2, overall scene brightness
   backgroundColor?: string;  // Hex color for scene background (e.g., "#f0f0f0")
+  cameraNear?: number;       // Camera near clipping plane (default: 0.1)
+  cameraFar?: number;        // Camera far clipping plane (default: 1000)
 }
 
 export interface VideoItem {
