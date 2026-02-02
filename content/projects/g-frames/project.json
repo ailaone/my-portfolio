@@ -1,5 +1,5 @@
 {
-    "slug": "ntop-skateframe",
+    "slug": "g-frames",
     "title": "G-Frames",
     "year": "2022",
     "category": "Sports Equipment",
@@ -13,7 +13,7 @@
       "ntop-skateframe_02.jpg",
       "ntop-skateframe_03.jpg"
     ],
-    "model": "test.glb",
+    "model": "g-frames.glb",
     "geometryType": "frame",
     "jobID": "slice",
     "videoUrl": "https://youtu.be/hqvR0lw_PT8"

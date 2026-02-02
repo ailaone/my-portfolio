@@ -22,6 +22,7 @@ interface ThreeSceneProps {
   geometryType: 'cube' | 'sphere' | 'torus' | 'icosahedron';
   modelUrl?: string;
   material?: Material3D;
+  materials?: Material3D[];
   lighting?: Lighting3D;
 }
 
@@ -69,7 +70,11 @@ const ErrorFallback: React.FC = () => {
 };
 
 // Process GLB scene: remove non-mesh objects, apply materials, and center at origin
-function processScene(scene: THREE.Group, materialOverride?: Material3D): THREE.Group {
+function processScene(
+  scene: THREE.Group,
+  materialOverride?: Material3D,
+  materialsArray?: Material3D[]
+): THREE.Group {
   // Clone scene to avoid mutating cached version
   const clonedScene = scene.clone(true);
 
@@ -86,61 +91,106 @@ function processScene(scene: THREE.Group, materialOverride?: Material3D): THREE.
   // Force update all matrices
   clonedScene.updateMatrixWorld(true);
 
-  // Compute bounding box and apply material overrides
+  // Collect meshes first to apply materials by index
+  const meshes: THREE.Mesh[] = [];
   clonedScene.traverse((child) => {
     if ((child as THREE.Mesh).isMesh) {
-      const mesh = child as THREE.Mesh;
-      if (mesh.geometry) {
-        mesh.geometry.computeBoundingBox();
-        mesh.geometry.computeBoundingSphere();
+      meshes.push(child as THREE.Mesh);
+    }
+  });
+
+  // Debug logging
+  console.log('=== Material Application Debug ===');
+  console.log('Total meshes found:', meshes.length);
+  console.log('Single material:', materialOverride);
+  console.log('Materials array:', materialsArray);
+  console.log('Materials array length:', materialsArray?.length || 0);
+
+  // Compute bounding box and apply material overrides
+  meshes.forEach((mesh, meshIndex) => {
+    if (mesh.geometry) {
+      mesh.geometry.computeBoundingBox();
+      mesh.geometry.computeBoundingSphere();
+    }
+
+    // Determine which material to apply
+    let materialToApply: Material3D | undefined;
+    if (materialsArray && materialsArray.length > 0) {
+      // Use array materials by index (with wraparound if needed)
+      const matIndex = meshIndex % materialsArray.length;
+      materialToApply = materialsArray[matIndex];
+      console.log(`Mesh ${meshIndex} (${mesh.name || 'unnamed'}) → materials[${matIndex}]:`, materialToApply);
+    } else if (materialOverride) {
+      // Fall back to single material (backward compatible)
+      materialToApply = materialOverride;
+      console.log(`Mesh ${meshIndex} (${mesh.name || 'unnamed'}) → single material:`, materialToApply);
+    }
+
+    // Apply material overrides if provided
+    if (materialToApply && mesh.material) {
+      // Create a NEW material instead of modifying the cached one
+      const oldMat = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+
+      if (!(oldMat instanceof THREE.MeshStandardMaterial)) {
+        console.warn(`Mesh ${meshIndex} material is not MeshStandardMaterial, skipping`);
+        return;
       }
 
-      // Apply material overrides if provided
-      if (materialOverride && mesh.material) {
-        const mat = mesh.material as THREE.MeshStandardMaterial;
+      // Clone the original material to preserve its base properties
+      const newMat = oldMat.clone();
 
-        if (materialOverride.color !== undefined) {
-          mat.color = new THREE.Color(materialOverride.color);
-        }
-        if (materialOverride.metalness !== undefined) {
-          mat.metalness = materialOverride.metalness;
-        }
-        if (materialOverride.roughness !== undefined) {
-          mat.roughness = materialOverride.roughness;
-        }
-        if (materialOverride.emissive !== undefined) {
-          mat.emissive = new THREE.Color(materialOverride.emissive);
-        }
-        if (materialOverride.emissiveIntensity !== undefined) {
-          mat.emissiveIntensity = materialOverride.emissiveIntensity;
-        }
-        if (materialOverride.opacity !== undefined) {
-          mat.opacity = materialOverride.opacity;
-          mat.transparent = materialOverride.opacity < 1;
-        }
-
-        mat.needsUpdate = true;
+      // Apply overrides
+      if (materialToApply.color !== undefined) {
+        newMat.color = new THREE.Color(materialToApply.color);
+      }
+      if (materialToApply.metalness !== undefined) {
+        newMat.metalness = materialToApply.metalness;
+      }
+      if (materialToApply.roughness !== undefined) {
+        newMat.roughness = materialToApply.roughness;
+      }
+      if (materialToApply.emissive !== undefined) {
+        newMat.emissive = new THREE.Color(materialToApply.emissive);
+      }
+      if (materialToApply.emissiveIntensity !== undefined) {
+        newMat.emissiveIntensity = materialToApply.emissiveIntensity;
+      }
+      if (materialToApply.opacity !== undefined) {
+        newMat.opacity = materialToApply.opacity;
+        newMat.transparent = materialToApply.opacity < 1;
       }
 
-      // Add wireframe overlay if enabled
-      if (materialOverride?.wireframe && mesh.geometry) {
-        const wireframeOpacity = materialOverride.wireframeOpacity ?? 0.1;
-        const wireframeColor = materialOverride.wireframeColor ?? '#000000';
+      newMat.needsUpdate = true;
 
-        // Create edges geometry (shows only significant edges, not all triangles)
-        const edges = new THREE.EdgesGeometry(mesh.geometry, 30); // 30 degree threshold
-        const lineMaterial = new THREE.LineBasicMaterial({
-          color: new THREE.Color(wireframeColor),
-          transparent: true,
-          opacity: wireframeOpacity,
-          depthTest: true,
-          depthWrite: false,
-        });
-        const wireframe = new THREE.LineSegments(edges, lineMaterial);
+      // Assign the NEW material to the mesh
+      mesh.material = newMat;
 
-        // Add wireframe as child of the mesh (inherits transforms)
-        mesh.add(wireframe);
-      }
+      // Debug: log final material state
+      console.log(`  ✓ Applied to mesh ${meshIndex}:`, {
+        color: newMat.color.getHexString(),
+        metalness: newMat.metalness,
+        roughness: newMat.roughness
+      });
+    }
+
+    // Add wireframe overlay if enabled
+    if (materialToApply?.wireframe && mesh.geometry) {
+      const wireframeOpacity = materialToApply.wireframeOpacity ?? 0.1;
+      const wireframeColor = materialToApply.wireframeColor ?? '#000000';
+
+      // Create edges geometry (shows only significant edges, not all triangles)
+      const edges = new THREE.EdgesGeometry(mesh.geometry, 30); // 30 degree threshold
+      const lineMaterial = new THREE.LineBasicMaterial({
+        color: new THREE.Color(wireframeColor),
+        transparent: true,
+        opacity: wireframeOpacity,
+        depthTest: true,
+        depthWrite: false,
+      });
+      const wireframe = new THREE.LineSegments(edges, lineMaterial);
+
+      // Add wireframe as child of the mesh (inherits transforms)
+      mesh.add(wireframe);
     }
   });
 
@@ -152,12 +202,12 @@ function processScene(scene: THREE.Group, materialOverride?: Material3D): THREE.
   return clonedScene;
 }
 
-const ModelLoader: React.FC<{ url: string; material?: Material3D }> = ({ url, material }) => {
+const ModelLoader: React.FC<{ url: string; material?: Material3D; materials?: Material3D[] }> = ({ url, material, materials }) => {
   const { scene } = useGLTF(url);
 
   // Process scene synchronously with useMemo (Bounds needs this immediately)
   const processedScene = React.useMemo(() => {
-    const processed = processScene(scene, material);
+    const processed = processScene(scene, material, materials);
 
     // Log for debugging
     const box = new THREE.Box3().setFromObject(processed);
@@ -169,7 +219,7 @@ const ModelLoader: React.FC<{ url: string; material?: Material3D }> = ({ url, ma
     });
 
     return processed;
-  }, [scene, url, material]);
+  }, [scene, url, material, materials]);
 
   // Cleanup on unmount - dispose of resources but don't clear cache immediately
   useEffect(() => {
@@ -328,7 +378,7 @@ export function getContrastTextColor(hexColor: string): string {
   return luminance > 0.5 ? '#333333' : '#e8e8e8';
 }
 
-export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, material, lighting }) => {
+export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, material, materials, lighting }) => {
   const [isMac, setIsMac] = useState(false);
   const [contextLost, setContextLost] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -506,7 +556,7 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, 
         {modelUrl ? (
           <Bounds key={`${modelUrl}-${refreshKey}`} fit clip margin={1.4}>
             <React.Suspense fallback={null}>
-              <ModelLoader url={modelUrl} material={material} />
+              <ModelLoader url={modelUrl} material={material} materials={materials} />
             </React.Suspense>
           </Bounds>
         ) : (

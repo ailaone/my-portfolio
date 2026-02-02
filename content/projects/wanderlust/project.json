@@ -15,8 +15,20 @@
       "wanderlust_04.webp",
       "wanderlust_05.webp"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
+    "model": "wanderlust2.glb",
+    "material": {
+      "color": "#ABBA45",
+      "metalness": 0.0,
+      "roughness": 0.9,
+      "wireframe": false
+    },
+    "lighting": {
+      "environment": "city",
+      "exposure": 1.0,
+      "ambientIntensity": 0.3,
+      "backgroundColor": "#ffffff"
+    },
+    "geometryType": "Pavilion",
     "jobID": "jmf",
     "themes": ["arch-fab"]
   }

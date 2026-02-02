@@ -497,6 +497,7 @@ case NodeType.VIEWER_3D:
         geometryType={upstreamData.geometryType || 'cube'}
         modelUrl={upstreamData.modelUrl}
         material={upstreamData.material}
+        materials={upstreamData.materials}
         lighting={upstreamData.lighting}
       />
       <div className="absolute bottom-3 right-3 text-[9px] font-mono uppercase tracking-wider pointer-events-none z-20 transition-colors duration-300" style={{ color: textColor }}>

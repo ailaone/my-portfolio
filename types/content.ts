@@ -65,7 +65,8 @@ export interface ProjectJson {
   // Fallback visual property from old version
   geometryType?: 'cube' | 'sphere' | 'torus' | 'icosahedron';
   // 3D Material and Lighting
-  material?: Material3D;
+  material?: Material3D;        // Single material for all meshes
+  materials?: Material3D[];     // Array of materials applied by mesh index
   lighting?: Lighting3D;
 }
 
