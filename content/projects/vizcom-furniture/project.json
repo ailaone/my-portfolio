@@ -1,6 +1,6 @@
 {
     "slug": "vizcom-furniture",
-    "title": "AI Furniture Design",
+    "title": "Vizcom Furniture",
     "year": "2025",
     "category": "AI + Furniture Design",
     "role": ["Designer"],
@@ -8,12 +8,31 @@
     "technologies": ["Rhino", "Grasshopper", "Vizcom"],
     "description_file": "description.md",
     "summary_file": "summary.md",
+    "themes": ["ai-dev"],
     "images": [
-      "vizcom-furniture_01.jpg",
-      "vizcom-furniture_02.jpg",
-      "vizcom-furniture_03.jpg"
+      "vizcom-furniture_00.webp",
+      "vizcom-furniture_01.webp",
+      "vizcom-furniture_02.webp",
+      "vizcom-furniture_03.webp",
+      "vizcom-furniture_04.webp",
+      "vizcom-furniture_05.webp",
+      "vizcom-furniture_06.webp",
+      "vizcom-furniture_07.webp",
+      "vizcom-furniture_08.webp"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
+    "model": "crossline2.glb",
+    "material": {
+      "color": "#D85F01",
+      "metalness": 0.0,
+      "roughness": 0.2,
+      "wireframe": false
+    },
+    "lighting": {
+      "environment": "studio",
+      "exposure": 1.0,
+      "ambientIntensity": 0.3,
+      "backgroundColor": "#898A95"
+    },
+    "geometryType": "Crossline Chair",
     "jobID": "solo"
   }

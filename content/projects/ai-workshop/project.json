@@ -1,0 +1,18 @@
+{
+    "slug": "ai-workshop",
+    "title": "Generative RefinementWorkshop",
+    "year": "2026",
+    "category": "AI Workshop",
+    "role": ["Educator"],
+    "client": "NYIT",
+    "technologies": ["Rhino", "Grasshopper", "ComfyUI", "Midjourney", "Vizcom", "Photoshop"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "ai-workshop_01.webp",
+      "ai-workshop_02.webp",
+      "ai-workshop_03.webp"
+    ],
+    "jobID": "solo",
+    "themes": ["edu-conf"]
+  }

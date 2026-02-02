@@ -41,6 +41,6 @@
       "cameraNear": 0.01,
       "cameraFar": 100
     },
-    "jobID": "solo",
+    "jobID": "slice",
     "themes": ["3d-dfam"]
   }

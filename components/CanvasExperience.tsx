@@ -79,7 +79,7 @@ const THEME_DATA: ThemeData[] = [
   { id: 'ai-dev', label: 'AI / Dev' },
   { id: 'comp-design', label: 'Computational Design' },
   { id: '3d-dfam', label: '3D Printing / DfAM' },
-  { id: 'edu-conf', label: 'Education / Conferences' },
+  { id: 'edu-conf', label: 'Education' },
   { id: 'arch-fab', label: 'Architecture / Fabrication' }
 ];
 
