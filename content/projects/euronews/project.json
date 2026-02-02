@@ -13,6 +13,22 @@
       "euronews_02.webp",
       "euronews_03.webp"
     ],
+    "model": "euronews.glb",
+    "geometryType": "Facade Panels",
+    "material": {
+      "color": "#B1DE59",
+      "metalness": 0.3,
+      "roughness": 0.7,
+      "wireframe": false
+    },
+    "lighting": {
+      "environment": "park",
+      "exposure": 1.0,
+      "ambientIntensity": 0.3,
+      "backgroundColor": "#bfbfbf",
+      "cameraNear": 0.0001,
+      "cameraFar": 1000
+    },
     "jobID": "jmf",
     "themes": ["arch-fab"],
     "videoUrl": "https://www.youtube.com/watch?v=oogVcRlVbCY",
