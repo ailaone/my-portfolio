@@ -9,9 +9,17 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "big-blue_01.webp",
-      "big-blue_02.webp",
-      "big-blue_03.webp"
+      "big-blue_01.jpeg",
+      "big-blue_02.jpeg",
+      "big-blue_03.jpeg",
+      "big-blue_04.jpeg",
+      "big-blue_05.jpeg",
+      "big-blue_06.jpeg",
+      "big-blue_07.jpeg",
+      "big-blue_08.jpeg",
+      "big-blue_09.jpeg",
+      "big-blue_10.jpeg",
+      "big-blue_11.jpeg"
     ],
     "jobID": "solo",
     "themes": ["ai-dev"],
