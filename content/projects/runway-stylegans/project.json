@@ -1,19 +1,60 @@
 {
     "slug": "runway-stylegans",
-    "title": "Runway StyleGANs",
+    "title": "StyleGANs to 3D Reconstruction",
     "year": "2021",
     "category": "AI Exploration",
     "role": ["Designer / Explorer"],
     "client": "Runway",
-    "technologies": ["RunwayML", "StyleGAN", "Diffusion Models", "Image Scrapping"],
+    "technologies": ["RunwayML", "StyleGAN", "Diffusion Models", "Image Scrapping", "Grasshopper", "Rhino"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "runway-stylegans_01.jpg",
-      "runway-stylegans_02.jpg",
-      "runway-stylegans_03.jpg"
+      "3d-stylegan_01.webp",
+      "3d-stylegan_02.webp",
+      "3d-stylegan_03.webp",
+      "3d-stylegan_04.webp",
+      "3d-stylegan_05.webp",
+      "3d-stylegan_06.webp",
+      "3d-stylegan_07.webp",
+      "3d-stylegan_08.webp",
+      "3d-stylegan_09.webp",
+      "3d-stylegan_10.webp"
     ],
-    "model": "test.glb",
+    "model": "3d-stylegan.glb",
+    "materials": [
+      {
+        "color": "#e70206",
+        "metalness": 0.0,
+        "roughness": 0.6,
+        "wireframe": false
+      }
+    ],
+    "lighting": {
+      "environment": "studio",
+      "exposure": 1.0,
+      "backgroundColor": "#ececec",
+      "ambientIntensity": 0.2,
+      "cameraNear": 0.01,
+      "cameraFar": 100
+    },
     "geometryType": "abstract",
-    "jobID": "solo"
+    "jobID": "solo",
+    "themes": ["ai-dev"],
+    "videos": [
+      {
+        "title": "Latent Space Walk - Kid's furniture 01",
+        "url": "https://vimeo.com/manage/videos/1161528109",
+        "autoplay": true
+      },
+      {
+        "title": "Latent Space Walk - Kid's furniture 02",
+        "url": "https://vimeo.com/manage/videos/1161528092",
+        "autoplay": true
+      },
+      {
+        "title": "Latent Space Walk - Kid's furniture 03",
+        "url": "https://vimeo.com/1161528109",
+        "autoplay": true
+      }
+    ]
   }

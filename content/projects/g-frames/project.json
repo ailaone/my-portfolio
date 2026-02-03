@@ -9,12 +9,36 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "ntop-skateframe_01.jpg",
-      "ntop-skateframe_02.jpg",
-      "ntop-skateframe_03.jpg"
+      "gframes_01.webp",
+      "gframes_02.webp",
+      "gframes_03.webp",
+      "gframes_04.webp",
+      "gframes_05.webp",
+      "gframes_06.webp",
+      "gframes_07.webp",
+      "gframes_08.webp",
+      "gframes_09.webp",
+      "gframes_10.webp"
     ],
-    "model": "g-frames.glb",
-    "geometryType": "frame",
+    "model": "gframes.glb",
+    "materials": [
+      {
+        "color": "#4e4e4e",
+        "metalness": 0.0,
+        "roughness": 0.8,
+        "wireframe": false
+      }
+    ],
+    "lighting": {
+      "environment": "studio",
+      "exposure": 1.0,
+      "backgroundColor": "#ececec",
+      "ambientIntensity": 0.2,
+      "cameraNear": 0.01,
+      "cameraFar": 100
+    },
+    "geometryType": "G-Frames V3.S",
     "jobID": "slice",
+    "themes": ["3d-dfam","comp-design"],
     "videoUrl": "https://youtu.be/hqvR0lw_PT8"
   }

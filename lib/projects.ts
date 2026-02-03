@@ -9,8 +9,8 @@ const CONTENT_DIR = path.join((process as any).cwd(), 'content', 'projects');
 function getVideoEmbedUrl(url?: string): string | undefined {
   if (!url) return undefined;
 
-  // YouTube patterns
-  const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  // YouTube patterns (including Shorts)
+  const youtubeRegex = /(?:youtube\.com\/(?:shorts\/|[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
   const youtubeMatch = url.match(youtubeRegex);
   if (youtubeMatch) {
     return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
@@ -176,7 +176,7 @@ export function getProjectBySlug(slug: string): ProjectData | null {
       galleryUrls: existingImages.map(img => getImageUrl(img)!).filter(Boolean),
       modelUrl: getModelUrl(projectJson.model),
       videoEmbedUrl: getVideoEmbedUrl(projectJson.videoUrl),  // Legacy: single video
-      videoEmbeds: processedVideos.length > 0 ? processedVideos : undefined, // NEW: video array
+      videoEmbeds: processedVideos && processedVideos.length > 0 ? processedVideos : undefined, // NEW: video array
       presentationEmbedUrl: getPresentationEmbedUrl(projectJson.presentationUrl),
     };
 

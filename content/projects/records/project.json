@@ -1,5 +1,5 @@
 {
-    "slug": "Records",
+    "slug": "ai-records",
     "title": "AI Record Collection",
     "year": "2021",
     "category": "AI Exploration",
@@ -9,11 +9,18 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "records_01.webp",
-      "records_02.webp",
-      "records_03.webp"
+      "ai-records_01.webp",
+      "ai-records_02.webp",
+      "ai-records_03.webp",
+      "ai-records_04.webp"
     ],
-    "model": "test.glb",
-    "geometryType": "abstract",
-    "jobID": "solo"
+    "jobID": "solo",
+    "themes": ["ai-dev"],
+    "videos": [
+      {
+        "title": "AI Album Covers - RunwayML StyleGAN2 Training",
+        "url": "https://youtube.com/shorts/m-PKoUaq3cU",
+        "autoplay": true
+      }
+    ]
   }
