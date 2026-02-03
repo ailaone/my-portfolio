@@ -1,0 +1,55 @@
+{
+    "slug": "treehouse",
+    "title": "Pinecone Treehouse",
+    "year": "2019",
+    "category": "Architecture",
+    "role": ["Fabrication Consultant"],
+    "client": "O2 Treehouse",
+    "technologies": ["Rhino", "Grasshopper"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "treehouse_01.webp",
+      "treehouse_02.webp",
+      "treehouse_03.webp",
+      "treehouse_04.webp",
+      "treehouse_05.webp",
+      "treehouse_06.webp",
+      "treehouse_07.webp",
+      "treehouse_08.webp"
+    ],
+    "jobID": "slice",
+    "model": "treehouse.glb",
+    "geometryType": "Treehouse",
+    "materials": [
+      {
+        "color": "#4f4f4f",
+        "metalness": 0.8,
+        "roughness": 0.6,
+        "wireframe": false
+      },
+      {
+        "color": "#cbcbcb",
+        "metalness": 0.0,
+        "roughness": 0.0,
+        "wireframe": false,
+        "opacity": 0.3
+      },
+      {
+        "color": "#774a2a",
+        "metalness": 0.0,
+        "roughness": 1.0,
+        "wireframe": false
+      }
+    ],
+    "lighting": {
+      "environment": "forest",
+      "exposure": 1.0,
+      "ambientIntensity": 0.3,
+      "backgroundColor": "#ffffff",
+      "cameraNear": 0.01,
+      "cameraFar": 100
+    },
+    "videoUrl": "https://www.youtube.com/watch?v=YLLRYahf4xs",
+    "themes": ["arch-fab"]
+}
