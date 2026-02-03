@@ -9,9 +9,9 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "viz-3_01.jpg",
-      "viz-3_02.jpg",
-      "viz-3_03.jpg"
+      "viz3_01.webp",
+      "viz3_02.webp",
+      "viz3_03.webp"
     ],
     "jobID": "",
     "themes": ["edu-conf"]
