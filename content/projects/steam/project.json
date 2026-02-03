@@ -18,5 +18,6 @@
     ],
     "model": "test.glb",
     "geometryType": "chair",
-    "jobID": "slice"
+    "jobID": "slice",
+    "themes": ["3d-dfam"]
   }
