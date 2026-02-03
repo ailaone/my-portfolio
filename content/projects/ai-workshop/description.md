@@ -1,19 +1,19 @@
-As course coordinator for Visualization 3 at New York Institute of Technology's School of Architecture and Design, I oversee the curriculum and guide section instructors in teaching advanced 3D modeling and visualization skills to undergraduate architecture students.
+A two-part workshop series introducing architecture and design students to AI-assisted design workflows, exploring visualization, 3D modeling, and hybrid computational processes.
 
-## Course Overview
+## Workshop Structure
 
-Visualization 3 develops students' ability to model spatial, volumetric, and tectonic conditions digitally, bridging the gap between digital design and physical realization. The course supports the core architecture curriculum while addressing contemporary digital design and fabrication processes.
+**Part 1: Visualization & Image Generation** — Introduction to AI models (language, visual, video, 3D) and practical demonstrations of visualization tools including Vizcom, Adobe Creative Suite with Firefly, and node-based workflow systems. Focus on sketch-to-render workflows, image generation, and systematic design exploration.
 
-## Curriculum Structure
+**Part 2: 3D Workflows** — Advanced applications exploring AI-assisted 3D modeling processes, including hybrid workflows that combine AI generation with traditional CAD refinement. Demonstrations of text-to-3D, image-to-3D, and integrated visualization pipelines similar to the Vizcom furniture study.
 
-As coordinator, I developed a progressive five-assignment sequence that builds technical proficiency:
+## Tools Covered
 
-**AI-Driven Design Exploration** — Students use AI image generation tools (Vizcom) to explore architectural forms and terminology, then translate these explorations into SubD 3D models.
+- **Vizcom** — Node-based platform with sketch-to-render, 3D generation, and video capabilities (free for educational accounts)
+- **Adobe Creative Suite** — Photoshop 2025 with integrated AI tools (Firefly, Imagen 3)
+- **Midjourney** — Advanced text-to-image and image-to-video generation platform
+- **Weavy** — Advanced node-based workflow system for chaining multiple AI models
+- **ComfyUI** — Open-source, locally-run alternative for full control and privacy
 
-**Pavilion & Landscape Design** — Group project applying subdivision surface modeling to design a site-specific pavilion with integrated landscape, emphasizing formal exploration and contextual response.
+## Approach
 
-**Structural Systems** — Evolution of pavilion design into detailed structural components, exploring seams, joints, creases, and material articulation through SubD modeling.
-
-**Digital-to-Physical Translation** — Multi-method fabrication exploration using 3D printing, CNC milling, and laser cutting, paired with digital simulations and rendering in Enscape.
-
-**Digital Portfolio** — Semester-long portfolio development focusing on composition, layout, graphic design, and professional presentation standards.
+The workshop emphasizes practical integration of AI tools into existing design processes rather than replacement of traditional skills. Focus on understanding model types, building repeatable workflows, and maintaining design intent while leveraging AI for rapid iteration and exploration.

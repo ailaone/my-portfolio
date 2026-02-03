@@ -1,0 +1,16 @@
+{
+  "slug": "3mf",
+  "title": "3MF Grasshopper Component",
+  "year": "2024",
+  "category": "Computational Design + Digital Fabrication",
+  "role": ["Developer", "Co-Founder"],
+  "client": "Slicelab",
+  "technologies": ["Grasshopper", "Rhino 8", "C#", "3MF", "Additive Manufacturing"],
+  "themes": ["comp-design"],
+  "description_file": "description.md",
+  "images": [
+    "3mf-gh.png",
+    "3mf-01.gif"
+  ],
+  "jobId": "slicelab"
+}

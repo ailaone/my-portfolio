@@ -1,6 +1,6 @@
 {
     "slug": "ai-workshop",
-    "title": "Generative RefinementWorkshop",
+    "title": "Generative Refinement AI Workshop",
     "year": "2026",
     "category": "AI Workshop",
     "role": ["Educator"],
@@ -14,5 +14,6 @@
       "ai-workshop_03.webp"
     ],
     "jobID": "solo",
-    "themes": ["edu-conf"]
+    "themes": ["edu-conf"],
+    "presentationUrl": "https://docs.google.com/presentation/d/1654MQM6iEQwAYTGXuxuJT7m0z95c_RtKOSu4jF0po9Q/edit?usp=sharing"
   }

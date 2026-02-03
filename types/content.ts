@@ -122,7 +122,6 @@ export enum NodeType {
   THEME = 'THEME',
   VIEWER_3D = 'VIEWER_3D',
   DETAILS = 'DETAILS',
-  DATA = 'DATA',
   IMAGE = 'IMAGE',
   VIDEO = 'VIDEO',
   PRESENTATION = 'PRESENTATION',

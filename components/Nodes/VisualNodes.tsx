@@ -2,9 +2,8 @@
 import React, { useEffect } from 'react';
 import { ProjectData, JobData, ThemeData, NodeState, NodeType, Connection } from '@/types/content';
 import { ThreeScene, getContrastTextColor } from '../ThreeScene';
-import { ChevronLeft, ChevronRight, Mail, Plug, Box, BarChart as BarChartIcon, Github, Linkedin, Instagram, Youtube, Maximize, Image as ImageIcon, Calendar, Video, Monitor } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail, Plug, Box, Github, Linkedin, Instagram, Youtube, Maximize, Image as ImageIcon, Calendar, Video, Monitor } from 'lucide-react';
 import { NewTwitterIcon } from 'hugeicons-react';
-import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface ContentProps {
   node: NodeState;
@@ -505,37 +504,6 @@ case NodeType.VIEWER_3D:
       </div>
     </div>
   );
-
-    case NodeType.DATA:
-      if (!upstreamData || !isProject(upstreamData)) {
-        return (
-          <div className="flex flex-col items-center justify-center h-full text-tertiary gap-2 p-4 text-center bg-node transition-colors duration-300">
-            <BarChartIcon size={16} />
-            <span className="text-[10px] uppercase tracking-widest">Waiting for Data...</span>
-          </div>
-        );
-      }
-
-      const stats = upstreamData.stats || { "Optimization": 80, "Complexity": 60 };
-      const chartData = Object.entries(stats).map(([k, v]) => ({ name: k, value: typeof v === 'number' ? v : 0 }));
-
-      return (
-         <div className="p-4 h-full flex flex-col font-mono text-[10px] bg-node transition-colors duration-300">
-            <div className="h-32 w-full mt-auto">
-                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData}>
-                        <XAxis dataKey="name" tick={{fontSize: 9, fill: 'var(--text-secondary)'}} axisLine={false} tickLine={false} />
-                        <Tooltip
-                            contentStyle={{ backgroundColor: 'var(--node-bg)', color: 'var(--text-primary)', borderRadius: '2px', border: '1px solid var(--border-secondary)', fontSize: '12px' }}
-                            itemStyle={{ color: 'var(--text-primary)' }}
-                            cursor={{fill: 'var(--hover-bg)'}}
-                        />
-                        <Bar dataKey="value" fill="var(--text-primary)" radius={[2, 2, 0, 0]} barSize={30} />
-                    </BarChart>
-                 </ResponsiveContainer>
-            </div>
-         </div>
-      );
 
     case NodeType.VIDEO:
       if (!upstreamData || !isProject(upstreamData)) {

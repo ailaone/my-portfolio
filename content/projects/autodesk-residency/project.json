@@ -17,9 +17,23 @@
       "autodesk-residency_06.webp",
       "autodesk-residency_07.webp"
     ],
-    "model": "ring.glb",
-    "geometryType": "Nexus ring",
+    "model": "xix_ring_men.glb",
+    "geometryType": "Nexus ring - Men's",
+    "material": {
+      "color": "#e1e1e1",
+      "metalness": 0.9,
+      "roughness": 0.0,
+      "wireframe": false
+    },
+    "lighting": {
+      "environment": "studio",
+      "exposure": 1.3,
+      "backgroundColor": "#ececec",
+      "ambientIntensity": 0.3,
+      "cameraNear": 0.01,
+      "cameraFar": 100
+    },
     "jobID": "slice",
     "videoUrl": "https://www.youtube.com/watch?v=0G0irhxeDxE",
-    "themes": ["3d-dfam"]
+    "themes": ["3d-dfam","comp-design"]
   }

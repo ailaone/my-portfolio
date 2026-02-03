@@ -1,0 +1,34 @@
+{
+    "slug": "wonderluk",
+    "title": "WonderLuk Jewelry Collection",
+    "year": "2015",
+    "category": "Jewelry",
+    "role": ["Lead Designer", "Computational Specialist"],
+    "client": "WonderLuk",
+    "technologies": ["Rhino", "Grasshopper", "Maya", "Z-Brush", "3D Printing"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "wonderluk_01.webp",
+      "stilnest_02.webp",
+      "wonderluk_03.webp",
+      "wonderluk_04.webp"
+    ],
+    "model": "wonderluk.glb",
+    "material": {
+      "color": "#e1e1e1",
+      "metalness": 0.9,
+      "roughness": 0.0,
+      "wireframe": false
+    },
+    "lighting": {
+      "environment": "studio",
+      "exposure": 1.3,
+      "backgroundColor": "#ececec",
+      "cameraNear": 0.01,
+      "cameraFar": 100
+    },
+    "geometryType": "Stilnest Bracelet",
+    "jobID": "fbs",
+    "themes": ["3d-dfam","comp-design"]
+  }

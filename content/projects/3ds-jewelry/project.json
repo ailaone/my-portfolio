@@ -1,0 +1,38 @@
+{
+    "slug": "3ds-jewelry",
+    "title": "Mutatio Jewelry Collection",
+    "year": "2015",
+    "category": "Jewelry",
+    "role": ["Lead Designer", "Computational Specialist"],
+    "client": "3D Systems",
+    "technologies": ["Rhino", "Grasshopper", "Maya", "Z-Brush", "3D Printing"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "3ds-jewelry_01.webp",
+      "3ds-jewelry_02.webp",
+      "3ds-jewelry_03.webp",
+      "3ds-jewelry_04.webp",
+      "3ds-jewelry_05.webp",
+      "3ds-jewelry_06.webp",
+      "3ds-jewelry_07.webp",
+      "3ds-jewelry_08.webp"
+    ],
+    "model": "3ds-jewelry.glb",
+    "material": {
+      "color": "#e0a33a",
+      "metalness": 0.9,
+      "roughness": 0.0,
+      "wireframe": false
+    },
+    "lighting": {
+      "environment": "studio",
+      "exposure": 1.3,
+      "backgroundColor": "#ececec",
+      "cameraNear": 0.01,
+      "cameraFar": 100
+    },
+    "geometryType": "Mutatio Bracelet",
+    "jobID": "fbs",
+    "themes": ["3d-dfam","comp-design"]
+  }

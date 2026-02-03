@@ -1,4 +1,4 @@
-As Design Director at Francis Bitonti Studio, I led the computational design and technical development for the Mutatio collection—a collaboration with United Nude and 3D Systems. Each shoe was algorithmically generated and uniquely manufactured through SLS 3D printing, gold-plating, and embossed leather uppers.
+As Design Director at Francis Bitonti Studio, I led the computational design and technical development for the Mutatio collection. A collaboration with United Nude and 3D Systems. Each shoe was algorithmically generated and uniquely manufactured through SLS 3D printing, gold-plating, and embossed leather uppers.
 
 The design called for a latticed platform heel with complex voronoi-inspired channeling, and flowing geometry that would be both structurally sound and visually striking. The challenge was developing a computational workflow that could generate this intricate woven pattern while maintaining smooth, continuous surfaces suitable for 3D printing and post-processing. Each heel needed to be algorithmically unique, yet manufacturable.
 

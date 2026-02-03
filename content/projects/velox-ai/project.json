@@ -3,17 +3,30 @@
     "title": "Velox AI",
     "year": "2023",
     "category": "AI + Product Design",
-    "role": ["Lead Designer", "Generative AI Specialist"],
-    "client": "Private / Variant3D",
+    "role": ["Lead Computational Designer", "Generative AI Specialist"],
+    "client": "Variant3D",
     "technologies": ["Rhino", "Grasshopper", "Midjourney", "Python", "3D Printing", "3D Knitting"],
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "velox-ai_01.jpg",
-      "velox-ai_02.jpg",
-      "velox-ai_03.jpg"
+      "velox-ai_01.webp",
+      "velox-ai_02.webp",
+      "velox-ai_03.webp",
+      "velox-ai_04.webp",
+      "velox-ai_05.webp",
+      "velox-ai_06.webp",
+      "velox-ai_07.webp"
     ],
-    "model": "test.glb",
-    "geometryType": "chair",
-    "jobID": "slice"
+    "model": "velox-ai.glb",
+    "lighting": {
+      "environment": "warehouse",
+      "exposure": 0.8,
+      "backgroundColor": "#efefef",
+      "ambientIntensity": 0.5,
+      "cameraNear": 0.01,
+      "cameraFar": 100
+    },
+    "geometryType": "Velox AI Shoe",
+    "jobID": "slice",
+    "themes": ["3d-dfam", "ai-dev"]
   }
