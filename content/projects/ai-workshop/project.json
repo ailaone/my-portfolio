@@ -9,11 +9,9 @@
     "description_file": "description.md",
     "summary_file": "summary.md",
     "images": [
-      "ai-workshop_01.webp",
-      "ai-workshop_02.webp",
-      "ai-workshop_03.webp"
+      "ai-workshop_01.jpg"
     ],
     "jobID": "solo",
-    "themes": ["edu-conf"],
+    "themes": ["edu-conf","ai-dev"],
     "presentationUrl": "https://docs.google.com/presentation/d/1654MQM6iEQwAYTGXuxuJT7m0z95c_RtKOSu4jF0po9Q/edit?usp=sharing"
   }
