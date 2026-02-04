@@ -270,7 +270,6 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
     }, 7000);
 
     return () => {
-      clearTimeout(showTimer);
       clearTimeout(hideTimer);
     };
   }, []);
