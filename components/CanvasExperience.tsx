@@ -177,11 +177,11 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
         position: { x: 500, y: 375 },
         title: 'Project Index',
         inputs: [{ id: 'in-filter', label: 'Filter by Theme/Job' }],
-        outputs: [],
+        outputs: projects.map(p => ({ id: `out-p-${p.slug}`, label: '' })), // Initialize with all project outputs
         width: 350,
         height: listHeight,
         socketStride: socketStride,
-        data: { displayedProjects: [] }
+        data: { displayedProjects: projects } // Start with all projects displayed
       },
 
       // COLUMN 3: RIGHT
@@ -196,11 +196,17 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
 
   const getInitialConnections = (projects: ProjectData[]): Connection[] => {
     const conns: Connection[] = [
+      // Connect AI/Dev theme to Project Index filter
+      { id: 'c-theme-filter', fromNodeId: 'n-theme', fromSocketId: 'out-theme-ai-dev', toNodeId: 'n-list', toSocketId: 'in-filter' },
+
+      // Connect Velox AI project to Details
+      { id: 'c-velox-details', fromNodeId: 'n-list', fromSocketId: 'out-p-velox-ai', toNodeId: 'n-details', toSocketId: 'in-select' },
+
+      // Connect Details outputs to viewers
       { id: 'c1', fromNodeId: 'n-details', fromSocketId: 'out-meta', toNodeId: 'n-image', toSocketId: 'in-img-data' },
       { id: 'c2', fromNodeId: 'n-details', fromSocketId: 'out-meta', toNodeId: 'n-viewer', toSocketId: 'in-geo' },
     ];
 
-    // No initial connections to PROJECT_LIST or DETAILS - let user explore
     return conns;
   };
 
@@ -248,7 +254,26 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
   const [isClickToPlace, setIsClickToPlace] = useState(false);
   const toolbarDragStart = useRef<Position | null>(null);
 
+  // Tooltip state - start hidden, then fade in with canvas
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Show tooltip immediately so it blurs in together with the canvas
+  useEffect(() => {
+    // Show tooltip immediately - it will blur in with the canvas during landing transition
+    setShowTooltip(true);
+
+    // Hide tooltip after 7 seconds
+    const hideTimer = setTimeout(() => {
+      setShowTooltip(false);
+    }, 7000);
+
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
+  }, []);
 
   // --- EFFECT: Dynamic Node Updates (Filtering Projects) ---
   // EFFECT 1: Update PROJECT_LIST nodes based on connections
@@ -1232,6 +1257,22 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
            </button>
         </div>
 
+        {/* Tooltip - fades in below toolbar and auto-fades */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 px-4 py-2 rounded-full shadow-lg pointer-events-none transition-opacity duration-700 ease-out"
+          style={{
+            top: '88px', // Position below toolbar (toolbar at 16px + 56px height + 16px gap)
+            backgroundColor: 'var(--toolbar-bg)',
+            borderColor: 'var(--toolbar-border)',
+            border: '1px solid',
+            opacity: showTooltip ? 1 : 0
+          }}
+        >
+          <span className="text-xs font-sans tracking-wide text-secondary">
+            Connect and drag nodes to explore connections
+          </span>
+        </div>
+
         {/* Multi-Selection Counter */}
         {selectedNodeIds.size > 1 && (
           <div className="absolute top-20 left-1/2 -translate-x-1/2 bg-primary text-canvas px-3 py-1.5 rounded-full shadow-lg pointer-events-none transition-colors duration-300">
@@ -1369,6 +1410,7 @@ export default function CanvasExperience({ initialProjects }: CanvasExperiencePr
            <div className="flex flex-col items-end gap-1 text-[9px] font-mono tracking-wider text-black/70">
               <div className="flex items-center gap-2"><MousePointer2 size={10}/> <span>PAN: RIGHT DRAG</span></div>
               <div className="flex items-center gap-2"><Box size={10}/> <span>ZOOM: PINCH / CTRL+WHEEL</span></div>
+              <div className="flex items-center gap-2"><Activity size={10}/> <span>CONNECT: DRAG SOCKET TO SOCKET</span></div>
            </div>
         </div>
       </div>

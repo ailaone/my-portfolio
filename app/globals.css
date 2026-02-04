@@ -153,12 +153,13 @@ html, body {
 }
 
 .animate-pulse-ring {
-  /* 
+  /*
      EDIT HERE TO CHANGE SPEED:
      Change '10s' to a lower number (faster) or higher number (slower).
   */
   animation: pulse-ring 10s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
 
 /* Force canvas elements to fill their containers */
 canvas {

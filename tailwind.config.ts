@@ -11,6 +11,7 @@ const config: Config = {
       fontFamily: {
         serif: ['var(--font-playfair)', 'serif'],
         sans: ['var(--font-inter)', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', 'monospace'],
       },
       colors: {
         canvas: 'var(--canvas-bg)',
@@ -45,7 +46,7 @@ const config: Config = {
         'pulse-ring': {
           '0%': { transform: 'scale(0.8)', opacity: '0.8' },
           '100%': { transform: 'scale(2.5)', opacity: '0' },
-        }
+        },
       }
     },
   },

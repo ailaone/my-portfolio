@@ -382,6 +382,7 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, 
   const [isMac, setIsMac] = useState(false);
   const [contextLost, setContextLost] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isReady, setIsReady] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -407,6 +408,17 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, 
       containerRef.current.focus();
     }
   }, []);
+
+  // Reset and delay 3D viewer when model changes or on initial load
+  useEffect(() => {
+    setIsReady(false);
+
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 1500); // Increased delay to 2 seconds
+
+    return () => clearTimeout(timer);
+  }, [modelUrl]);
 
   // Handle WebGL context loss and restore
   useEffect(() => {
@@ -548,29 +560,32 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({ geometryType, modelUrl, 
       >
         <color attach="background" args={[backgroundColor]} />
         <PerspectiveCamera
-          key={`camera-${cameraNear}-${cameraFar}`}
+          key={`camera-${cameraNear}-${cameraFar}-${refreshKey}`}
           makeDefault
           position={[0, 0, 6]}
           near={cameraNear}
           far={cameraFar}
         />
-        <CustomOrbitControls />
+        <CustomOrbitControls key={`controls-${refreshKey}`} />
 
         <ambientLight intensity={ambientIntensity} />
         <directionalLight position={[5, 10, 5]} intensity={1} />
         <directionalLight position={[-5, 5, -5]} intensity={0.5} color="#e0e0e0" />
 
         {/* Bounds with fit auto-centers and zooms to model regardless of scale */}
-        {modelUrl ? (
-          <Bounds key={`${modelUrl}-${refreshKey}`} fit clip margin={1.4}>
-            <React.Suspense fallback={null}>
-              <ModelLoader url={modelUrl} material={material} materials={materials} />
-            </React.Suspense>
-          </Bounds>
-        ) : (
-          <Bounds key={refreshKey} fit margin={1.4}>
-            <GeometryMesh type={geometryType} />
-          </Bounds>
+        {/* Only render 3D content after canvas is ready (delay for fade-in) */}
+        {isReady && (
+          modelUrl ? (
+            <Bounds key={`${modelUrl}-${refreshKey}`} fit clip margin={1.4}>
+              <React.Suspense fallback={null}>
+                <ModelLoader url={modelUrl} material={material} materials={materials} />
+              </React.Suspense>
+            </Bounds>
+          ) : (
+            <Bounds key={refreshKey} fit margin={1.4}>
+              <GeometryMesh type={geometryType} />
+            </Bounds>
+          )
         )}
 
         <Environment preset={environmentPreset} />
