@@ -43,6 +43,7 @@ next-env.d.ts
 CLAUDE.md
 GEMINI.md
 perso.md
+/docs-perso/
 
 # projects
 /content/projects/neom/
