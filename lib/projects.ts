@@ -3,7 +3,7 @@ import path from 'path';
 import { marked } from 'marked';
 import { ProjectData, ProjectJson } from '@/types/content';
 
-const CONTENT_DIR = path.join((process as any).cwd(), 'content', 'projects');
+const CONTENT_DIR = path.join((process as any).cwd(), 'public', 'projects');
 
 // Helper to convert YouTube/Vimeo URLs to embed URLs
 function getVideoEmbedUrl(url?: string): string | undefined {
@@ -125,12 +125,12 @@ export function getProjectBySlug(slug: string): ProjectData | null {
       return marked.parse(markdownContent) as string;
     };
 
-    // Construct Asset URLs for the frontend API
-    // /api/project-asset?project=<slug>&type=image&file=<filename>
+    // Construct static asset URLs (assets now served from /public/projects/)
     const getUrl = (type: 'image' | 'model', relativePath?: string) => {
       if (!relativePath) return undefined;
       const filename = path.basename(relativePath);
-      return `/api/project-asset?project=${slug}&type=${type}&file=${filename}`;
+      const folder = type === 'image' ? 'images' : '3d';
+      return `/projects/${slug}/${folder}/${filename}`;
     };
 
     // Check if model file actually exists before creating URL

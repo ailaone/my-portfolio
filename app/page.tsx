@@ -1,8 +1,6 @@
 import { getAllProjects } from '@/lib/projects';
 import LandingPageAnimation from '@/components/LandingPageAnimation';
 
-export const dynamic = 'force-dynamic';
-
 export default function Home() {
   const projects = getAllProjects();
 

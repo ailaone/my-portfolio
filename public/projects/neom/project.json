@@ -1,0 +1,26 @@
+{
+    "slug": "neom",
+    "title": "Neom Residences Competition",
+    "year": "2020",
+    "category": "Architecture",
+    "role": ["Lead Designer"],
+    "client": "Neom",
+    "technologies": ["Rhino", "Grasshopper", "Twinmotion"],
+    "description_file": "description.md",
+    "summary_file": "summary.md",
+    "images": [
+      "neom_01.webp",
+      "neom_02.webp",
+      "neom_03.webp",
+      "neom_04.webp",
+      "neom_05.webp",
+      "neom_06.webp",
+      "neom_07.webp",
+      "neom_08.webp",
+      "neom_09.webp",
+      "neom_10.webp",
+      "neom_11.webp"
+    ],
+    "jobID": "rg",
+    "themes": ["arch-fab"]
+  }
